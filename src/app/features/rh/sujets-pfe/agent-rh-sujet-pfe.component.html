@@ -1,0 +1,970 @@
+<div class="animate-fade-in">
+  <!-- Page Header Premium -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-red-50/50 to-white rounded-2xl border border-red-100/50">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-lg shadow-red-500/25">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-7 h-7">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Gestion des Sujets PFE</h1>
+        <p class="text-sm text-gray-500 mt-1">{{ totalElements }} sujet(s) au total</p>
+      </div>
+    </div>
+    <button class="btn-ooredoo-red" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span>Nouveau Sujet</span>
+    </button>
+  </div>
+
+  <!-- Search & Filters Bar Premium -->
+  <div class="mb-8 space-y-4">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+           [class.border-ooredoo-600]="activeFilter === 'tous'"
+           (click)="setFilter('tous')">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
+            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <div>
+          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ totalElements }}</span>
+          <span class="block text-xs text-brand-muted font-medium mt-0.5">Total</span>
+        </div>
+      </div>
+      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+           [class.border-ooredoo-600]="activeFilter === 'actifs'"
+           (click)="setFilter('actifs')">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div>
+          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ getOpenCount() }}</span>
+          <span class="block text-xs text-brand-muted font-medium mt-0.5">Disponibles</span>
+        </div>
+      </div>
+      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+           [class.border-ooredoo-600]="activeFilter === 'archives'"
+           (click)="setFilter('archives')">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
+            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/>
+          </svg>
+        </div>
+        <div>
+          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ getArchivedCount() }}</span>
+          <span class="block text-xs text-brand-muted font-medium mt-0.5">Archivés</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar with Filter Tabs -->
+    <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
+      <div class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]">
+        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+          [class]="activeFilter === 'actifs' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+          (click)="setFilter('actifs')">
+          Actifs
+        </button>
+        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+          [class]="activeFilter === 'archives' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+          (click)="setFilter('archives')">
+          Archivés
+        </button>
+        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+          [class]="activeFilter === 'tous' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+          (click)="setFilter('tous')">
+          Tous
+        </button>
+      </div>
+    </div>
+
+    <!-- Search and Filters Card -->
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+      <!-- Search Input -->
+      <div class="relative mb-4">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-5 h-5 text-gray-400">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+        <input type="text" placeholder="Rechercher un sujet par titre..." [(ngModel)]="searchTitre" (ngModelChange)="onSearchInput()"
+          class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 outline-none transition-all duration-300 focus:border-red-500 focus:bg-white focus:shadow-sm placeholder:text-gray-400"/>
+      </div>
+      
+      <!-- Filters Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Statut Filter -->
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1.5 ml-1">Statut</label>
+          <div class="relative">
+            <select [(ngModel)]="searchStatut" (ngModelChange)="onSearch()"
+              class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-200 focus:border-red-500 focus:bg-white appearance-none cursor-pointer">
+              <option value="">Tous les statuts</option>
+              <option value="OUVERT">Disponible</option>
+              <option value="POURVU">Pourvu</option>
+              <option value="FERME">Indisponible</option>
+            </select>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Département Filter -->
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1.5 ml-1">Département</label>
+          <div class="relative">
+            <select [(ngModel)]="searchDepartementId" (ngModelChange)="onSearch()"
+              class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-200 focus:border-red-500 focus:bg-white appearance-none cursor-pointer">
+              <option value="">Tous les départements</option>
+              @for (dept of departements(); track dept.id) {
+                <option [value]="dept.id">{{ dept.nom }}</option>
+              }
+            </select>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Spécialité Filter -->
+        <div>
+          <label class="block text-xs font-medium text-gray-500 mb-1.5 ml-1">Spécialité universitaire</label>
+          <div class="relative">
+            <select [(ngModel)]="searchSpecialiteId" (ngModelChange)="onSearch()"
+              class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-200 focus:border-red-500 focus:bg-white appearance-none cursor-pointer">
+              <option value="">Toutes les spécialités</option>
+              @for (spec of specialitesUniversitaires(); track spec.id) {
+                <option [value]="spec.id">{{ spec.nom }}</option>
+              }
+            </select>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear Filters Button -->
+      @if (searchTitre || searchStatut || searchDepartementId || searchSpecialiteId) {
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <button (click)="clearFilters()" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-200 cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            Effacer tous les filtres
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Content -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center py-20 gap-4">
+      <div class="w-12 h-12 rounded-full border-4 border-gray-200 border-t-ooredoo-600 animate-spin"></div>
+      <span class="text-sm text-gray-500">Chargement des sujets PFE...</span>
+    </div>
+  } @else if (sujets().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center bg-white rounded-2xl border border-gray-100">
+      <div class="w-20 h-20 rounded-2xl bg-ooredoo-50 flex items-center justify-center mb-5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="1.5" class="w-10 h-10">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun sujet PFE trouvé</h3>
+      <p class="text-sm text-gray-500 mb-6 max-w-sm">
+        {{ searchTitre || searchStatut || searchDepartementId
+          ? "Essayez de modifier vos filtres de recherche"
+          : "Commencez par créer votre premier sujet de stage" }}
+      </p>
+      @if (!searchTitre && !searchStatut && !searchDepartementId) {
+        <button class="btn-ooredoo" (click)="openCreateModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-5 h-5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Créer un sujet PFE
+        </button>
+      }
+    </div>
+  } @else {
+    <!-- Sujets List -->
+    <div class="space-y-4">
+      @for (sujet of sujets(); track sujet.id; let i = $index) {
+        <div
+          class="bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-gray-200"
+          [class.opacity-60]="sujet.archive"
+        >
+          <div class="flex">
+            <!-- Left Color Bar -->
+            <div class="w-1.5 flex-shrink-0"
+                 [class]="sujet.statut === 'OUVERT' 
+                   ? 'bg-gradient-to-b from-emerald-400 to-emerald-600' 
+                   : sujet.statut === 'POURVU' 
+                     ? 'bg-gradient-to-b from-blue-400 to-blue-600' 
+                     : 'bg-gradient-to-b from-red-400 to-red-600'">
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 p-5">
+              <!-- Header Row -->
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <div class="flex items-center gap-3">
+                  <span class="px-3 py-1 bg-gray-100 rounded-full text-xs font-bold text-gray-600 uppercase tracking-wide">
+                    PFE-{{ (i + 1).toString().padStart(3, '0') }}
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                        [class]="sujet.statut === 'OUVERT' 
+                          ? 'bg-emerald-50 text-emerald-700' 
+                          : sujet.statut === 'POURVU' 
+                            ? 'bg-blue-50 text-blue-700' 
+                            : 'bg-red-50 text-red-700'">
+                    <span class="w-1.5 h-1.5 rounded-full"
+                          [class]="sujet.statut === 'OUVERT' ? 'bg-emerald-500' : sujet.statut === 'POURVU' ? 'bg-blue-500' : 'bg-red-500'"></span>
+                    {{ getStatutLabel(sujet.statut) }}
+                  </span>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+                  @if (!sujet.archive && sujet.statut !== 'FERME') {
+                    <button 
+                      (click)="openEditModal(sujet)"
+                      title="Modifier"
+                      class="inline-flex items-center justify-center w-9 h-9 border border-gray-200 rounded-lg text-gray-500 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                  }
+                  <button 
+                    (click)="openConfirm(sujet, sujet.archive ? 'desarchiver' : 'archiver')"
+                    [title]="sujet.archive ? 'Restaurer' : 'Archiver'"
+                    class="inline-flex items-center justify-center w-9 h-9 border border-gray-200 rounded-lg text-gray-500 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-all">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                      @if (sujet.archive) {
+                        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                      } @else {
+                        <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/>
+                      }
+                    </svg>
+                  </button>
+                  
+                  <!-- Toggle Actif -->
+                  <div class="flex items-center gap-2 pl-4 border-l border-gray-200">
+                    <button 
+                      (click)="sujet.statut === 'OUVERT' ? openConfirm(sujet, 'fermer') : null"
+                      [disabled]="sujet.statut !== 'OUVERT' || sujet.archive"
+                      class="relative w-12 h-6 rounded-full transition-all duration-300"
+                      [class]="sujet.statut === 'OUVERT' && !sujet.archive ? 'bg-ooredoo-600' : 'bg-gray-200'"
+                    >
+                      <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300"
+                            [class.translate-x-6]="sujet.statut === 'OUVERT' && !sujet.archive"></span>
+                    </button>
+                    <span class="text-xs font-medium" [class]="sujet.statut === 'OUVERT' && !sujet.archive ? 'text-ooredoo-600' : 'text-gray-400'">
+                      {{ sujet.statut === 'OUVERT' && !sujet.archive ? 'Actif' : 'Inactif' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <h3 class="text-lg font-bold text-ooredoo-600 mb-2 cursor-pointer hover:text-ooredoo-700 transition-colors" (click)="openDetail(sujet)">
+                {{ sujet.titre }}
+              </h3>
+
+              <!-- Description -->
+              <p class="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2">
+                {{ sujet.mission }}
+              </p>
+
+              <!-- Meta Info -->
+              <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-500 mb-4">
+                <div class="flex items-center gap-1.5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-gray-400">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  </svg>
+                  <span>{{ sujet.departementNom }}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-gray-400">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <span>{{ sujet.dureeEnMois }} mois</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-gray-400">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                  </svg>
+                  <span>{{ sujet.nombreStagiaires }} stagiaire{{ sujet.nombreStagiaires > 1 ? 's' : '' }}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-gray-400">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"/>
+                  </svg>
+                  <span>{{ getNiveauLabel(sujet.niveauAcademique) }}</span>
+                </div>
+                @if (sujet.specialitesUniversitaires.length > 0) {
+                  <div class="flex items-center gap-1.5">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 text-gray-400">
+                      <circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>
+                    </svg>
+                    <span>{{ sujet.specialitesUniversitaires[0].nom }}{{ sujet.specialitesUniversitaires.length > 1 ? ' / +' + (sujet.specialitesUniversitaires.length - 1) : '' }}</span>
+                  </div>
+                }
+              </div>
+
+              <!-- Competences Tags -->
+              @if (sujet.competences && sujet.competences.length > 0) {
+                <div class="flex flex-wrap gap-2">
+                  @for (comp of sujet.competences; track comp.id) {
+                    <span class="px-3 py-1 bg-ooredoo-50 text-ooredoo-700 rounded-full text-xs font-medium border border-ooredoo-100">
+                      {{ comp.nom }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+      <div class="flex items-center justify-between mt-6 py-4">
+        <span class="text-sm text-gray-500">
+          Page {{ currentPage + 1 }} sur {{ totalPages }} — {{ totalElements }} résultat{{ totalElements > 1 ? 's' : '' }}
+        </span>
+        <div class="flex items-center gap-2">
+          <button
+            class="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            [disabled]="currentPage === 0"
+            (click)="goToPage(currentPage - 1)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-gray-600">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          @for (page of pageNumbers; track page) {
+            <button
+              class="w-10 h-10 rounded-lg text-sm font-medium transition-all"
+              [class]="page === currentPage 
+                ? 'bg-ooredoo-600 text-white shadow-md' 
+                : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50'"
+              (click)="goToPage(page)"
+            >
+              {{ page + 1 }}
+            </button>
+          }
+          <button
+            class="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            [disabled]="currentPage >= totalPages - 1"
+            (click)="goToPage(currentPage + 1)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-gray-600">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+  }
+
+<!-- ═══════ CREATE/EDIT MODAL WITH GRADIENT HEADER ═══════ -->
+@if (showModal()) {
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5"
+    (click)="closeModal()"
+  >
+    <div
+      class="bg-white rounded-2xl w-full max-w-[720px] shadow-modal animate-modal-in max-h-[90vh] flex flex-col"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Modal Header with Gradient -->
+      <div class="relative bg-gradient-to-br from-[#D90012] via-[#B8000F] to-[#8B000B] px-6 py-5 text-white rounded-t-2xl">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/20 blur-3xl"></div>
+        </div>
+        <div class="relative flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6">
+                @if (modalMode === 'create') {
+                  <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/>
+                } @else {
+                  <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                }
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">{{ modalMode === 'create' ? 'Nouveau Sujet PFE' : 'Modifier le Sujet PFE' }}</h2>
+              <p class="text-white/70 text-sm mt-0.5">{{ modalMode === 'create' ? 'Définissez un nouveau projet de stage' : 'Modifiez les informations du sujet' }}</p>
+            </div>
+          </div>
+          <button (click)="closeModal()" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="px-6 py-5 overflow-y-auto flex-1 space-y-5">
+        @if (modalError()) {
+          <div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-5 h-5">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-red-800">Erreur</p>
+              <p class="text-sm text-red-600">{{ modalError() }}</p>
+            </div>
+          </div>
+        }
+
+        <form [formGroup]="sujetForm" class="space-y-5">
+          <!-- SECTION 1: Informations générales -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <div class="form-section-icon bg-red-100">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-5 h-5">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="form-section-title">Informations générales</h3>
+                <p class="form-section-subtitle">Titre et description du sujet</p>
+              </div>
+            </div>
+            <div class="form-section-content space-y-4">
+              <!-- Titre -->
+              <div class="form-group">
+                <label class="form-label">Titre du sujet <span class="text-red-500">*</span></label>
+                <input type="text" class="form-input" placeholder="Ex: Développement d'une application web de gestion..."
+                       formControlName="titre" [class.field-invalid]="isFieldInvalid('titre')"/>
+                <div class="flex items-center justify-between mt-1">
+                  @if (getFieldError('titre')) {
+                    <span class="text-[0.75rem] text-red-600 flex items-center gap-1">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      {{ getFieldError('titre') }}
+                    </span>
+                  } @else {
+                    <span></span>
+                  }
+                  <span class="text-[0.6875rem] text-gray-400" [class.text-red-600]="getRemainingChars('titre', 200) < 0">
+                    {{ getRemainingChars('titre', 200) }} caractères restants
+                  </span>
+                </div>
+              </div>
+              <!-- Mission -->
+              <div class="form-group">
+                <label class="form-label">Mission <span class="text-red-500">*</span></label>
+                <textarea class="form-input min-h-[100px] resize-y" rows="4" placeholder="Décrivez en détail la mission du stagiaire..."
+                          formControlName="mission" [class.field-invalid]="isFieldInvalid('mission')"></textarea>
+                <div class="flex items-center justify-between mt-1">
+                  @if (getFieldError('mission')) {
+                    <span class="text-[0.75rem] text-red-600 flex items-center gap-1">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      {{ getFieldError('mission') }}
+                    </span>
+                  } @else {
+                    <span></span>
+                  }
+                  <span class="text-[0.6875rem] text-gray-400" [class.text-red-600]="getRemainingChars('mission', 2000) < 0">
+                    {{ getRemainingChars('mission', 2000) }} caractères restants
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: Organisation -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <div class="form-section-icon bg-blue-100">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" class="w-5 h-5">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="form-section-title">Organisation</h3>
+                <p class="form-section-subtitle">Département et spécialités requises</p>
+              </div>
+            </div>
+            <div class="form-section-content space-y-4">
+              <!-- Département -->
+              <div class="form-group">
+                <label class="form-label">Département <span class="text-red-500">*</span></label>
+                <select class="form-select" formControlName="departementId" [class.field-invalid]="isFieldInvalid('departementId')">
+                  <option value="">Sélectionner un département</option>
+                  @for (dept of departements(); track dept.id) {
+                    <option [value]="dept.id">{{ dept.nom }}</option>
+                  }
+                </select>
+                @if (getFieldError('departementId')) {
+                  <span class="text-[0.75rem] text-red-600 mt-1 flex items-center gap-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    {{ getFieldError('departementId') }}
+                  </span>
+                }
+              </div>
+
+              <!-- Spécialités Multi-select -->
+              <div class="form-group">
+                <label class="form-label flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" class="w-4 h-4">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                  Spécialités universitaires <span class="text-red-500">*</span>
+                </label>
+                <div class="flex flex-wrap gap-2 p-4 bg-gray-50 rounded-xl border border-gray-200 min-h-[80px]">
+                  @for (spec of specialitesUniversitaires(); track spec.id) {
+                    <button type="button"
+                      (click)="toggleSpecialite(spec.id)"
+                      class="chip-select"
+                      [class.chip-select-active]="isSpecialiteSelected(spec.id)">
+                      @if (isSpecialiteSelected(spec.id)) {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      }
+                      {{ spec.nom }}
+                    </button>
+                  }
+                </div>
+                @if (selectedSpecialiteIds.length > 0) {
+                  <p class="text-xs text-amber-600 mt-2 font-medium">{{ selectedSpecialiteIds.length }} spécialité(s) sélectionnée(s)</p>
+                } @else {
+                  <p class="text-xs text-gray-400 mt-2">Sélectionnez au moins une spécialité</p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: Compétences -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <div class="form-section-icon bg-purple-100">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" class="w-5 h-5">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="form-section-title">Compétences</h3>
+                <p class="form-section-subtitle">Technologies et savoir-faire requis</p>
+              </div>
+            </div>
+            <div class="form-section-content">
+              <!-- Compétences Multi-select -->
+              <div class="form-group">
+                <label class="form-label flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" class="w-4 h-4">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  Compétences requises <span class="text-red-500">*</span>
+                </label>
+                <div class="flex flex-wrap gap-2 p-4 bg-purple-50 rounded-xl border border-purple-200 min-h-[80px]">
+                  @for (comp of competences(); track comp.id) {
+                    <button type="button"
+                      (click)="toggleCompetence(comp.id)"
+                      class="chip-select"
+                      [class.chip-select-active]="isCompetenceSelected(comp.id)">
+                      @if (isCompetenceSelected(comp.id)) {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-3.5 h-3.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      }
+                      {{ comp.nom }}
+                    </button>
+                  }
+                </div>
+                @if (selectedCompetenceIds.length > 0) {
+                  <p class="text-xs text-purple-600 mt-2 font-medium">{{ selectedCompetenceIds.length }} compétence(s) sélectionnée(s)</p>
+                } @else {
+                  <p class="text-xs text-gray-400 mt-2">Sélectionnez au moins une compétence</p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 4: Paramètres du stage -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <div class="form-section-icon bg-amber-100">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" class="w-5 h-5">
+                  <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="form-section-title">Paramètres du stage</h3>
+                <p class="form-section-subtitle">Niveau, durée et nombre de places</p>
+              </div>
+            </div>
+            <div class="form-section-content">
+              <div class="grid grid-cols-3 gap-4">
+                <!-- Niveau -->
+                <div class="form-group">
+                  <label class="form-label">Niveau académique <span class="text-red-500">*</span></label>
+                  <select class="form-select" formControlName="niveauAcademique">
+                    @for (n of niveaux; track n) {
+                      <option [value]="n">{{ getNiveauLabel(n) }}</option>
+                    }
+                  </select>
+                </div>
+                <!-- Nombre stagiaires -->
+                <div class="form-group">
+                  <label class="form-label">Nombre de stagiaires <span class="text-red-500">*</span></label>
+                  <input type="number" class="form-input" min="1" max="10" formControlName="nombreStagiaires"
+                         [class.field-invalid]="isFieldInvalid('nombreStagiaires')"/>
+                  @if (getFieldError('nombreStagiaires')) {
+                    <span class="text-[0.75rem] text-red-600 mt-1">{{ getFieldError('nombreStagiaires') }}</span>
+                  }
+                </div>
+                <!-- Durée -->
+                <div class="form-group">
+                  <label class="form-label">Durée (mois) <span class="text-red-500">*</span></label>
+                  <input type="number" class="form-input" min="1" max="24" formControlName="dureeEnMois"
+                         [class.field-invalid]="isFieldInvalid('dureeEnMois')"/>
+                  @if (getFieldError('dureeEnMois')) {
+                    <span class="text-[0.75rem] text-red-600 mt-1">{{ getFieldError('dureeEnMois') }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-2xl">
+        <p class="text-xs text-gray-400">
+          <span class="text-red-500">*</span> Champs obligatoires
+        </p>
+        <div class="flex items-center gap-3">
+          <button class="modal-btn-cancel" (click)="closeModal()">Annuler</button>
+          <button class="btn-ooredoo-red" (click)="saveModal()" [disabled]="isSaving()">
+            @if (isSaving()) {
+              <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                @if (modalMode === 'create') {
+                  <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/>
+                } @else {
+                  <polyline points="20 6 9 17 4 12"/>
+                }
+              </svg>
+            }
+            <span>{{ modalMode === 'create' ? 'Créer le sujet' : 'Enregistrer' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ DETAIL MODAL WITH GRADIENT HEADER ═══════ -->
+@if (showDetail()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDetail()">
+    <div class="bg-white rounded-2xl max-w-[600px] w-full shadow-modal animate-modal-in overflow-hidden max-h-[90vh] flex flex-col" (click)="$event.stopPropagation()">
+      @if (detailSujet) {
+        <!-- Header avec fond coloré gradient -->
+        <div class="relative bg-gradient-to-br from-[#D90012] via-[#B8000F] to-[#8B000B] p-6 text-white">
+          <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20 blur-2xl"></div>
+            <div class="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
+          </div>
+          <div class="relative flex items-start gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg flex-shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-7 h-7">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h2 class="text-lg font-bold leading-tight line-clamp-2">{{ detailSujet.titre }}</h2>
+              <p class="text-white/80 text-sm mt-1">{{ detailSujet.departementNom || 'Département non assigné' }}</p>
+              <div class="flex flex-wrap gap-2 mt-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
+                  [class]="detailSujet.statut === 'OUVERT' ? 'bg-emerald-500/20 text-emerald-100' : detailSujet.statut === 'POURVU' ? 'bg-blue-500/20 text-blue-100' : 'bg-red-200/30 text-red-100'">
+                  <span class="w-1.5 h-1.5 rounded-full" [class]="detailSujet.statut === 'OUVERT' ? 'bg-emerald-400' : detailSujet.statut === 'POURVU' ? 'bg-blue-400' : 'bg-red-300'"></span>
+                  {{ getStatutLabel(detailSujet.statut) }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-white/20 text-white">
+                  {{ getNiveauLabel(detailSujet.niveauAcademique) }}
+                </span>
+                @if (detailSujet.archive) {
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-100">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>
+                    </svg>
+                    Archivé
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+          <button (click)="closeDetail()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Contenu -->
+        <div class="p-6 space-y-5 overflow-y-auto flex-1">
+          <!-- Mission -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Mission</h4>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{{ detailSujet.mission }}</p>
+            </div>
+          </div>
+
+          <!-- Spécialités -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Spécialités requises</h4>
+            <div class="flex flex-wrap gap-2">
+              @for (spec of detailSujet.specialitesUniversitaires; track spec.id) {
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-sm font-medium text-amber-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
+                  {{ spec.nom }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Compétences -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Compétences techniques</h4>
+            <div class="flex flex-wrap gap-2">
+              @for (comp of detailSujet.competences; track comp.id) {
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-lg text-sm font-medium text-purple-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  {{ comp.nom }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Informations du stage -->
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Informations du stage</h4>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+                <div class="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" class="w-4 h-4">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-400">Stagiaires</p>
+                  <p class="text-sm font-semibold text-gray-900">{{ detailSujet.nombreStagiaires }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+                <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" class="w-4 h-4">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-400">Durée</p>
+                  <p class="text-sm font-semibold text-gray-900">{{ detailSujet.dureeEnMois }} mois</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+                <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-4 h-4">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-xs text-gray-400">Créé le</p>
+                  <p class="text-sm font-semibold text-gray-900">{{ formatDate(detailSujet.dateCreation) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
+          <button class="modal-btn-cancel" (click)="closeDetail()">Fermer</button>
+          @if (!detailSujet.archive && detailSujet.statut !== 'FERME') {
+            <button class="btn-ooredoo-red" (click)="editFromDetail()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              <span>Modifier</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- ═══════ CONFIRM DIALOG ═══════ -->
+@if (showConfirm()) {
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5"
+    (click)="closeConfirm()"
+  >
+    <div
+      class="bg-white rounded-2xl max-w-[420px] w-full shadow-modal animate-modal-in text-center p-8"
+      (click)="$event.stopPropagation()"
+    >
+      <div
+        class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+        [class]="
+          confirmAction === 'desarchiver'
+            ? 'bg-emerald-50'
+            : confirmAction === 'fermer'
+              ? 'bg-red-50'
+              : 'bg-amber-50'
+        "
+      >
+        @switch (confirmAction) {
+          @case ("archiver") {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#F59E0B"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-7 h-7"
+            >
+              <polyline points="21 8 21 21 3 21 3 8" />
+              <rect x="1" y="3" width="22" height="5" />
+            </svg>
+          }
+          @case ("desarchiver") {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#10B981"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-7 h-7"
+            >
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+            </svg>
+          }
+          @case ("fermer") {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#D90012"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-7 h-7"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          }
+        }
+      </div>
+      <h3 class="text-lg font-extrabold text-brand-text mb-2">
+        {{ getConfirmTitle() }}
+      </h3>
+      <p class="text-sm text-brand-muted leading-relaxed mb-6">
+        {{ getConfirmText() }}
+      </p>
+      <div class="flex gap-3 justify-center">
+        <button class="btn-cancel" (click)="closeConfirm()">Annuler</button>
+        <button
+          (click)="executeConfirm()"
+          class="btn-ooredoo"
+          [class.btn-success]="confirmAction === 'desarchiver'"
+          [class.btn-warning]="confirmAction === 'fermer'"
+        >
+          {{
+            confirmAction === "archiver"
+              ? "Archiver"
+              : confirmAction === "desarchiver"
+                ? "Désarchiver"
+                : "Fermer"
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ TOAST ═══════ -->
+@if (toastMessage()) {
+  <div
+    class="fixed bottom-8 right-8 flex items-center gap-3 px-5 py-3.5 rounded-[14px] shadow-toast z-[2000] animate-toast-in text-sm font-semibold"
+    [class]="
+      toastType() === 'success'
+        ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+        : 'bg-red-50 border border-red-200 text-ooredoo-800'
+    "
+  >
+    <div>
+      @if (toastType() === "success") {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#10B981"
+          stroke-width="2.5"
+          class="w-5 h-5"
+        >
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+      } @else {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#D90012"
+          stroke-width="2.5"
+          class="w-5 h-5"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      }
+    </div>
+    <span>{{ toastMessage() }}</span>
+  </div>
+}

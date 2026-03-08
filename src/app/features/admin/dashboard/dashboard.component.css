@@ -1,0 +1,52 @@
+/* -----------------------------------------------------------
+   DASHBOARD - PREMIUM OOREDOO THEME
+----------------------------------------------------------- */
+
+:host {
+  display: block;
+}
+
+/* ------- ANIMATIONS ------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* ------- CARD OOREDOO ------- */
+.card-ooredoo {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: visible;
+}
+
+.card-ooredoo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #D90012, #ff6b6b);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px 20px 0 0;
+}
+
+.card-ooredoo:hover {
+  border-color: #D90012;
+  box-shadow: 0 12px 40px rgba(217, 0, 18, 0.12);
+  transform: translateY(-6px);
+}
+
+.card-ooredoo:hover::before {
+  transform: scaleX(1);
+}
