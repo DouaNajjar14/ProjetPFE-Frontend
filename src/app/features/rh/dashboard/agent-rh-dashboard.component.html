@@ -61,7 +61,7 @@
     <!-- Sujets Fermés -->
     <div class="flex items-center gap-4 p-5 rounded-2xl border bg-gradient-to-br from-red-50 to-red-100 border-ooredoo-200">
       <div class="w-[52px] h-[52px] rounded-[14px] flex items-center justify-center flex-shrink-0 bg-ooredoo-600/[0.08]">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" stroke-linecap="round" class="w-6 h-6">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" class="w-6 h-6">
           <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
         </svg>
       </div>
@@ -118,7 +118,7 @@
         @if (recentSujets().length === 0) {
           <div class="flex flex-col items-center justify-center py-12 text-center">
             <div class="w-14 h-14 rounded-2xl bg-ooredoo-600/[0.06] flex items-center justify-center mb-3">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="1.5" class="w-7 h-7">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="1.5" class="w-7 h-7">
                 <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
               </svg>
             </div>
@@ -132,7 +132,7 @@
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                   [class]="sujet.statut === 'OUVERT' ? 'bg-emerald-50' : sujet.statut === 'POURVU' ? 'bg-blue-50' : 'bg-red-50'">
                   <svg viewBox="0 0 24 24" fill="none" stroke-width="2" class="w-5 h-5"
-                    [attr.stroke]="sujet.statut === 'OUVERT' ? '#10B981' : sujet.statut === 'POURVU' ? '#3B82F6' : '#D90012'">
+                    [attr.stroke]="sujet.statut === 'OUVERT' ? '#10B981' : sujet.statut === 'POURVU' ? '#3B82F6' : '#ED1C24'">
                     <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
                   </svg>
                 </div>

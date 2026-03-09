@@ -3,7 +3,7 @@
 }
 
 .field-invalid {
-  border-color: #D90012 !important;
+  border-color: #ED1C24 !important;
   background-color: rgba(254, 242, 242, 0.5) !important;
 }
 
@@ -109,8 +109,8 @@
 
 /* ------- PREMIUM HEADER ------- */
 .page-header-premium {
-  background: linear-gradient(135deg, rgba(217, 0, 18, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
-  border: 1px solid rgba(217, 0, 18, 0.08);
+  background: linear-gradient(135deg, rgba(237, 28, 36, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
+  border: 1px solid rgba(237, 28, 36, 0.08);
   border-radius: 20px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -135,14 +135,14 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #D90012, #ff4444);
+  background: linear-gradient(90deg, #ED1C24, #ff4444);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
 
 .stat-card-premium:hover {
-  border-color: #D90012;
-  box-shadow: 0 8px 30px rgba(217, 0, 18, 0.12);
+  border-color: #ED1C24;
+  box-shadow: 0 8px 30px rgba(237, 28, 36, 0.12);
   transform: translateY(-4px);
 }
 
@@ -151,8 +151,8 @@
 }
 
 .stat-card-premium.active {
-  border-color: #D90012;
-  background: linear-gradient(135deg, rgba(217, 0, 18, 0.02) 0%, white 100%);
+  border-color: #ED1C24;
+  background: linear-gradient(135deg, rgba(237, 28, 36, 0.02) 0%, white 100%);
 }
 
 .stat-card-premium.active::before {
@@ -216,7 +216,7 @@
 
 .filter-tab {
   padding: 0.625rem 1.25rem;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   border-radius: 10px;
   border: none;
@@ -228,14 +228,14 @@
 }
 
 .filter-tab:hover:not(.active) {
-  background: rgba(217, 0, 18, 0.04);
-  color: #D90012;
+  background: rgba(237, 28, 36, 0.04);
+  color: #ED1C24;
 }
 
 .filter-tab.active {
-  background: linear-gradient(135deg, #D90012 0%, #b8000f 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(217, 0, 18, 0.25);
+  box-shadow: 0 4px 12px rgba(237, 28, 36, 0.25);
 }
 
 /* ------- SEARCH INPUT ------- */
@@ -257,8 +257,8 @@
 }
 
 .search-input-premium:focus {
-  border-color: #D90012;
-  box-shadow: 0 0 0 4px rgba(217, 0, 18, 0.08);
+  border-color: #ED1C24;
+  box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.08);
 }
 
 .search-input-premium::placeholder {
@@ -276,7 +276,7 @@
 }
 
 .search-wrapper:focus-within .search-icon {
-  color: #D90012;
+  color: #ED1C24;
 }
 
 /* ------- TABLE PREMIUM ------- */
@@ -300,7 +300,7 @@
 .table-premium th {
   padding: 1rem 1.25rem;
   text-align: left;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -318,7 +318,7 @@
 }
 
 .table-premium tbody tr:hover {
-  background: linear-gradient(90deg, rgba(217, 0, 18, 0.02) 0%, transparent 100%);
+  background: linear-gradient(90deg, rgba(237, 28, 36, 0.02) 0%, transparent 100%);
 }
 
 .table-premium td {
@@ -336,15 +336,15 @@
   font-size: 0.8125rem;
   font-weight: 700;
   color: white;
-  background: linear-gradient(135deg, #D90012 0%, #b8000f 100%);
-  box-shadow: 0 4px 12px rgba(217, 0, 18, 0.2);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
+  box-shadow: 0 4px 12px rgba(237, 28, 36, 0.2);
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
 .avatar-premium:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(217, 0, 18, 0.3);
+  box-shadow: 0 6px 20px rgba(237, 28, 36, 0.3);
 }
 
 .avatar-premium.inactive {
@@ -405,9 +405,9 @@
 }
 
 .action-btn-premium:hover {
-  border-color: #D90012;
-  color: #D90012;
-  background: rgba(217, 0, 18, 0.04);
+  border-color: #ED1C24;
+  color: #ED1C24;
+  background: rgba(237, 28, 36, 0.04);
   transform: scale(1.08);
 }
 
@@ -443,7 +443,7 @@
   width: 80px;
   height: 80px;
   border-radius: 24px;
-  background: linear-gradient(135deg, rgba(217, 0, 18, 0.08) 0%, rgba(217, 0, 18, 0.02) 100%);
+  background: linear-gradient(135deg, rgba(237, 28, 36, 0.08) 0%, rgba(237, 28, 36, 0.02) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -479,7 +479,7 @@
   height: 48px;
   border-radius: 50%;
   border: 3px solid #f3f4f6;
-  border-top-color: #D90012;
+  border-top-color: #ED1C24;
   animation: spin 0.8s linear infinite;
 }
 
@@ -514,7 +514,7 @@
 /* ------- FORM INPUTS ------- */
 .form-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: #4b5563;
   margin-bottom: 0.375rem;
@@ -525,7 +525,7 @@
   padding: 0.75rem 1rem;
   border: 1.5px solid #e5e7eb;
   border-radius: 12px;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: #1f2937;
   background: white;
   transition: all 0.2s ease;
@@ -533,8 +533,8 @@
 }
 
 .form-input:focus {
-  border-color: #D90012;
-  box-shadow: 0 0 0 3px rgba(217, 0, 18, 0.08);
+  border-color: #ED1C24;
+  box-shadow: 0 0 0 3px rgba(237, 28, 36, 0.08);
 }
 
 .form-input::placeholder {
@@ -550,7 +550,7 @@
 }
 
 .form-hint {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: #9ca3af;
   margin-top: 0.375rem;
 }
@@ -583,7 +583,7 @@
 }
 
 .form-section-title {
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #1f2937;
 }
@@ -609,15 +609,15 @@
   align-items: center;
   gap: 0.625rem;
   padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, #D90012 0%, #B8000F 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
   color: white;
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   border-radius: 14px;
   border: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(217, 0, 18, 0.3);
+  box-shadow: 0 4px 15px rgba(237, 28, 36, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -634,9 +634,9 @@
 }
 
 .btn-ooredoo-red:hover {
-  background: linear-gradient(135deg, #B8000F 0%, #960009 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(217, 0, 18, 0.4);
+  box-shadow: 0 8px 25px rgba(237, 28, 36, 0.4);
 }
 
 .btn-ooredoo-red:hover::before {
@@ -668,7 +668,7 @@
 
 .confirm-btn-danger {
   padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, #D90012 0%, #B8000F 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
   color: white;
   font-weight: 600;
   font-size: 0.9375rem;
@@ -676,11 +676,11 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(217, 0, 18, 0.25);
+  box-shadow: 0 4px 15px rgba(237, 28, 36, 0.25);
 }
 
 .confirm-btn-danger:hover {
-  background: linear-gradient(135deg, #B8000F 0%, #960009 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
 }
 
 .confirm-btn-success {
@@ -742,5 +742,5 @@
 }
 
 .toast-premium.error {
-  border-left: 4px solid #D90012;
+  border-left: 4px solid #ED1C24;
 }

@@ -84,8 +84,8 @@ import { RouterModule } from '@angular/router';
   `,
     styles: [`
     :host {
-      --ooredoo-red: #E30613;
-      --ooredoo-red-dark: #B8000F;
+      --ooredoo-red: #ED1C24;
+      --ooredoo-red-dark: #ED1C24;
     }
 
     .header {
@@ -132,7 +132,7 @@ import { RouterModule } from '@angular/router';
       inset: 0;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--ooredoo-red) 0%, var(--ooredoo-red-dark) 100%);
-      box-shadow: 0 4px 20px rgba(227,6,19,0.4);
+      box-shadow: 0 4px 20px rgba(237,28,36,0.4);
     }
     .circle-inner {
       position: absolute;
@@ -191,7 +191,7 @@ import { RouterModule } from '@angular/router';
     }
     .nav-item.dark:hover {
       color: var(--ooredoo-red);
-      background: rgba(227,6,19,0.06);
+      background: rgba(237,28,36,0.06);
     }
     .nav-item.active {
       color: var(--ooredoo-red) !important;
@@ -218,7 +218,7 @@ import { RouterModule } from '@angular/router';
       text-decoration: none;
       background: linear-gradient(135deg, var(--ooredoo-red) 0%, var(--ooredoo-red-dark) 100%);
       border-radius: 25px;
-      box-shadow: 0 4px 20px rgba(227,6,19,0.4);
+      box-shadow: 0 4px 20px rgba(237,28,36,0.4);
       transition: all 0.3s;
     }
     .btn-candidater svg {
@@ -227,7 +227,7 @@ import { RouterModule } from '@angular/router';
     }
     .btn-candidater:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(227,6,19,0.5);
+      box-shadow: 0 8px 30px rgba(237,28,36,0.5);
     }
 
     /* Mobile Toggle */
@@ -280,7 +280,7 @@ import { RouterModule } from '@angular/router';
     }
     .mobile-link.active {
       color: var(--ooredoo-red);
-      background: rgba(227,6,19,0.06);
+      background: rgba(237,28,36,0.06);
       font-weight: 600;
     }
     .mobile-cta {
@@ -303,7 +303,7 @@ import { RouterModule } from '@angular/router';
       text-decoration: none;
       background: linear-gradient(135deg, var(--ooredoo-red) 0%, var(--ooredoo-red-dark) 100%);
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(227,6,19,0.3);
+      box-shadow: 0 4px 20px rgba(237,28,36,0.3);
     }
     .mobile-btn-candidater svg {
       width: 20px;

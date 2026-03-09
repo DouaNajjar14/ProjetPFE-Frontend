@@ -1,47 +1,22 @@
 <div class="animate-fade-in">
   <!-- Page Header -->
-  <div
-    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6"
-  >
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 px-6 py-5 bg-white rounded-2xl border border-gray-200 shadow-sm">
     <div class="flex items-center gap-4">
-      <div
-        class="w-12 h-12 rounded-[14px] bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center shadow-btn-red"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="w-6 h-6"
-        >
+      <div class="w-14 h-14 rounded-xl bg-ooredoo flex items-center justify-center shadow-md flex-shrink-0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
       </div>
-      <div>
-        <h1
-          class="text-[1.625rem] font-extrabold text-brand-text tracking-tight"
-        >
-          Agents RH
-        </h1>
-        <p class="text-[0.8125rem] text-brand-muted mt-0.5">
-          Gérez les agents des ressources humaines
-        </p>
+      <div class="flex flex-col justify-center self-center">
+        <h1 class="text-2xl font-bold text-gray-900 leading-none">Gestion des Agents RH</h1>
+        <p class="text-[0.9375rem] text-gray-500 mt-3">{{ filteredAgents().length }} agent(s) au total</p>
       </div>
     </div>
     <button class="btn-ooredoo-red" (click)="openCreateModal()">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        class="w-[18px] h-[18px]"
-      >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
         <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />
       </svg>
@@ -149,10 +124,10 @@
       class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]"
     >
       <button
-        class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
         [class]="
           activeFilter === 'actifs'
-            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]'
+            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
             : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
         "
         (click)="setFilter('actifs')"
@@ -160,10 +135,10 @@
         Actifs
       </button>
       <button
-        class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
         [class]="
           activeFilter === 'archives'
-            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]'
+            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
             : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
         "
         (click)="setFilter('archives')"
@@ -171,10 +146,10 @@
         Archivés
       </button>
       <button
-        class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
         [class]="
           activeFilter === 'tous'
-            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]'
+            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
             : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
         "
         (click)="setFilter('tous')"
@@ -183,7 +158,7 @@
       </button>
     </div>
     <div
-      class="flex items-center gap-2 bg-white border border-brand-border rounded-[10px] px-4 py-2 min-w-[300px] transition-all duration-200 focus-within:border-ooredoo-600 focus-within:shadow-[0_0_0_3px_rgba(217,0,18,0.08)]"
+      class="flex items-center gap-2 bg-white border border-brand-border rounded-[10px] px-4 py-2 min-w-[300px] transition-all duration-200 focus-within:border-ooredoo-600 focus-within:shadow-[0_0_0_3px_rgba(237,28,36,0.08)]"
     >
       <svg
         viewBox="0 0 24 24"
@@ -225,7 +200,7 @@
           <svg
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#D90012"
+            stroke="#ED1C24"
             stroke-width="1.5"
             class="w-8 h-8"
           >
@@ -270,32 +245,32 @@
         <thead>
           <tr class="bg-brand-bg border-b border-brand-border">
             <th
-              class="px-5 py-3.5 text-left text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted"
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
             >
               Agent
             </th>
             <th
-              class="px-5 py-3.5 text-left text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted"
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
             >
               Email
             </th>
             <th
-              class="px-5 py-3.5 text-left text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted"
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
             >
               Téléphone
             </th>
             <th
-              class="px-5 py-3.5 text-left text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted"
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
             >
               Statut
             </th>
             <th
-              class="px-5 py-3.5 text-left text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted"
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
             >
               Date de création
             </th>
             <th
-              class="px-5 py-3.5 text-right text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-brand-muted"
+              class="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
             >
               Actions
             </th>
@@ -322,10 +297,10 @@
                   </div>
                   <div>
                     <span
-                      class="block text-[0.9375rem] font-semibold text-brand-text"
+                      class="block text-base font-semibold text-brand-text"
                       >{{ agent.prenom }} {{ agent.nom }}</span
                     >
-                    <span class="block text-xs text-brand-light">Agent RH</span>
+                    <span class="block text-[0.8125rem] text-brand-light">Agent RH</span>
                   </div>
                 </div>
               </td>
@@ -351,7 +326,7 @@
                   {{ agent.actif ? "Actif" : "Archivé" }}
                 </span>
               </td>
-              <td class="px-5 py-4 text-[0.8125rem] text-brand-light">
+              <td class="px-5 py-4 text-sm text-brand-light">
                 {{ formatDate(agent.dateCreation) }}
               </td>
               <td class="px-5 py-4 text-right">
@@ -440,7 +415,7 @@
       (click)="$event.stopPropagation()"
     >
       <!-- Modal Header with Gradient -->
-      <div class="relative bg-gradient-to-br from-[#D90012] via-[#B8000F] to-[#8B000B] px-6 py-5 text-white rounded-t-2xl">
+      <div class="relative bg-gradient-to-br from-[#ED1C24] via-[#ED1C24] to-[#ED1C24] px-6 py-5 text-white rounded-t-2xl">
         <div class="absolute inset-0 opacity-10">
           <div class="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/20 blur-3xl"></div>
         </div>
@@ -473,7 +448,7 @@
         @if (modalError()) {
           <div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
             <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-5 h-5">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
               </svg>
             </div>
@@ -488,7 +463,7 @@
         <div class="form-section">
           <div class="form-section-header">
             <div class="form-section-icon bg-red-100">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-5 h-5">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
               </svg>
             </div>
@@ -686,7 +661,7 @@
   <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDetailModal()">
     <div class="bg-white rounded-2xl max-w-[520px] w-full shadow-modal animate-modal-in overflow-hidden" (click)="$event.stopPropagation()">
       <!-- Header avec fond coloré -->
-      <div class="relative bg-gradient-to-br from-[#D90012] via-[#B8000F] to-[#8B000B] p-6 text-white">
+      <div class="relative bg-gradient-to-br from-[#ED1C24] via-[#ED1C24] to-[#ED1C24] p-6 text-white">
         <div class="absolute inset-0 opacity-10">
           <div class="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20 blur-2xl"></div>
           <div class="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
@@ -720,7 +695,7 @@
           <div class="grid grid-cols-2 gap-3">
             <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
               <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-4 h-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
                   <rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/>
                 </svg>
               </div>
@@ -731,7 +706,7 @@
             </div>
             <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
               <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-4 h-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                 </svg>
               </div>
@@ -883,7 +858,7 @@
         <svg
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#D90012"
+          stroke="#ED1C24"
           stroke-width="2.5"
           class="w-5 h-5"
         >

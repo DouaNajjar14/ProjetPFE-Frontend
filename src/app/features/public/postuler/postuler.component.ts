@@ -552,7 +552,7 @@ import { Niveau } from '../../../core/models/candidat.model';
   styles: [`
     /* ===== Variables ===== */
     :host {
-      --primary: #e30613;
+      --primary: #ED1C24;
       --primary-dark: #c20510;
       --primary-light: #fee2e2;
       --ink: #1a1a2e;
@@ -578,7 +578,7 @@ import { Niveau } from '../../../core/models/candidat.model';
     /* ===== Hero Section ===== */
     .hero-section {
       min-height: 40vh;
-      background: linear-gradient(135deg, #E30613 0%, #B8000F 100%);
+      background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -744,7 +744,7 @@ import { Niveau } from '../../../core/models/candidat.model';
       color: var(--white);
       border-color: var(--primary);
       transform: scale(1.1);
-      box-shadow: 0 0 0 4px rgba(227, 6, 19, 0.2);
+      box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.2);
     }
 
     .step-dot.completed {
@@ -855,7 +855,7 @@ import { Niveau } from '../../../core/models/candidat.model';
     }
 
     .type-card:hover {
-      border-color: rgba(227, 6, 19, 0.3);
+      border-color: rgba(237, 28, 36, 0.3);
       background: #fef7f7;
     }
 
@@ -950,7 +950,7 @@ import { Niveau } from '../../../core/models/candidat.model';
 
     .btn-primary:hover:not(.disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(227, 6, 19, 0.3);
+      box-shadow: 0 8px 20px rgba(237, 28, 36, 0.3);
     }
 
     .btn-primary.disabled {
@@ -1031,7 +1031,7 @@ import { Niveau } from '../../../core/models/candidat.model';
 
     .form-input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.1);
+      box-shadow: 0 0 0 3px rgba(237, 28, 36, 0.1);
     }
 
     .form-input::placeholder {

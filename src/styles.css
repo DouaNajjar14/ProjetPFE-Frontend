@@ -1,12 +1,12 @@
-/* ═══════ TAILWIND DIRECTIVES ═══════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â TAILWIND DIRECTIVES Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ═══════ CSS VARIABLES ═══════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â CSS VARIABLES Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 :root {
-  --r: #E30613;
-  --r2: #B8000F;
+  --r: #ED1C24;
+  --r2: #C81018;
   --r3: #7A0009;
   --ink: #0A0A0A;
   --ink2: #222;
@@ -20,7 +20,7 @@
   --trans: 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ═══════ BASE STYLES ═══════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â BASE STYLES Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 *,
 *::before,
 *::after {
@@ -40,7 +40,7 @@ body {
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
   background: var(--bg);
   color: var(--ink);
   line-height: 1.6;
@@ -54,9 +54,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Syne', system-ui, sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.2;
   color: var(--ink);
   margin: 0;
 }
@@ -80,7 +80,7 @@ svg {
 /* Focus outline */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(227, 6, 19, 0.3);
+  box-shadow: 0 0 0 2px rgba(237, 28, 36, 0.3);
 }
 
 /* Modern scrollbar */
@@ -101,7 +101,7 @@ svg {
   background: var(--g);
 }
 
-/* ═══════ GLOBAL COMPONENT STYLES ═══════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â GLOBAL COMPONENT STYLES Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 .card-ooredoo {
   background: white;
   border-radius: var(--radius);
@@ -132,7 +132,7 @@ svg {
   }
 }
 
-/* ═══════ UTILITY HELPERS ═══════ */
+/* Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â UTILITY HELPERS Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â */
 .animate-delay-100 {
   animation-delay: 0.1s;
 }

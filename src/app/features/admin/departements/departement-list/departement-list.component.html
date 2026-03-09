@@ -1,15 +1,15 @@
 <div class="animate-fade-in">
-  <!-- Page Header Premium -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-red-50/50 to-white rounded-2xl border border-red-100/50">
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 px-6 py-5 bg-white rounded-2xl border border-gray-200 shadow-sm">
     <div class="flex items-center gap-4">
-      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center shadow-lg shadow-red-500/25">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-7 h-7">
+      <div class="w-14 h-14 rounded-xl bg-ooredoo flex items-center justify-center shadow-md flex-shrink-0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
           <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
         </svg>
       </div>
-      <div>
-        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Gestion des Départements</h1>
-        <p class="text-sm text-gray-500 mt-1">{{ filteredDepartements().length }} département(s) • {{ totalEncadrants }} encadrant(s) • {{ totalStagiaires }} stagiaire(s)</p>
+      <div class="flex flex-col justify-center self-center">
+        <h1 class="text-2xl font-bold text-gray-900 leading-none">Gestion des Départements</h1>
+        <p class="text-[0.9375rem] text-gray-500 mt-3">{{ filteredDepartements().length }} département(s) • {{ totalEncadrants }} encadrant(s) • {{ totalStagiaires }} stagiaire(s)</p>
       </div>
     </div>
     <button class="btn-ooredoo-red" (click)="openCreateModal()">
@@ -20,81 +20,74 @@
     </button>
   </div>
 
-  <!-- Search & Filters Bar -->
-  <div class="mb-8 space-y-4">
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-3 gap-4 mb-6">
-      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-           [class.border-ooredoo-600]="activeFilter === 'tous'"
-           (click)="setFilter('tous')">
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-            <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
-          </svg>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ departements().length }}</span>
-          <span class="block text-xs text-brand-muted font-medium mt-0.5">Total</span>
-        </div>
-      </div>
-      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-           [class.border-ooredoo-600]="activeFilter === 'actifs'"
-           (click)="setFilter('actifs')">
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-          </svg>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ activeDeptCount }}</span>
-          <span class="block text-xs text-brand-muted font-medium mt-0.5">Actifs</span>
-        </div>
-      </div>
-      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-           [class.border-ooredoo-600]="activeFilter === 'archives'"
-           (click)="setFilter('archives')">
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/>
-          </svg>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ archivedDeptCount }}</span>
-          <span class="block text-xs text-brand-muted font-medium mt-0.5">Archivés</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Toolbar with Filter Tabs -->
-    <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
-      <div class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]">
-        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
-          [class]="activeFilter === 'actifs' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
-          (click)="setFilter('actifs')">
-          Actifs
-        </button>
-        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
-          [class]="activeFilter === 'archives' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
-          (click)="setFilter('archives')">
-          Archivés
-        </button>
-        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
-          [class]="activeFilter === 'tous' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(217,0,18,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
-          (click)="setFilter('tous')">
-          Tous
-        </button>
-      </div>
-    </div>
-
-    <!-- Search Input -->
-    <div class="relative max-w-md">
-      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-5 h-5 text-gray-400">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+         [class.border-ooredoo-600]="activeFilter === 'tous'"
+         (click)="setFilter('tous')">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
+          <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
         </svg>
       </div>
+      <div>
+        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ departements().length }}</span>
+        <span class="block text-xs text-brand-muted font-medium mt-0.5">Total</span>
+      </div>
+    </div>
+    <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+         [class.border-ooredoo-600]="activeFilter === 'actifs'"
+         (click)="setFilter('actifs')">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div>
+        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ activeDeptCount }}</span>
+        <span class="block text-xs text-brand-muted font-medium mt-0.5">Actifs</span>
+      </div>
+    </div>
+    <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+         [class.border-ooredoo-600]="activeFilter === 'archives'"
+         (click)="setFilter('archives')">
+      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
+          <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/>
+        </svg>
+      </div>
+      <div>
+        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ archivedDeptCount }}</span>
+        <span class="block text-xs text-brand-muted font-medium mt-0.5">Archivés</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar: Filters + Search -->
+  <div class="flex items-center justify-between gap-4 mb-6 flex-wrap">
+    <div class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]">
+      <button class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter === 'actifs' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+        (click)="setFilter('actifs')">
+        Actifs
+      </button>
+      <button class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter === 'archives' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+        (click)="setFilter('archives')">
+        Archivés
+      </button>
+      <button class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter === 'tous' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
+        (click)="setFilter('tous')">
+        Tous
+      </button>
+    </div>
+    <div class="flex items-center gap-2 bg-white border border-brand-border rounded-[10px] px-4 py-2 min-w-[300px] transition-all duration-200 focus-within:border-ooredoo-600 focus-within:shadow-[0_0_0_3px_rgba(237,28,36,0.08)]">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-[18px] h-[18px] text-brand-light flex-shrink-0">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
       <input type="text" placeholder="Rechercher un département..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
-        class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm text-gray-900 outline-none transition-all duration-300 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/10 placeholder:text-gray-400"/>
+        class="flex-1 border-none bg-transparent text-sm text-brand-text outline-none placeholder:text-brand-light"/>
     </div>
   </div>
 
@@ -123,42 +116,43 @@
       }
     </div>
   } @else {
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
       @for (dept of filteredDepartements(); track dept.id) {
-        <div class="dept-card" [class.opacity-60]="dept.archive" (click)="openDetailModal(dept)">
+        <div class="dept-card" [class.dept-card-archived]="dept.archive" (click)="openDetailModal(dept)">
           <!-- Card Header -->
           <div class="flex items-start justify-between mb-4">
-            <div class="flex items-center gap-4">
-              <!-- Icon -->
+            <div class="flex items-center gap-3.5">
               <div class="dept-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-6 h-6">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-5.5 h-5.5">
                   <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/>
                 </svg>
               </div>
-              <!-- Name -->
               <div>
-                <h3 class="text-base font-semibold text-gray-900">{{ dept.nom }}</h3>
-                <p class="text-sm text-gray-500">{{ dept.archive ? 'Archivé' : 'Actif' }}</p>
+                <h3 class="text-base font-semibold text-brand-text leading-tight">{{ dept.nom }}</h3>
+                <span class="badge-status mt-1" [class]="dept.archive ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800'">
+                  <span class="w-1.5 h-1.5 rounded-full" [class]="dept.archive ? 'bg-amber-500' : 'bg-emerald-500'"></span>
+                  {{ dept.archive ? 'Archivé' : 'Actif' }}
+                </span>
               </div>
             </div>
             <!-- Actions -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
               @if (!dept.archive) {
                 <button title="Modifier" (click)="openEditModal(dept, $event)" class="action-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                   </svg>
                 </button>
               }
-              <button [title]="dept.archive ? 'Restaurer' : 'Supprimer'" (click)="openArchiveConfirm(dept, $event)" class="action-btn action-btn-delete">
+              <button [title]="dept.archive ? 'Restaurer' : 'Archiver'" (click)="openArchiveConfirm(dept, $event)" class="action-btn action-btn-delete">
                 @if (dept.archive) {
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
                     <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
                   </svg>
                 } @else {
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
-                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                    <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
                   </svg>
                 }
               </button>
@@ -166,7 +160,7 @@
           </div>
 
           <!-- Stats -->
-          <div class="grid grid-cols-2 gap-4 mb-5">
+          <div class="grid grid-cols-2 gap-3 mb-4">
             <div class="stat-box">
               <span class="stat-value">{{ dept.nombreStagiairesActuel || 0 }}</span>
               <span class="stat-label">Stagiaires</span>
@@ -179,16 +173,16 @@
 
           <!-- Specialités Preview -->
           @if (dept.specialites && dept.specialites.length > 0) {
-            <div class="mb-4">
-              <p class="text-xs font-medium text-gray-500 mb-2">Spécialités ({{ dept.specialites.length }})</p>
+            <div class="mb-3">
+              <p class="text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">Spécialités ({{ dept.specialites.length }})</p>
               <div class="flex flex-wrap gap-1.5">
                 @for (spec of dept.specialites.slice(0, 3); track spec.id) {
-                  <span class="px-2 py-1 bg-red-50 text-ooredoo-700 rounded-lg text-xs font-medium">
+                  <span class="px-2.5 py-1 bg-ooredoo-600/[0.06] text-ooredoo-700 rounded-lg text-xs font-medium">
                     {{ spec.nom }}
                   </span>
                 }
                 @if (dept.specialites.length > 3) {
-                  <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">
+                  <span class="px-2.5 py-1 bg-gray-100 text-gray-500 rounded-lg text-xs font-medium">
                     +{{ dept.specialites.length - 3 }}
                   </span>
                 }
@@ -228,7 +222,7 @@
   <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeModal()">
     <div class="bg-white rounded-2xl w-full max-w-[520px] shadow-modal animate-modal-in max-h-[90vh] flex flex-col" (click)="$event.stopPropagation()">
       <!-- Modal Header -->
-      <div class="relative bg-gradient-to-br from-[#D90012] via-[#B8000F] to-[#8B000B] px-6 py-5 text-white rounded-t-2xl">
+      <div class="relative bg-gradient-to-br from-[#ED1C24] via-[#ED1C24] to-[#ED1C24] px-6 py-5 text-white rounded-t-2xl">
         <div class="absolute inset-0 opacity-10">
           <div class="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/20 blur-3xl"></div>
         </div>
@@ -261,7 +255,7 @@
         @if (modalError()) {
           <div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
             <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-5 h-5">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
               </svg>
             </div>
@@ -276,7 +270,7 @@
         <div class="form-section">
           <div class="form-section-header">
             <div class="form-section-icon bg-red-100">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-5 h-5">
                 <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/>
               </svg>
             </div>
@@ -361,7 +355,7 @@
   <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDetailModal()">
     <div class="bg-white rounded-2xl max-w-[520px] w-full shadow-modal animate-modal-in overflow-hidden" (click)="$event.stopPropagation()">
       <!-- Header avec fond coloré -->
-      <div class="relative bg-gradient-to-br from-[#D90012] via-[#B8000F] to-[#8B000B] p-6 text-white">
+      <div class="relative bg-gradient-to-br from-[#ED1C24] via-[#ED1C24] to-[#ED1C24] p-6 text-white">
         <div class="absolute inset-0 opacity-10">
           <div class="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20 blur-2xl"></div>
           <div class="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
@@ -396,7 +390,7 @@
           <div class="grid grid-cols-2 gap-3">
             <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
               <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-4 h-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
               </div>
@@ -407,7 +401,7 @@
             </div>
             <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
               <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2" class="w-4 h-4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                 </svg>
               </div>
@@ -469,7 +463,7 @@
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
         </svg>
       } @else {
-        <svg viewBox="0 0 24 24" fill="none" stroke="#D90012" stroke-width="2.5" class="w-5 h-5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2.5" class="w-5 h-5">
           <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
         </svg>
       }

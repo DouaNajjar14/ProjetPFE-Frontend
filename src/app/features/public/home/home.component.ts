@@ -261,8 +261,8 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
   `,
   styles: [`
     :host {
-      --red: #E30613;
-      --red-dark: #B8000F;
+      --red: #ED1C24;
+      --red-dark: #ED1C24;
       --red-light: #FF3D4A;
       --white: #FFFFFF;
       --gray-50: #F9FAFB;
@@ -442,13 +442,13 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
       border-radius: 12px;
       text-decoration: none;
       transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(227,6,19,0.3);
+      box-shadow: 0 4px 20px rgba(237,28,36,0.3);
     }
     .btn-red svg { width: 20px; height: 20px; }
     .btn-red:hover {
       background: var(--red-dark);
       transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(227,6,19,0.4);
+      box-shadow: 0 8px 30px rgba(237,28,36,0.4);
     }
 
     .hero-stats {
@@ -540,7 +540,7 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
       align-items: center;
       gap: 8px;
       padding: 8px 16px;
-      background: rgba(227,6,19,0.08);
+      background: rgba(237,28,36,0.08);
       border-radius: 50px;
       font-size: 13px;
       font-weight: 600;
@@ -596,8 +596,8 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
     }
     .stage-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 20px 50px rgba(227,6,19,0.12);
-      border-color: rgba(227,6,19,0.2);
+      box-shadow: 0 20px 50px rgba(237,28,36,0.12);
+      border-color: rgba(237,28,36,0.2);
     }
     .stage-icon {
       width: 56px;
@@ -814,7 +814,7 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
     }
     .dept-badge {
       padding: 5px 12px;
-      background: rgba(227,6,19,0.1);
+      background: rgba(237,28,36,0.1);
       color: var(--red);
       font-size: 12px;
       font-weight: 600;

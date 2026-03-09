@@ -5,19 +5,12 @@
     [class]="sidebarCollapsed() ? 'w-[76px]' : 'w-[272px]'"
   >
     <!-- Logo -->
-    <div class="flex items-center gap-3 px-5 py-6">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-ooredoo-600 to-ooredoo-800 flex items-center justify-center shadow-btn-red flex-shrink-0">
-        <svg viewBox="0 0 40 40" fill="none" class="w-10 h-10" style="width: 40px; height: 40px; max-width: 40px; max-height: 40px;">
-          <circle cx="20" cy="20" r="18" fill="#D90012"/>
-          <text x="20" y="26" text-anchor="middle" fill="white" font-size="16" font-weight="bold" font-family="sans-serif">O</text>
-        </svg>
-      </div>
-      @if (!sidebarCollapsed()) {
-        <div class="overflow-hidden">
-          <span class="block text-[1.1rem] font-extrabold tracking-tight text-brand-text leading-tight">ooredoo</span>
-          <span class="block text-[0.7rem] text-brand-muted font-medium">Gestion des Stages</span>
-        </div>
-      }
+    <div class="flex items-center justify-center px-5 py-4">
+      <img
+        src="ooredoo-logo.jpg"
+        alt="Ooredoo"
+        [class]="sidebarCollapsed() ? 'h-8 w-auto object-contain' : 'h-10 w-auto object-contain'"
+      />
     </div>
 
     <!-- Divider -->
@@ -151,10 +144,19 @@
           {{ authService.currentUser()?.prenom?.charAt(0) }}{{ authService.currentUser()?.nom?.charAt(0) }}
         </div>
         @if (!sidebarCollapsed()) {
-          <div class="overflow-hidden min-w-0">
+          <div class="overflow-hidden min-w-0 flex-1">
             <span class="block text-sm font-semibold text-brand-text truncate">{{ authService.currentUser()?.prenom }} {{ authService.currentUser()?.nom }}</span>
             <span class="block text-xs text-brand-muted">{{ authService.currentUser()?.role === 'ADMIN' ? 'Administrateur' : authService.currentUser()?.role }}</span>
           </div>
+          <button
+            (click)="logout()"
+            title="Déconnexion"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-brand-border bg-white hover:bg-red-50 hover:text-ooredoo-600 hover:border-ooredoo-200 text-brand-muted transition-all duration-200 cursor-pointer flex-shrink-0"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </button>
         }
       </div>
     </div>
@@ -184,15 +186,6 @@
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>En ligne</span>
         </div>
-        <button
-          (click)="logout()"
-          class="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold text-brand-muted border border-brand-border bg-white hover:bg-red-50 hover:text-ooredoo-600 hover:border-ooredoo-200 transition-all duration-200 cursor-pointer"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-          <span class="hidden sm:inline">Déconnexion</span>
-        </button>
       </div>
     </header>
 

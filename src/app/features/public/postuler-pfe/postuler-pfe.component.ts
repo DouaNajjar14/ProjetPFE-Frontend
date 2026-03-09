@@ -658,7 +658,7 @@ import { SujetPfe } from '../../../core/models/sujet-pfe.model';
   styles: [`
     /* ===== Variables ===== */
     :host {
-      --primary: #e30613;
+      --primary: #ED1C24;
       --primary-dark: #c20510;
       --primary-light: #fee2e2;
       --ink: #1a1a2e;
@@ -678,7 +678,7 @@ import { SujetPfe } from '../../../core/models/sujet-pfe.model';
     /* ===== Hero Section ===== */
     .hero-section {
       min-height: 40vh;
-      background: linear-gradient(135deg, #E30613 0%, #B8000F 100%);
+      background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -881,7 +881,7 @@ import { SujetPfe } from '../../../core/models/sujet-pfe.model';
       color: var(--white);
       border-color: var(--primary);
       transform: scale(1.1);
-      box-shadow: 0 0 0 4px rgba(227, 6, 19, 0.2);
+      box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.2);
     }
 
     .step-dot.completed {
@@ -972,7 +972,7 @@ import { SujetPfe } from '../../../core/models/sujet-pfe.model';
       gap: 16px;
       padding: 20px;
       background: var(--primary-light);
-      border: 1px solid rgba(227, 6, 19, 0.2);
+      border: 1px solid rgba(237, 28, 36, 0.2);
       border-radius: var(--radius);
       margin-bottom: 24px;
     }
@@ -1049,7 +1049,7 @@ import { SujetPfe } from '../../../core/models/sujet-pfe.model';
 
     .btn-primary:hover:not(.disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(227, 6, 19, 0.3);
+      box-shadow: 0 8px 20px rgba(237, 28, 36, 0.3);
     }
 
     .btn-primary.disabled {
@@ -1136,7 +1136,7 @@ import { SujetPfe } from '../../../core/models/sujet-pfe.model';
 
     .form-input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(227, 6, 19, 0.1);
+      box-shadow: 0 0 0 3px rgba(237, 28, 36, 0.1);
     }
 
     .form-input::placeholder {
@@ -1232,8 +1232,8 @@ import { SujetPfe } from '../../../core/models/sujet-pfe.model';
 
     /* ===== Binome Form ===== */
     .binome-form {
-      background: rgba(227, 6, 19, 0.05);
-      border: 1px solid rgba(227, 6, 19, 0.1);
+      background: rgba(237, 28, 36, 0.05);
+      border: 1px solid rgba(237, 28, 36, 0.1);
       border-radius: var(--radius);
       padding: 24px;
     }

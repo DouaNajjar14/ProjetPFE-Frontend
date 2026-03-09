@@ -3,17 +3,17 @@
 }
 
 .field-invalid {
-  border-color: #D90012 !important;
+  border-color: #ED1C24 !important;
   background-color: rgba(254, 242, 242, 0.5) !important;
 }
 
-/* ═══════ BUTTON OOREDOO RED ═══════ */
+/* â•â•â•â•â•â•â• BUTTON OOREDOO RED â•â•â•â•â•â•â• */
 .btn-ooredoo-red {
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
   padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, #D90012 0%, #B8000F 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
   color: white;
   font-weight: 600;
   font-size: 0.9375rem;
@@ -21,7 +21,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(217, 0, 18, 0.3);
+  box-shadow: 0 4px 15px rgba(237, 28, 36, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -38,9 +38,9 @@
 }
 
 .btn-ooredoo-red:hover {
-  background: linear-gradient(135deg, #B8000F 0%, #960009 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(217, 0, 18, 0.4);
+  box-shadow: 0 8px 25px rgba(237, 28, 36, 0.4);
 }
 
 .btn-ooredoo-red:hover::before {
@@ -53,7 +53,7 @@
   transform: none;
 }
 
-/* ═══════ FORM SECTIONS ═══════ */
+/* â•â•â•â•â•â•â• FORM SECTIONS â•â•â•â•â•â•â• */
 .form-section {
   background: white;
   border: 1px solid #e5e7eb;
@@ -102,7 +102,7 @@
   padding: 1.25rem;
 }
 
-/* ═══════ FORM ELEMENTS ═══════ */
+/* â•â•â•â•â•â•â• FORM ELEMENTS â•â•â•â•â•â•â• */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -130,9 +130,9 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #D90012;
+  border-color: #ED1C24;
   background: white;
-  box-shadow: 0 0 0 4px rgba(217, 0, 18, 0.1);
+  box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.1);
 }
 
 .form-select {
@@ -149,12 +149,12 @@
 
 .form-select:focus {
   outline: none;
-  border-color: #D90012;
+  border-color: #ED1C24;
   background: white;
-  box-shadow: 0 0 0 4px rgba(217, 0, 18, 0.1);
+  box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.1);
 }
 
-/* ═══════ MODAL BUTTONS ═══════ */
+/* â•â•â•â•â•â•â• MODAL BUTTONS â•â•â•â•â•â•â• */
 .modal-btn-cancel {
   padding: 0.875rem 1.5rem;
   background: white;
@@ -174,7 +174,7 @@
 
 .confirm-btn-danger {
   padding: 0.875rem 1.75rem;
-  background: linear-gradient(135deg, #D90012 0%, #B8000F 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
   color: white;
   font-weight: 600;
   font-size: 0.9375rem;
@@ -182,11 +182,11 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(217, 0, 18, 0.25);
+  box-shadow: 0 4px 15px rgba(237, 28, 36, 0.25);
 }
 
 .confirm-btn-danger:hover {
-  background: linear-gradient(135deg, #B8000F 0%, #960009 100%);
+  background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
 }
 
 .confirm-btn-success {
@@ -223,7 +223,7 @@
   background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
 }
 
-/* ═══════ CHIP SELECT (Multi-select) ═══════ */
+/* â•â•â•â•â•â•â• CHIP SELECT (Multi-select) â•â•â•â•â•â•â• */
 .chip-select {
   display: inline-flex;
   align-items: center;
@@ -240,19 +240,19 @@
 }
 
 .chip-select:hover {
-  border-color: #D90012;
-  color: #D90012;
+  border-color: #ED1C24;
+  color: #ED1C24;
 }
 
 .chip-select-active {
-  background: linear-gradient(135deg, #D90012, #B8000F);
+  background: linear-gradient(135deg, #ED1C24, #ED1C24);
   color: white;
   border-color: transparent;
-  box-shadow: 0 2px 8px rgba(217, 0, 18, 0.3);
+  box-shadow: 0 2px 8px rgba(237, 28, 36, 0.3);
 }
 
 .chip-select-active:hover {
-  background: linear-gradient(135deg, #B8000F, #960009);
+  background: linear-gradient(135deg, #ED1C24, #ED1C24);
   border-color: transparent;
   color: white;
 }

@@ -267,7 +267,7 @@ import { Departement } from '../../../core/models/departement.model';
   `,
   styles: [`
     :host {
-      --red: #E30613;
+      --red: #ED1C24;
       --red-dark: #C00510;
       --red-light: #FF3D4A;
       --green: #10B981;
@@ -350,7 +350,7 @@ import { Departement } from '../../../core/models/departement.model';
     .search-box input:focus {
       outline: none;
       border-color: var(--red);
-      box-shadow: 0 0 0 3px rgba(227,6,19,0.1);
+      box-shadow: 0 0 0 3px rgba(237,28,36,0.1);
     }
     .filter-group {
       display: flex;
@@ -646,7 +646,7 @@ import { Departement } from '../../../core/models/departement.model';
     .btn-postuler:hover {
       background: var(--red-dark);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(227,6,19,0.3);
+      box-shadow: 0 8px 20px rgba(237,28,36,0.3);
     }
 
     /* RIGHT PANEL */

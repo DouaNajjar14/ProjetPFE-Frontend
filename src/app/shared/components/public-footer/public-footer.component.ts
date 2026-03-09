@@ -67,7 +67,7 @@ import { RouterModule } from '@angular/router';
             <ul class="contact-list">
               <li>
                 <div class="contact-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E30613" stroke-width="2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2">
                     <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                     <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                   </svg>
@@ -76,7 +76,7 @@ import { RouterModule } from '@angular/router';
               </li>
               <li>
                 <div class="contact-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E30613" stroke-width="2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2">
                     <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                   </svg>
                 </div>
@@ -84,7 +84,7 @@ import { RouterModule } from '@angular/router';
               </li>
               <li>
                 <div class="contact-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E30613" stroke-width="2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2">
                     <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                   </svg>
                 </div>
@@ -142,7 +142,7 @@ import { RouterModule } from '@angular/router';
       width: 44px;
       height: 44px;
       border-radius: 16px;
-      background: linear-gradient(135deg, #E30613, #B8000F);
+      background: linear-gradient(135deg, #ED1C24, #ED1C24);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -174,7 +174,7 @@ import { RouterModule } from '@angular/router';
       transition: all 0.3s;
     }
     .social-link:hover {
-      background: #E30613;
+      background: #ED1C24;
       color: white;
     }
     
@@ -210,7 +210,7 @@ import { RouterModule } from '@angular/router';
     .dot {
       width: 6px;
       height: 6px;
-      background: #E30613;
+      background: #ED1C24;
       border-radius: 50%;
     }
     

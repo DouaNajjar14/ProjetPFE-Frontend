@@ -62,7 +62,7 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
                   </div>
                   <p class="stage-desc">{{ stage.description }}</p>
                   <div class="stage-duration">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E30613" stroke-width="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2">
                       <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     {{ stage.duree }}
@@ -95,7 +95,7 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
                   <ul>
                     @for (prerequis of stage.prerequis; track prerequis) {
                       <li>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E30613" stroke-width="2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2">
                           <path d="M9 5l7 7-7 7"/>
                         </svg>
                         {{ prerequis }}
@@ -149,11 +149,11 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
       margin: 0 auto;
       padding: 0 20px;
     }
-    .highlight { color: #E30613; }
+    .highlight { color: #ED1C24; }
 
     /* Hero */
     .hero {
-      background: linear-gradient(135deg, #E30613 0%, #B8000F 100%);
+      background: linear-gradient(135deg, #ED1C24 0%, #ED1C24 100%);
       padding: 120px 0 80px;
       text-align: center;
       position: relative;
@@ -292,7 +292,7 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
       font-weight: 700;
     }
     .icon-box.green { background: #D1FAE5; color: #059669; }
-    .icon-box.red { background: #FFF7F6; color: #E30613; }
+    .icon-box.red { background: #FFF7F6; color: #ED1C24; }
     .details-col ul {
       list-style: none;
       padding: 0;
@@ -326,15 +326,15 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
       font-size: 14px;
       font-weight: 700;
       color: white;
-      background: linear-gradient(135deg, #E30613, #B8000F);
+      background: linear-gradient(135deg, #ED1C24, #ED1C24);
       border-radius: 22px;
-      box-shadow: 0 4px 16px rgba(227,6,19,0.38);
+      box-shadow: 0 4px 16px rgba(237,28,36,0.38);
       text-decoration: none;
       transition: all 0.3s;
     }
     .btn-primary:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 28px rgba(227,6,19,0.5);
+      box-shadow: 0 10px 28px rgba(237,28,36,0.5);
     }
 
     /* Help Section */
@@ -354,7 +354,7 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
       justify-content: center;
       font-size: 28px;
       font-weight: 700;
-      color: #E30613;
+      color: #ED1C24;
     }
     .help-section h2 {
       font-size: 28px;
@@ -383,8 +383,8 @@ import { TYPE_STAGE_INFO } from '../../../core/models/candidature.model';
       transition: all 0.3s;
     }
     .btn-secondary:hover {
-      border-color: #E30613;
-      color: #E30613;
+      border-color: #ED1C24;
+      color: #ED1C24;
     }
   `]
 })
@@ -396,7 +396,7 @@ export class StagesComponent {
       'blue': '#2563EB',
       'amber': '#D97706',
       'green': '#059669',
-      'red': '#E30613'
+      'red': '#ED1C24'
     };
     return colors[couleur] || '#6B7280';
   }
@@ -416,7 +416,7 @@ export class StagesComponent {
       'blue': '#2563EB',
       'amber': '#D97706',
       'green': '#059669',
-      'red': '#E30613'
+      'red': '#ED1C24'
     };
     return colors[couleur] || '#6B7280';
   }
