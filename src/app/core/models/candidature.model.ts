@@ -16,8 +16,6 @@ export interface Candidature {
     estBinome: boolean;
     dateDepot: string;
     dateEntretien?: string;
-    dateDebut: string;
-    dateFin: string;
     candidat1: Candidat;
     candidat2?: Candidat;
     sujetChoix1?: SujetPfeSimple;
@@ -31,8 +29,6 @@ export interface CandidatureRequest {
     candidat2?: CandidatRequest;
     sujetChoix1Id?: string;
     sujetChoix2Id?: string;
-    dateDebut: string;
-    dateFin: string;
 }
 
 export interface CandidatureUpdateRequest {
@@ -63,10 +59,10 @@ export const TYPE_STAGE_INFO: TypeStageInfo[] = [
         type: 'INITIATION',
         titre: 'Stage d\'Initiation',
         description: 'Première immersion dans le monde professionnel pour les étudiants de 1ère année ISET et ISETCOM uniquement.',
-        duree: '1-2 mois',
+        duree: '1 mois',
         niveau: 'L1',
         couleur: 'blue',
-        icone: 'academic-cap',
+        icone: 'rocket-launch',
         objectifs: [
             'Découvrir l\'environnement professionnel',
             'Observer les métiers des télécommunications',
@@ -75,7 +71,6 @@ export const TYPE_STAGE_INFO: TypeStageInfo[] = [
         ],
         prerequis: [
             'Être étudiant en L1 (ISET ou ISETCOM)',
-            'Avoir une convention de stage',
             'Motivation et curiosité'
         ]
     },
@@ -83,7 +78,7 @@ export const TYPE_STAGE_INFO: TypeStageInfo[] = [
         type: 'PERFECTIONNEMENT',
         titre: 'Stage de Perfectionnement',
         description: 'Approfondissez vos connaissances techniques avec des missions concrètes. Réservé aux étudiants ISET et ISETCOM en L2.',
-        duree: '2-3 mois',
+        duree: '1 mois',
         niveau: 'L2',
         couleur: 'amber',
         icone: 'building-office',
@@ -95,8 +90,7 @@ export const TYPE_STAGE_INFO: TypeStageInfo[] = [
         ],
         prerequis: [
             'Être étudiant en L2 (ISET ou ISETCOM)',
-            'Bases techniques solides',
-            'Convention de stage obligatoire'
+            'Bases techniques solides'
         ]
     },
     {
@@ -126,7 +120,7 @@ export const TYPE_STAGE_INFO: TypeStageInfo[] = [
         duree: '4-6 mois',
         niveau: 'Ingénieur / Master / Licence',
         couleur: 'red',
-        icone: 'rocket-launch',
+        icone: 'academic-cap',
         objectifs: [
             'Réaliser un projet complet de A à Z',
             'Résoudre une problématique concrète',

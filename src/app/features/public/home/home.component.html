@@ -1,0 +1,125 @@
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hm-hero">
+      <div class="hm-hero-pattern"></div>
+      <div class="hm-hero-slice"></div>
+      <div class="hm-hero-grid">
+        <div class="hm-hero-l">
+          <div class="hm-live">
+            <span class="hm-live-pulse"><span></span></span>
+            <span class="hm-live-text">Candidatures 2026 ouvertes</span>
+          </div>
+          <h1 class="hm-h1">Lancez votre<br><span class="hm-ghost">carrière</span><br>avec Ooredoo</h1>
+          <p class="hm-sub">Découvrez nos opportunités de stages et PFE au sein d'une équipe innovante dans les télécommunications tunisiennes.</p>
+          <div class="hm-btns">
+            <a routerLink="/postuler" class="hm-btn-w">Postuler maintenant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+            <a routerLink="/pfe-book" class="hm-btn-wol"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> PFE Book 2026</a>
+          </div>
+        </div>
+        <div class="hm-hero-r">
+          <div class="hm-rng"></div><div class="hm-rng"></div><div class="hm-rng"></div>
+          <div class="hm-stats-grid">
+            <div class="hm-stat-c">
+              <div class="hm-stat-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+              <div class="hm-stat-num">150<sub>+</sub></div><div class="hm-stat-lbl">Stagiaires / an</div>
+            </div>
+            <div class="hm-stat-c">
+              <div class="hm-stat-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div class="hm-stat-num">12</div><div class="hm-stat-lbl">Départements</div>
+            </div>
+            <div class="hm-stat-c">
+              <div class="hm-stat-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+              <div class="hm-stat-num">95<sub>%</sub></div><div class="hm-stat-lbl">Satisfaction</div>
+            </div>
+            <div class="hm-stat-c">
+              <div class="hm-stat-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+              <div class="hm-stat-num">{{ totalSujets() }}</div><div class="hm-stat-lbl">Sujets PFE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TICKER ═══ -->
+    <div class="hm-ticker">
+      <div class="hm-t-track">
+        <span class="hm-t-item"><b>150+</b> Stagiaires par an <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item"><b>12</b> Départements <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item"><b>95%</b> Satisfaction <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item"><b>{{ totalSujets() }}</b> Sujets PFE 2026 <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item">Candidatures <b>2026</b> ouvertes <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item"><b>150+</b> Stagiaires par an <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item"><b>12</b> Départements <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item"><b>95%</b> Satisfaction <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item"><b>{{ totalSujets() }}</b> Sujets PFE 2026 <span class="hm-t-dot">◆</span></span>
+        <span class="hm-t-item">Candidatures <b>2026</b> ouvertes <span class="hm-t-dot">◆</span></span>
+      </div>
+    </div>
+
+    <!-- ═══ STAGES SECTION ═══ -->
+    <section class="hm-sec-stages">
+      <div class="hm-s-eye">Nos offres</div>
+      <div class="hm-s-title">Trouvez le stage <i>idéal</i></div>
+    
+      <div class="hm-cards4">
+        @for (stage of typeStages; track stage.type; let i = $index) {
+          <div class="hm-scard" [class.hm-feat]="stage.type === 'PFE'" [class.hm-s-blue]="stage.couleur === 'blue'" [class.hm-s-amb]="stage.couleur === 'amber'" [class.hm-s-grn]="stage.couleur === 'green'">
+            <div class="hm-sc-h">
+              <div class="hm-sc-ico">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" [attr.stroke]="stage.type === 'PFE' ? 'white' : getStrokeColor(stage.couleur)" stroke-width="2">
+                  @switch (stage.icone) {
+                    @case ('academic-cap') { <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/> }
+                    @case ('building-office') { <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/> }
+                    @case ('sun') { <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/> }
+                    @case ('rocket-launch') { <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/> }
+                  }
+                </svg>
+              </div>
+              <span class="hm-sc-tag">{{ stage.type === 'PFE' ? '★ PFE' : stage.niveau }}</span>
+            </div>
+            <div class="hm-sc-name">{{ stage.titre }}</div>
+            <div class="hm-sc-pills">
+              <span class="hm-sc-pill">⏱ {{ stage.duree }}</span>
+              <span class="hm-sc-pill">{{ stage.niveau }}</span>
+            </div>
+            <p class="hm-sc-desc">{{ stage.description }}</p>
+            <a [routerLink]="stage.type === 'PFE' ? '/pfe-book' : '/postuler'" [queryParams]="stage.type !== 'PFE' ? {type: stage.type} : {}" class="hm-sc-btn">
+              {{ stage.type === 'PFE' ? 'Voir les sujets' : 'Postuler' }}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ═══ PROCESS ═══ -->
+    <section class="hm-sec-process">
+      <div class="hm-sec-process-pat"></div>
+      <div class="hm-proc-top">
+        <div class="hm-s-eye">Processus</div>
+        <div class="hm-s-title">Comment ça <i>marche ?</i></div>
+        <p class="hm-proc-sub">Un processus transparent en 6 étapes simples</p>
+      </div>
+      <div class="hm-cards3x2">
+        @for (step of processSteps; track step.num; let i = $index) {
+          <div class="hm-pcard">
+            <div class="hm-pc-num">{{ step.num }}</div>
+            <div class="hm-pc-ico">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E2001A" stroke-width="2">
+                @switch (i) {
+                  @case (0) { <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/> }
+                  @case (1) { <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/> }
+                  @case (2) { <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/> }
+                  @case (3) { <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/> }
+                  @case (4) { <rect x="2" y="3" width="20" height="14" rx="2"/> }
+                  @case (5) { <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/> }
+                }
+              </svg>
+            </div>
+            <div class="hm-pc-title">{{ step.title }}</div>
+            <p class="hm-pc-desc">{{ step.desc }}</p>
+          </div>
+        }
+      </div>
+    </section>
+  

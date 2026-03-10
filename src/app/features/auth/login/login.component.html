@@ -207,34 +207,23 @@
               [disabled]="isLoading()"
               [class.loading]="isLoading()"
             >
-              <div class="sb-main">
-                <div class="sb-sheen"></div>
-                <div class="sb-ico">
-                  @if (isLoading()) {
-                    <div class="spinner"></div>
-                  } @else {
-                    <svg viewBox="0 0 24 24">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                  }
-                </div>
-                <div class="sb-copy">
-                  <span class="sb-label">{{
-                    isLoading() ? "Connexion..." : "Se Connecter"
-                  }}</span>
-                  <span class="sb-hint">{{
-                    isLoading()
-                      ? "Vérification en cours"
-                      : "Connexion sécurisée"
-                  }}</span>
-                </div>
+              <div class="sb-sheen"></div>
+              <div class="sb-ico">
+                @if (isLoading()) {
+                  <div class="spinner"></div>
+                } @else {
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                }
               </div>
-              <div class="sb-wing" [class.dimmed]="isLoading()">
-                <svg viewBox="0 0 24 24">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </div>
+              <span class="sb-label">{{
+                isLoading() ? "Connexion..." : "Se Connecter"
+              }}</span>
+              <svg class="sb-arrow" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
             </button>
           </div>
         </form>

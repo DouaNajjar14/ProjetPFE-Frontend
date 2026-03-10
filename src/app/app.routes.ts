@@ -25,7 +25,8 @@ export const routes: Routes = [
       },
       {
         path: 'postuler-pfe',
-        loadComponent: () => import('./features/public/postuler-pfe/postuler-pfe.component').then(m => m.PostulerPfeComponent)
+        redirectTo: 'postuler',
+        pathMatch: 'full'
       }
     ]
   },
@@ -84,8 +85,16 @@ export const routes: Routes = [
         loadComponent: () => import('./features/rh/dashboard/agent-rh-dashboard.component').then(m => m.AgentRhDashboardComponent)
       },
       {
+        path: 'departements',
+        loadComponent: () => import('./features/rh/departements/rh-departement-list.component').then(m => m.RhDepartementListComponent)
+      },
+      {
         path: 'sujets-pfe',
         loadComponent: () => import('./features/rh/sujets-pfe/agent-rh-sujet-pfe.component').then(m => m.AgentRhSujetPfeComponent)
+      },
+      {
+        path: 'encadrants',
+        loadComponent: () => import('./features/rh/encadrants/rh-encadrant-list.component').then(m => m.RhEncadrantListComponent)
       }
     ]
   },

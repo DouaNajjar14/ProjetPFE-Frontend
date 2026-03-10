@@ -31,7 +31,10 @@ export interface SujetPfeRequest {
 
 export enum Niveau {
   L3 = 'L3',
+  M1 = 'M1',
   M2 = 'M2',
+  CY1 = 'CY1',
+  CY2 = 'CY2',
   CY3 = 'CY3'
 }
 

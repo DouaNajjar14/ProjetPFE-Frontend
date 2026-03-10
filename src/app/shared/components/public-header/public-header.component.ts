@@ -3,21 +3,18 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'app-public-header',
-    standalone: true,
-    imports: [CommonModule, RouterModule],
-    template: `
+  selector: 'app-public-header',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  template: `
     <nav class="header" [class.scrolled]="isScrolled()">
       <div class="header-container">
         <!-- Logo Ooredoo -->
         <a routerLink="/" class="logo-link">
           <div class="logo">
-            <div class="logo-circle">
-              <div class="circle-outer"></div>
-              <div class="circle-inner"></div>
-            </div>
+            <img src="ooredoo-logo.jpg" alt="Ooredoo" class="logo-img" [class.scrolled]="isScrolled()">
+            <div class="logo-divider" [class.dark]="isScrolled()"></div>
             <div class="logo-text">
-              <span class="logo-brand" [class.dark]="isScrolled()">ooredoo</span>
               <span class="logo-sub" [class.dark]="isScrolled()">Portail Stages & PFE</span>
             </div>
           </div>
@@ -82,7 +79,7 @@ import { RouterModule } from '@angular/router';
       }
     </nav>
   `,
-    styles: [`
+  styles: [`
     :host {
       --ooredoo-red: #ED1C24;
       --ooredoo-red-dark: #ED1C24;
@@ -120,49 +117,41 @@ import { RouterModule } from '@angular/router';
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
-    .logo-circle {
-      position: relative;
-      width: 42px;
-      height: 42px;
+    .logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      transition: filter 0.3s ease;
     }
-    .circle-outer {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--ooredoo-red) 0%, var(--ooredoo-red-dark) 100%);
-      box-shadow: 0 4px 20px rgba(237,28,36,0.4);
+    .logo-img.scrolled {
+      filter: none;
     }
-    .circle-inner {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: white;
+    .logo-divider {
+      width: 1.5px;
+      height: 28px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 1px;
+      transition: background 0.3s ease;
+    }
+    .logo-divider.dark {
+      background: rgba(0,0,0,0.15);
     }
     .logo-text {
       display: flex;
       flex-direction: column;
     }
-    .logo-brand {
-      font-size: 20px;
-      font-weight: 700;
-      color: white;
-      letter-spacing: -0.5px;
-    }
-    .logo-brand.dark { color: #111; }
     .logo-sub {
-      font-size: 10px;
-      font-weight: 500;
+      font-size: 11px;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: rgba(255,255,255,0.7);
+      letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.3;
     }
-    .logo-sub.dark { color: #666; }
+    .logo-sub.dark { color: #555; }
 
     /* Navigation */
     .nav-menu {
@@ -312,25 +301,25 @@ import { RouterModule } from '@angular/router';
   `]
 })
 export class PublicHeaderComponent {
-    isScrolled = signal(false);
-    mobileOpen = signal(false);
+  isScrolled = signal(false);
+  mobileOpen = signal(false);
 
-    navLinks = [
-        { path: '/', label: 'Accueil', exact: true },
-        { path: '/stages', label: 'Opportunités', exact: false },
-        { path: '/pfe-book', label: 'PFE Book', exact: false }
-    ];
+  navLinks = [
+    { path: '/', label: 'Accueil', exact: true },
+    { path: '/stages', label: 'Stages', exact: false },
+    { path: '/pfe-book', label: 'PFE Book', exact: false }
+  ];
 
-    @HostListener('window:scroll')
-    onScroll() {
-        this.isScrolled.set(window.scrollY > 50);
-    }
+  @HostListener('window:scroll')
+  onScroll() {
+    this.isScrolled.set(window.scrollY > 50);
+  }
 
-    toggleMobile() {
-        this.mobileOpen.update(v => !v);
-    }
+  toggleMobile() {
+    this.mobileOpen.update(v => !v);
+  }
 
-    closeMobile() {
-        this.mobileOpen.set(false);
-    }
+  closeMobile() {
+    this.mobileOpen.set(false);
+  }
 }

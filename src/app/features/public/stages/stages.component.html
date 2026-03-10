@@ -1,0 +1,100 @@
+
+    <!-- ═══ HERO ═══ -->
+    <section class="stg-hero">
+      <div class="stg-hero-pat"></div>
+      <div class="stg-wm">2026</div>
+      <div class="stg-hero-in">
+        <span class="stg-label">— STAGES 2026</span>
+        <h1 class="stg-h1">Nos types de <i>stages</i></h1>
+        <div class="stg-pills">
+          <span class="stg-pill stg-pill-fill">● {{ typeStages.length }} types disponibles</span>
+          <span class="stg-pill stg-pill-out">Session 2025 — 2026</span>
+        </div>
+        <p class="stg-sub">Choisissez le stage qui correspond à votre niveau académique et vos objectifs professionnels.</p>
+      </div>
+    </section>
+
+    <!-- ═══ STAGES LIST ═══ -->
+    <section class="stg-body">
+      @for (stage of typeStages; track stage.type; let i = $index) {
+        <div class="stg-row" [class.stg-feat]="stage.type === 'PFE'">
+          <!-- LEFT: icon + base info -->
+          <div class="sr-left">
+            <div class="sr-ico" [style.background]="getIconBg(stage.couleur)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" [attr.stroke]="getStroke(stage.couleur)" stroke-width="2">
+                @switch (stage.icone) {
+                  @case ('academic-cap') { <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/> }
+                  @case ('building-office') { <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/> }
+                  @case ('sun') { <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/> }
+                  @case ('rocket-launch') { <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/> }
+                }
+              </svg>
+            </div>
+            <div class="sr-tag" [style.background]="getTagBg(stage.couleur)" [style.color]="getStroke(stage.couleur)">{{ stage.niveau }}</div>
+            <div class="sr-name">{{ stage.titre }}</div>
+            <div class="sr-dur">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E2001A" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              {{ stage.duree }}
+            </div>
+          </div>
+
+          <!-- MID: description + objectives -->
+          <div class="sr-mid">
+            <p class="sr-desc">{{ stage.description }}</p>
+            <div class="sr-obj-title">
+              <span class="sr-obj-ico green">✓</span>
+              Objectifs
+            </div>
+            <ul class="sr-list">
+              @for (obj of stage.objectifs; track obj) {
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                  {{ obj }}
+                </li>
+              }
+            </ul>
+          </div>
+
+          <!-- RIGHT: prerequisites + CTA -->
+          <div class="sr-right">
+            <div class="sr-obj-title">
+              <span class="sr-obj-ico red">→</span>
+              Prérequis
+            </div>
+            <ul class="sr-list">
+              @for (pre of stage.prerequis; track pre) {
+                <li>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E2001A" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                  {{ pre }}
+                </li>
+              }
+            </ul>
+            <div class="sr-cta">
+              @if (stage.type === 'PFE') {
+                <a routerLink="/pfe-book" class="sr-btn sr-btn-r">
+                  Consulter le PFE Book
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              } @else {
+                <a [routerLink]="['/postuler']" [queryParams]="{type: stage.type}" class="sr-btn sr-btn-r">
+                  Postuler maintenant
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- ═══ HELP CTA ═══ -->
+    <section class="stg-help">
+      <div class="stg-help-ico">?</div>
+      <h2 class="stg-help-title">Besoin d'aide pour <i>choisir</i> ?</h2>
+      <p class="stg-help-sub">Notre équipe RH est disponible pour vous guider et vous aider à trouver le stage qui correspond le mieux à votre profil.</p>
+      <a href="https://mail.google.com/mail/?view=cm&to=stages@ooredoo.tn" target="_blank" rel="noopener noreferrer" class="sr-btn sr-btn-out">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Nous contacter
+      </a>
+    </section>
+  

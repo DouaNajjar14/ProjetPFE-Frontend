@@ -1,4 +1,4 @@
-export type Niveau = 'L3' | 'M2' | 'CY3';
+export type Niveau = 'L1' | 'L2' | 'L3' | 'M1' | 'M2' | 'CY1' | 'CY2' | 'CY3';
 
 export interface Candidat {
     id: string;

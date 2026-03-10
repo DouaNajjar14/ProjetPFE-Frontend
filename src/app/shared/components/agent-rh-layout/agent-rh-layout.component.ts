@@ -21,16 +21,26 @@ export class AgentRhLayoutComponent {
       route: '/agent-rh/dashboard'
     },
     {
+      label: 'Départements',
+      icon: 'building',
+      route: '/agent-rh/departements'
+    },
+    {
       label: 'Sujets PFE',
       icon: 'briefcase',
       route: '/agent-rh/sujets-pfe'
+    },
+    {
+      label: 'Encadrants',
+      icon: 'users',
+      route: '/agent-rh/encadrants'
     }
   ];
 
   constructor(
     public authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   toggleSidebar(): void {
     this.sidebarCollapsed.update(v => !v);
