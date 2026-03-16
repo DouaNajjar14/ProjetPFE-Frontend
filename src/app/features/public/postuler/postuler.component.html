@@ -1,0 +1,353 @@
+
+    <!-- ═══ HERO ═══ -->
+    <section class="cd-hero">
+      <div class="cd-hero-pat"></div>
+      <div class="cd-wm">2026</div>
+      <div class="cd-hero-in">
+        <span class="cd-label">— CANDIDATURE 2026</span>
+        <h1 class="cd-hero-h1">Déposer votre <i>candidature</i></h1>
+        <div class="cd-pills">
+          <span class="cd-pill cd-pill-fill">● Formulaire en ligne</span>
+          <span class="cd-pill cd-pill-out">Session 2025 — 2026</span>
+        </div>
+        <p class="cd-hero-sub">Aucun compte requis — remplissez le formulaire et soumettez votre dossier directement.</p>
+      </div>
+    </section>
+
+    <div class="cd-page">
+      <div class="cd-wrap">
+
+        <!-- ═══ STEPPER ═══ -->
+        <div class="cd-stepper">
+          @for (s of steps; track s.num; let i = $index) {
+            <div class="cd-dot" [class.active]="currentStep() === s.num" [class.done]="currentStep() > s.num">
+              @if (currentStep() > s.num) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+              } @else { {{ s.num }} }
+            </div>
+            @if (i < steps.length - 1) {
+              <div class="cd-line" [class.done]="currentStep() > s.num"></div>
+            }
+          }
+        </div>
+        <div class="cd-labels">
+          @for (s of steps; track s.num) {
+            <span [class.active]="currentStep() === s.num" [class.done]="currentStep() > s.num">{{ s.label }}</span>
+          }
+        </div>
+
+        @if (!showSuccess()) {
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <!-- ═══ STEP 1 — Informations ═══ -->
+          @if (currentStep() === 1) {
+            <div class="cd-card">
+              <div class="cd-row">
+                <div class="cd-fg">
+                  <label>Nom <em>*</em></label>
+                  <input type="text" formControlName="nom" placeholder="Votre nom" [class.cd-input-err]="form.get('nom')?.invalid && form.get('nom')?.touched">
+                  @if (form.get('nom')?.touched && form.get('nom')?.hasError('required')) {
+                    <span class="cd-err">Le nom est obligatoire</span>
+                  } @else if (form.get('nom')?.touched && form.get('nom')?.hasError('minlength')) {
+                    <span class="cd-err">Le nom doit contenir au moins 2 caractères</span>
+                  } @else if (form.get('nom')?.touched && form.get('nom')?.hasError('pattern')) {
+                    <span class="cd-err">Le nom doit contenir uniquement des lettres</span>
+                  }
+                </div>
+                <div class="cd-fg">
+                  <label>Prénom <em>*</em></label>
+                  <input type="text" formControlName="prenom" placeholder="Votre prénom" [class.cd-input-err]="form.get('prenom')?.invalid && form.get('prenom')?.touched">
+                  @if (form.get('prenom')?.touched && form.get('prenom')?.hasError('required')) {
+                    <span class="cd-err">Le prénom est obligatoire</span>
+                  } @else if (form.get('prenom')?.touched && form.get('prenom')?.hasError('minlength')) {
+                    <span class="cd-err">Le prénom doit contenir au moins 2 caractères</span>
+                  } @else if (form.get('prenom')?.touched && form.get('prenom')?.hasError('pattern')) {
+                    <span class="cd-err">Le prénom doit contenir uniquement des lettres</span>
+                  }
+                </div>
+              </div>
+              <div class="cd-row">
+                <div class="cd-fg">
+                  <label>Email <em>*</em></label>
+                  <input type="email" formControlName="email" placeholder="votre&#64;email.com" [class.cd-input-err]="form.get('email')?.invalid && form.get('email')?.touched">
+                  @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
+                    <span class="cd-err">L'email est obligatoire</span>
+                  } @else if (form.get('email')?.touched && form.get('email')?.hasError('email')) {
+                    <span class="cd-err">L'email doit contenir &#64;</span>
+                  }
+                </div>
+                <div class="cd-fg">
+                  <label>Téléphone <em>*</em></label>
+                  <input type="tel" formControlName="tel" placeholder="XX XXX XXX" maxlength="8" [class.cd-input-err]="form.get('tel')?.invalid && form.get('tel')?.touched">
+                  @if (form.get('tel')?.touched && form.get('tel')?.hasError('required')) {
+                    <span class="cd-err">Le téléphone est obligatoire</span>
+                  } @else if (form.get('tel')?.touched && form.get('tel')?.hasError('pattern')) {
+                    <span class="cd-err">Le téléphone doit contenir exactement 8 chiffres</span>
+                  }
+                </div>
+              </div>
+              <button type="button" class="cd-btn-full" [disabled]="!isStep1Valid()" (click)="nextStep()">Continuer →</button>
+            </div>
+          }
+
+          <!-- ═══ STEP 2 — Stage ═══ -->
+          @if (currentStep() === 2) {
+            <div class="cd-card">
+              <div class="cd-fg">
+                <label>Type de stage <em>*</em></label>
+                <select formControlName="typeStage" (change)="onTypeChange()">
+                  <option value="">Choisir...</option>
+                  @for (t of stageTypes; track t.type) {
+                    <option [value]="t.type">{{ t.titre }}</option>
+                  }
+                </select>
+              </div>
+
+              @if (selectedType()) {
+                <div class="cd-fg">
+                  <label>Niveau académique <em>*</em></label>
+                  <select formControlName="niveauAcademique" (change)="onNiveauChange()">
+                    <option value="">Sélectionnez votre niveau</option>
+                    @for (niv of niveauOptions(); track niv.value) {
+                      <option [value]="niv.value">{{ niv.label }}</option>
+                    }
+                  </select>
+                </div>
+              }
+
+              @if (selectedType() && form.get('niveauAcademique')?.value) {
+                <div class="cd-fg">
+                  <label>Université / École <em>*</em></label>
+                  <select formControlName="universiteId">
+                    <option value="">Sélectionnez votre établissement</option>
+                    @for (u of filteredUniversites(); track u.id) {
+                      <option [value]="u.id">{{ u.nom }}</option>
+                    }
+                  </select>
+                </div>
+              }
+
+              <!-- PFE: Subject selection -->
+              @if (selectedType() === 'PFE') {
+                <div class="cd-fg">
+                  <label>Sujet PFE — 1er choix <em>*</em></label>
+                  <select formControlName="sujetChoix1Id">
+                    <option value="">Sélectionnez votre premier choix</option>
+                    @for (s of sujets(); track s.id) {
+                      <option [value]="s.id">{{ s.titre }} — {{ s.departementNom }}</option>
+                    }
+                  </select>
+                </div>
+                <div class="cd-fg">
+                  <label>Sujet PFE — 2ème choix <span class="cd-opt">(optionnel)</span></label>
+                  <select formControlName="sujetChoix2Id">
+                    <option value="">Sélectionnez votre deuxième choix</option>
+                    @for (s of sujets(); track s.id) {
+                      @if (s.id !== form.get('sujetChoix1Id')?.value) {
+                        <option [value]="s.id">{{ s.titre }} — {{ s.departementNom }}</option>
+                      }
+                    }
+                  </select>
+                </div>
+              }
+
+              <!-- Binome: PFE + Licence (L3) only -->
+              @if (selectedType() === 'PFE' && form.get('niveauAcademique')?.value === 'L3') {
+                <div class="cd-binome-sec">
+                  <div class="cd-binome-toggle">
+                    <input type="checkbox" id="estBinome" formControlName="estBinome">
+                    <label for="estBinome">
+                      <strong>Candidature en binôme</strong>
+                      <span>Cochez si vous postulez avec un partenaire</span>
+                    </label>
+                  </div>
+                  @if (form.get('estBinome')?.value) {
+                    <div class="cd-binome-form">
+                      <h4>Informations du binôme</h4>
+                      <div class="cd-row">
+                        <div class="cd-fg"><label>Nom <em>*</em></label><input type="text" formControlName="binomeNom" placeholder="Nom"></div>
+                        <div class="cd-fg"><label>Prénom <em>*</em></label><input type="text" formControlName="binomePrenom" placeholder="Prénom"></div>
+                      </div>
+                      <div class="cd-row">
+                        <div class="cd-fg"><label>Email <em>*</em></label><input type="email" formControlName="binomeEmail" placeholder="email&#64;exemple.com"></div>
+                        <div class="cd-fg"><label>Téléphone <em>*</em></label><input type="tel" formControlName="binomeTel" placeholder="+216 XX XXX XXX"></div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+
+              <div class="cd-actions">
+                <button type="button" class="cd-btn-back" (click)="prevStep()">← Retour</button>
+                <button type="button" class="cd-btn-full cd-btn-flex" [disabled]="!isStep2Valid()" (click)="nextStep()">Continuer →</button>
+              </div>
+            </div>
+          }
+
+          <!-- ═══ STEP 3 — Documents ═══ -->
+          @if (currentStep() === 3) {
+            <div class="cd-card">
+              <div class="cd-fg">
+                <label>CV <em>*</em></label>
+                <div class="cd-drop cd-drop-big" [class.has]="cv1File()"
+                     (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event, 'cv1')">
+                  @if (cv1File()) {
+                    <div class="cd-file-ok">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <div><p class="cd-fn">{{ cv1File()?.name }}</p><p class="cd-fs">{{ formatSize(cv1File()?.size || 0) }}</p></div>
+                      <button type="button" class="cd-rm" (click)="removeFile('cv1')">✕</button>
+                    </div>
+                  } @else {
+                    <input type="file" accept=".pdf" (change)="onFileSelect($event, 'cv1')">
+                    <div class="cd-drop-inner">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      <span><strong>Glissez votre CV ici</strong><br>ou cliquez · PDF max 5 Mo</span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <div class="cd-fg">
+                <label>Lettre de motivation <em>*</em></label>
+                <div class="cd-drop" [class.has]="lettreFile()"
+                     (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event, 'lettre')">
+                  @if (lettreFile()) {
+                    <div class="cd-file-ok">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <div><p class="cd-fn">{{ lettreFile()?.name }}</p><p class="cd-fs">{{ formatSize(lettreFile()?.size || 0) }}</p></div>
+                      <button type="button" class="cd-rm" (click)="removeFile('lettre')">✕</button>
+                    </div>
+                  } @else {
+                    <input type="file" accept=".pdf" (change)="onFileSelect($event, 'lettre')">
+                    <div class="cd-drop-inner">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      <span><strong>Glissez votre lettre de motivation ici</strong><br>ou cliquez · PDF max 5 Mo</span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Binome CV -->
+              @if (form.get('estBinome')?.value) {
+                <div class="cd-fg">
+                  <label>CV du binôme <em>*</em></label>
+                  <div class="cd-drop" [class.has]="cv2File()"
+                       (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event, 'cv2')">
+                    @if (cv2File()) {
+                      <div class="cd-file-ok">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <div><p class="cd-fn">{{ cv2File()?.name }}</p><p class="cd-fs">{{ formatSize(cv2File()?.size || 0) }}</p></div>
+                        <button type="button" class="cd-rm" (click)="removeFile('cv2')">✕</button>
+                      </div>
+                    } @else {
+                      <input type="file" accept=".pdf" (change)="onFileSelect($event, 'cv2')">
+                      <div class="cd-drop-inner">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <span><strong>CV du binôme</strong><br>PDF max 5 Mo</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+              <div class="cd-actions">
+                <button type="button" class="cd-btn-back" (click)="prevStep()">← Retour</button>
+                <button type="button" class="cd-btn-full cd-btn-flex" [disabled]="!isStep3Valid()" (click)="nextStep()">Continuer →</button>
+              </div>
+            </div>
+          }
+
+          <!-- ═══ STEP 4 — Confirmation ═══ -->
+          @if (currentStep() === 4) {
+            <div class="cd-card">
+              <div class="cd-recap">
+                <div class="cd-recap-header">
+                  <div class="cd-recap-header-ico">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  </div>
+                  <div class="cd-recap-header-text">
+                    <span class="cd-recap-header-label">Étape finale</span>
+                    <span class="cd-recap-header-title">Récapitulatif de votre candidature</span>
+                  </div>
+                </div>
+                <div class="cd-recap-body">
+                <div class="cd-recap-list">
+                  <div class="cd-ri"><span class="cd-rl">Nom</span><span class="cd-rv">{{ form.get('nom')?.value }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">Prénom</span><span class="cd-rv">{{ form.get('prenom')?.value }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">Email</span><span class="cd-rv">{{ form.get('email')?.value }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">Téléphone</span><span class="cd-rv">{{ form.get('tel')?.value }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">Université</span><span class="cd-rv">{{ getUniversiteNom() }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">Type de stage</span><span class="cd-rv">{{ getTypeLabel() }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">Niveau</span><span class="cd-rv">{{ getNiveauLabel() }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">CV</span><span class="cd-rv">{{ cv1File()?.name || '—' }}</span></div>
+                  <div class="cd-ri"><span class="cd-rl">Lettre de motivation</span><span class="cd-rv">{{ lettreFile()?.name || '—' }}</span></div>
+                  @if (selectedType() === 'PFE') {
+                    <div class="cd-ri"><span class="cd-rl">Sujet PFE (1er choix)</span><span class="cd-rv">{{ getSujetTitre(form.get('sujetChoix1Id')?.value) }}</span></div>
+                    @if (form.get('sujetChoix2Id')?.value) {
+                      <div class="cd-ri"><span class="cd-rl">Sujet PFE (2ème choix)</span><span class="cd-rv">{{ getSujetTitre(form.get('sujetChoix2Id')?.value) }}</span></div>
+                    }
+                  }
+                  @if (form.get('estBinome')?.value) {
+                    <div class="cd-ri cd-ri-section"><span class="cd-rl">Binôme</span></div>
+                    <div class="cd-ri"><span class="cd-rl">Nom du binôme</span><span class="cd-rv">{{ form.get('binomeNom')?.value }}</span></div>
+                    <div class="cd-ri"><span class="cd-rl">Prénom du binôme</span><span class="cd-rv">{{ form.get('binomePrenom')?.value }}</span></div>
+                    <div class="cd-ri"><span class="cd-rl">Email du binôme</span><span class="cd-rv">{{ form.get('binomeEmail')?.value }}</span></div>
+                    <div class="cd-ri"><span class="cd-rl">Tél. du binôme</span><span class="cd-rv">{{ form.get('binomeTel')?.value }}</span></div>
+                    @if (cv2File()) {
+                      <div class="cd-ri"><span class="cd-rl">CV du binôme</span><span class="cd-rv">{{ cv2File()?.name }}</span></div>
+                    }
+                  }
+                  <div class="cd-ri cd-ri-ok"><span class="cd-rl">Statut</span><span class="cd-rv">✓ Prêt à soumettre</span></div>
+                </div>
+                </div>
+              </div>
+
+              <div class="cd-consent">
+                <input type="checkbox" id="acceptTerms" [(ngModel)]="acceptTerms" [ngModelOptions]="{standalone: true}">
+                <label for="acceptTerms">J'accepte que mes informations soient traitées par Ooredoo Tunisia dans le cadre de ma candidature, conformément à la politique de confidentialité.</label>
+              </div>
+
+              <div class="cd-actions">
+                <button type="button" class="cd-btn-back" (click)="prevStep()">← Retour</button>
+                <button type="submit" class="cd-btn-submit cd-btn-flex" [disabled]="!acceptTerms || submitting()">
+                  @if (submitting()) { Envoi en cours… } @else { Soumettre ma candidature ✓ }
+                </button>
+              </div>
+            </div>
+          }
+        </form>
+        }
+
+        <!-- ═══ SUCCESS ═══ -->
+        @if (showSuccess()) {
+          <div class="cd-success">
+            <div class="cd-suc-circle">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h2>Candidature Envoyée !</h2>
+            <p>Votre demande de stage a été enregistrée avec succès. Un email de confirmation a été envoyé à <strong>{{ form.get('email')?.value }}</strong>.</p>
+
+            <div class="cd-next-steps">
+              <h4>Prochaines étapes :</h4>
+              <div class="cd-step-item">
+                <span class="cd-step-num">1</span>
+                <span>Vérifiez votre boîte mail (y compris les spams)</span>
+              </div>
+              <div class="cd-step-item">
+                <span class="cd-step-num">2</span>
+                <span>Notre équipe RH examinera votre candidature sous 5-7 jours ouvrables</span>
+              </div>
+              <div class="cd-step-item">
+                <span class="cd-step-num">3</span>
+                <span>Vous recevrez une réponse par email (acceptation ou refus)</span>
+              </div>
+            </div>
+
+            <a routerLink="/" class="cd-btn-full" style="text-decoration:none;display:inline-flex;justify-content:center;max-width:280px;">
+              Retour à l'accueil
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  

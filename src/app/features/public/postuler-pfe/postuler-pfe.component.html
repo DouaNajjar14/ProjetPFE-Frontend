@@ -1,0 +1,627 @@
+
+    <!-- Hero Header -->
+    <section class="hero-section">
+      <div class="floating-circle circle-1"></div>
+      <div class="floating-circle circle-2"></div>
+      <div class="floating-circle circle-3"></div>
+
+      <div class="hero-content">
+        <div class="badge">
+          <svg class="badge-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+          </svg>
+          <span>Projet de Fin d'Études</span>
+        </div>
+        <h1 class="hero-title reveal">
+          Candidature <span class="text-red">PFE</span>
+        </h1>
+        <p class="hero-subtitle reveal">
+          Postulez pour un sujet de Projet de Fin d'Études et lancez votre carrière.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Form Section -->
+    <section class="form-section">
+      <div class="container">
+        <!-- Back Link -->
+        <a routerLink="/pfe-book" class="back-link">
+          <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Retour au catalogue PFE
+        </a>
+
+        @if (loading()) {
+          <div class="loading-state">
+            <svg class="spinner" fill="none" viewBox="0 0 24 24">
+              <circle class="spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="spinner-fill" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p>Chargement des sujets PFE...</p>
+          </div>
+        } @else {
+          <!-- Step Indicator -->
+          <div class="step-indicator">
+            @for (step of steps; track step.number; let i = $index) {
+              <div class="step-dot" 
+                   [class.active]="currentStep() === step.number"
+                   [class.completed]="currentStep() > step.number">
+                @if (currentStep() > step.number) {
+                  <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                } @else {
+                  {{ step.number }}
+                }
+              </div>
+              @if (i < steps.length - 1) {
+                <div class="step-line" [class.active]="currentStep() > step.number"></div>
+              }
+            }
+          </div>
+
+          <!-- Step Labels -->
+          <div class="step-labels">
+            @for (step of steps; track step.number) {
+              <span class="step-label" [class.active]="currentStep() >= step.number">{{ step.label }}</span>
+            }
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <!-- Step 1: Subject Selection -->
+            @if (currentStep() === 1) {
+              <div class="card reveal">
+                <div class="card-header">
+                  <div class="header-icon">
+                    <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
+                  <h2 class="card-title">Choisissez vos sujets PFE</h2>
+                  <p class="card-subtitle">Sélectionnez un premier choix obligatoire et un second choix optionnel.</p>
+                </div>
+
+                <!-- Selected Subject Preview -->
+                @if (selectedSujet()) {
+                  <div class="selected-preview">
+                    <div class="preview-icon">
+                      <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div class="preview-info">
+                      <p class="preview-label">SUJET PRÉ-SÉLECTIONNÉ</p>
+                      <h4 class="preview-title">{{ selectedSujet()?.titre }}</h4>
+                      <p class="preview-dept">{{ selectedSujet()?.departementNom }}</p>
+                    </div>
+                  </div>
+                }
+
+                <div class="subjects-form">
+                  <div class="form-group">
+                    <label class="form-label">
+                      Premier choix <span class="required">*</span>
+                    </label>
+                    <select formControlName="sujetChoix1Id" class="form-input">
+                      <option value="">Sélectionnez votre premier choix</option>
+                      @for (sujet of sujets(); track sujet.id) {
+                        <option [value]="sujet.id">{{ sujet.titre }} — {{ sujet.departementNom }}</option>
+                      }
+                    </select>
+                    @if (form.get('sujetChoix1Id')?.value) {
+                      <div class="subject-description">
+                        <p>{{ getSujetDescription(form.get('sujetChoix1Id')?.value) }}</p>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">
+                      Deuxième choix <span class="optional">(optionnel)</span>
+                    </label>
+                    <select formControlName="sujetChoix2Id" class="form-input">
+                      <option value="">Sélectionnez votre deuxième choix</option>
+                      @for (sujet of sujets(); track sujet.id) {
+                        @if (sujet.id !== form.get('sujetChoix1Id')?.value) {
+                          <option [value]="sujet.id">{{ sujet.titre }} — {{ sujet.departementNom }}</option>
+                        }
+                      }
+                    </select>
+                  </div>
+                </div>
+
+                <div class="card-actions">
+                  <button type="button" 
+                          (click)="nextStep()" 
+                          [disabled]="!form.get('sujetChoix1Id')?.value"
+                          class="btn-primary"
+                          [class.disabled]="!form.get('sujetChoix1Id')?.value">
+                    Continuer
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Step 2: Personal Information -->
+            @if (currentStep() === 2) {
+              <div class="card reveal">
+                <div class="card-header">
+                  <div class="header-icon">
+                    <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <h2 class="card-title">Vos informations personnelles</h2>
+                  <p class="card-subtitle">Renseignez vos coordonnées et informations académiques.</p>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Nom <span class="required">*</span></label>
+                    <input type="text" formControlName="nom" placeholder="Votre nom" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Prénom <span class="required">*</span></label>
+                    <input type="text" formControlName="prenom" placeholder="Votre prénom" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Email <span class="required">*</span></label>
+                    <input type="email" formControlName="email" placeholder="votre@email.com" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Téléphone <span class="required">*</span></label>
+                    <input type="tel" formControlName="tel" placeholder="+216 XX XXX XXX" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Université / École <span class="required">*</span></label>
+                    <select formControlName="universiteId" class="form-input">
+                      <option value="">Sélectionnez votre établissement</option>
+                      @for (univ of universites(); track univ.id) {
+                        <option [value]="univ.id">{{ univ.nom }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Niveau académique <span class="required">*</span></label>
+                    <select formControlName="niveauAcademique" class="form-input">
+                      <option value="">Sélectionnez votre niveau</option>
+                      <option value="L3">Licence 3 (L3)</option>
+                      <option value="M2">Master 2 (M2)</option>
+                      <option value="CY3">Cycle Ingénieur 3 (CY3)</option>
+                    </select>
+                  </div>
+                </div>
+
+
+
+                <div class="card-actions-between">
+                  <button type="button" (click)="prevStep()" class="btn-secondary">
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Retour
+                  </button>
+                  <button type="button" 
+                          (click)="nextStep()" 
+                          [disabled]="!isStep2Valid()"
+                          class="btn-primary"
+                          [class.disabled]="!isStep2Valid()">
+                    Continuer
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Step 3: Binome -->
+            @if (currentStep() === 3) {
+              <div class="card reveal">
+                <div class="card-header">
+                  <div class="header-icon">
+                    <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <h2 class="card-title">Travail en binôme</h2>
+                  <p class="card-subtitle">Indiquez si vous travaillez avec un partenaire sur ce PFE.</p>
+                </div>
+
+                <div class="binome-toggle">
+                  <div class="toggle-info">
+                    <p class="toggle-title">Travaillez-vous en binôme ?</p>
+                    <p class="toggle-desc">Recommandé pour les projets complexes</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" formControlName="estBinome">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                @if (form.get('estBinome')?.value) {
+                  <div class="binome-form">
+                    <h4 class="binome-heading">
+                      <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      Informations du binôme
+                    </h4>
+                    <div class="form-grid">
+                      <div class="form-group">
+                        <label class="form-label">Nom <span class="required">*</span></label>
+                        <input type="text" formControlName="binomeNom" placeholder="Nom du binôme" class="form-input">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Prénom <span class="required">*</span></label>
+                        <input type="text" formControlName="binomePrenom" placeholder="Prénom du binôme" class="form-input">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Email <span class="required">*</span></label>
+                        <input type="email" formControlName="binomeEmail" placeholder="email@binome.com" class="form-input">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Téléphone <span class="required">*</span></label>
+                        <input type="tel" formControlName="binomeTel" placeholder="+216 XX XXX XXX" class="form-input">
+                      </div>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="solo-message">
+                    <svg class="icon-large" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <p>Vous travaillerez seul sur ce projet.</p>
+                  </div>
+                }
+
+                <div class="card-actions-between">
+                  <button type="button" (click)="prevStep()" class="btn-secondary">
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Retour
+                  </button>
+                  <button type="button" 
+                          (click)="nextStep()" 
+                          [disabled]="form.get('estBinome')?.value && !isBinomeValid()"
+                          class="btn-primary"
+                          [class.disabled]="form.get('estBinome')?.value && !isBinomeValid()">
+                    Continuer
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Step 4: Documents Upload -->
+            @if (currentStep() === 4) {
+              <div class="card reveal">
+                <div class="card-header">
+                  <div class="header-icon">
+                    <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h2 class="card-title">Vos documents</h2>
+                  <p class="card-subtitle">Téléchargez votre CV et lettre de motivation.</p>
+                </div>
+
+                <!-- CV Upload -->
+                <div class="upload-section">
+                  <label class="form-label">
+                    Curriculum Vitae (CV) <span class="required">*</span>
+                  </label>
+                  <div class="upload-zone" 
+                       [class.has-file]="cv1File()"
+                       [class.drag-over]="isDragging()"
+                       (dragover)="onDragOver($event)" 
+                       (dragleave)="onDragLeave($event)"
+                       (drop)="onDrop($event, 'cv1')">
+                    @if (cv1File()) {
+                      <div class="file-preview">
+                        <div class="file-icon success">
+                          <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div class="file-info">
+                          <p class="file-name">{{ cv1File()?.name }}</p>
+                          <p class="file-size">{{ formatFileSize(cv1File()?.size || 0) }}</p>
+                        </div>
+                        <button type="button" (click)="removeFile('cv1')" class="file-remove">
+                          <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    } @else {
+                      <div class="upload-icon">
+                        <svg class="icon-large" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                      </div>
+                      <p class="upload-text">Glissez-déposez votre CV ici</p>
+                      <p class="upload-or">ou</p>
+                      <label class="upload-btn">
+                        Parcourir les fichiers
+                        <input type="file" class="hidden" accept=".pdf" (change)="onFileSelect($event, 'cv1')">
+                      </label>
+                      <p class="upload-hint">Format: PDF • Taille max: 5 Mo</p>
+                    }
+                  </div>
+                </div>
+
+                <!-- Lettre de motivation Upload -->
+                <div class="upload-section">
+                  <label class="form-label">
+                    Lettre de motivation <span class="optional">(optionnel)</span>
+                  </label>
+                  <div class="upload-zone small" 
+                       [class.has-file]="lettreFile()"
+                       (dragover)="onDragOver($event)" 
+                       (dragleave)="onDragLeave($event)"
+                       (drop)="onDrop($event, 'lettre')">
+                    @if (lettreFile()) {
+                      <div class="file-preview">
+                        <div class="file-icon success">
+                          <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div class="file-info">
+                          <p class="file-name">{{ lettreFile()?.name }}</p>
+                          <p class="file-size">{{ formatFileSize(lettreFile()?.size || 0) }}</p>
+                        </div>
+                        <button type="button" (click)="removeFile('lettre')" class="file-remove">
+                          <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    } @else {
+                      <label class="upload-btn-secondary">
+                        Parcourir
+                        <input type="file" class="hidden" accept=".pdf" (change)="onFileSelect($event, 'lettre')">
+                      </label>
+                    }
+                  </div>
+                </div>
+
+                <!-- Binome CV Upload -->
+                @if (form.get('estBinome')?.value) {
+                  <div class="upload-section">
+                    <label class="form-label">
+                      CV du binôme <span class="required">*</span>
+                    </label>
+                    <div class="upload-zone small" 
+                         [class.has-file]="cv2File()"
+                         (dragover)="onDragOver($event)" 
+                         (dragleave)="onDragLeave($event)"
+                         (drop)="onDrop($event, 'cv2')">
+                      @if (cv2File()) {
+                        <div class="file-preview">
+                          <div class="file-icon success">
+                            <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </div>
+                          <div class="file-info">
+                            <p class="file-name">{{ cv2File()?.name }}</p>
+                            <p class="file-size">{{ formatFileSize(cv2File()?.size || 0) }}</p>
+                          </div>
+                          <button type="button" (click)="removeFile('cv2')" class="file-remove">
+                            <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      } @else {
+                        <label class="upload-btn">
+                          Parcourir
+                          <input type="file" class="hidden" accept=".pdf" (change)="onFileSelect($event, 'cv2')">
+                        </label>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <div class="card-actions-between">
+                  <button type="button" (click)="prevStep()" class="btn-secondary">
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Retour
+                  </button>
+                  <button type="button" 
+                          (click)="nextStep()" 
+                          [disabled]="!isStep4Valid()"
+                          class="btn-primary"
+                          [class.disabled]="!isStep4Valid()">
+                    Réviser et envoyer
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Step 5: Review -->
+            @if (currentStep() === 5) {
+              <div class="card reveal">
+                <div class="card-header">
+                  <div class="header-icon">
+                    <svg class="icon-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                  </div>
+                  <h2 class="card-title">Récapitulatif</h2>
+                  <p class="card-subtitle">Vérifiez vos informations avant d'envoyer votre candidature PFE.</p>
+                </div>
+
+                <!-- Review Sections -->
+                <div class="review-sections">
+                  <!-- Sujets -->
+                  <div class="review-card">
+                    <div class="review-header">
+                      <h4 class="review-title">
+                        <span class="review-number">1</span>
+                        Sujets PFE
+                      </h4>
+                      <button type="button" (click)="goToStep(1)" class="review-edit">Modifier</button>
+                    </div>
+                    <p class="review-value">{{ getSujetTitre(form.get('sujetChoix1Id')?.value) }}</p>
+                    @if (form.get('sujetChoix2Id')?.value) {
+                      <p class="review-meta">2e choix: {{ getSujetTitre(form.get('sujetChoix2Id')?.value) }}</p>
+                    }
+                  </div>
+
+                  <!-- Informations personnelles -->
+                  <div class="review-card">
+                    <div class="review-header">
+                      <h4 class="review-title">
+                        <span class="review-number">2</span>
+                        Informations personnelles
+                      </h4>
+                      <button type="button" (click)="goToStep(2)" class="review-edit">Modifier</button>
+                    </div>
+                    <div class="review-grid">
+                      <div class="review-item">
+                        <span class="review-label">Nom:</span> 
+                        <span class="review-value">{{ form.get('prenom')?.value }} {{ form.get('nom')?.value }}</span>
+                      </div>
+                      <div class="review-item">
+                        <span class="review-label">Email:</span> 
+                        <span class="review-value">{{ form.get('email')?.value }}</span>
+                      </div>
+                      <div class="review-item">
+                        <span class="review-label">Téléphone:</span> 
+                        <span class="review-value">{{ form.get('tel')?.value }}</span>
+                      </div>
+                      <div class="review-item">
+                        <span class="review-label">Niveau:</span> 
+                        <span class="review-value">{{ form.get('niveauAcademique')?.value }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Binome -->
+                  @if (form.get('estBinome')?.value) {
+                    <div class="review-card">
+                      <div class="review-header">
+                        <h4 class="review-title">
+                          <span class="review-number">3</span>
+                          Binôme
+                        </h4>
+                        <button type="button" (click)="goToStep(3)" class="review-edit">Modifier</button>
+                      </div>
+                      <p class="review-value">{{ form.get('binomePrenom')?.value }} {{ form.get('binomeNom')?.value }}</p>
+                      <p class="review-meta">{{ form.get('binomeEmail')?.value }}</p>
+                    </div>
+                  }
+
+                  <!-- Documents -->
+                  <div class="review-card">
+                    <div class="review-header">
+                      <h4 class="review-title">
+                        <span class="review-number">4</span>
+                        Documents
+                      </h4>
+                      <button type="button" (click)="goToStep(4)" class="review-edit">Modifier</button>
+                    </div>
+                    <div class="documents-list">
+                      <div class="document-item">
+                        <svg class="icon-small success-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>{{ cv1File()?.name }}</span>
+                      </div>
+                      @if (lettreFile()) {
+                        <div class="document-item">
+                          <svg class="icon-small success-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>{{ lettreFile()?.name }} (Lettre)</span>
+                        </div>
+                      }
+                      @if (cv2File()) {
+                        <div class="document-item">
+                          <svg class="icon-small success-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>{{ cv2File()?.name }} (Binôme)</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="terms-section">
+                  <input type="checkbox" id="terms" [(ngModel)]="acceptTerms" [ngModelOptions]="{standalone: true}" class="checkbox">
+                  <label for="terms" class="terms-label">
+                    J'atteste que les informations fournies sont exactes et j'accepte les 
+                    <a href="#" class="terms-link">conditions générales</a>.
+                  </label>
+                </div>
+
+                <div class="card-actions-between">
+                  <button type="button" (click)="prevStep()" class="btn-secondary">
+                    <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Retour
+                  </button>
+                  <button type="submit"
+                          [disabled]="!acceptTerms || submitting()"
+                          class="btn-primary"
+                          [class.disabled]="!acceptTerms || submitting()">
+                    @if (submitting()) {
+                      <svg class="spinner-btn" fill="none" viewBox="0 0 24 24">
+                        <circle class="spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="spinner-fill" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Envoi en cours...
+                    } @else {
+                      <svg class="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                      Soumettre ma candidature PFE
+                    }
+                  </button>
+                </div>
+              </div>
+            }
+          </form>
+        }
+      </div>
+    </section>
+
+    <!-- Success Modal -->
+    @if (showSuccess()) {
+      <div class="modal-overlay">
+        <div class="modal-content">
+          <div class="success-icon">
+            <svg class="icon-large" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="modal-title">Candidature PFE envoyée !</h3>
+          <p class="modal-text">
+            Votre candidature a été soumise avec succès pour le sujet <strong>{{ getSujetTitre(form.get('sujetChoix1Id')?.value) }}</strong>.
+          </p>
+          <div class="modal-actions">
+            <a routerLink="/" class="btn-primary full-width">Retour à l'accueil</a>
+            <a routerLink="/pfe-book" class="btn-secondary full-width">Voir d'autres sujets</a>
+          </div>
+        </div>
+      </div>
+    }
+  

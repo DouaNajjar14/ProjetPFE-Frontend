@@ -1,0 +1,318 @@
+<p-toast position="bottom-right" />
+
+<div class="ca-page">
+  <!-- ══ LOADING ══ -->
+  @if (status() === "loading") {
+    <div class="ca-feedback-wrap">
+      <div class="ca-spinner">
+        <svg class="ca-spin" viewBox="0 0 24 24" fill="none">
+          <circle
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="#ED1C24"
+            stroke-width="3"
+            stroke-dasharray="31.4 31.4"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+      <p class="ca-feedback-text">Chargement en cours…</p>
+    </div>
+  }
+
+  <!-- ══ EXPIRED (410 or missing token) ══ -->
+  @if (status() === "expired") {
+    <div class="ca-feedback-wrap">
+      <div class="ca-feedback-icon ca-feedback-icon--red">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      </div>
+      <h2 class="ca-feedback-title">Lien expiré</h2>
+      <p class="ca-feedback-desc">
+        Ce lien de création de compte n'est plus valide ou a expiré.<br />
+        Veuillez contacter l'administrateur pour obtenir un nouveau lien.
+      </p>
+      <p-button
+        label="Retour à la liste"
+        icon="pi pi-arrow-left"
+        [outlined]="true"
+        severity="secondary"
+        (onClick)="goBack()"
+      />
+    </div>
+  }
+
+  <!-- ══ ALREADY CONFIRMED (409) ══ -->
+  @if (status() === "already-confirmed") {
+    <div class="ca-feedback-wrap">
+      <div class="ca-feedback-icon ca-feedback-icon--green">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="9 12 11 14 15 10" />
+        </svg>
+      </div>
+      <h2 class="ca-feedback-title">Déjà confirmé</h2>
+      <p class="ca-feedback-desc">
+        Ce compte a déjà été confirmé. Les identifiants ont été envoyés par
+        email au stagiaire.
+      </p>
+      <p-button
+        label="Voir la liste des stagiaires"
+        icon="pi pi-users"
+        (onClick)="goBack()"
+      />
+    </div>
+  }
+
+  <!-- ══ FORM ══ -->
+  @if (status() === "form" || status() === "submitting") {
+    <!-- Page header -->
+    <div class="ca-header">
+      <div class="ca-header-left">
+        <div class="ca-header-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-5 h-5 text-white"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+            <path d="M16 11l2 2 4-4" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="ca-title">Création de compte stagiaire</h1>
+          <p class="ca-subtitle">
+            Vérifiez et ajustez les dates avant de confirmer
+          </p>
+        </div>
+      </div>
+      <p-button
+        label="Annuler"
+        icon="pi pi-arrow-left"
+        [outlined]="true"
+        severity="secondary"
+        size="small"
+        (onClick)="goBack()"
+        [disabled]="status() === 'submitting'"
+      />
+    </div>
+
+    <!-- Form card -->
+    <div class="ca-card" [formGroup]="form">
+      <!-- ── Section : Identité ── -->
+      <div class="ca-section">
+        <div class="ca-section-header">
+          <div class="ca-section-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-3.5 h-3.5"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <span>Identité du stagiaire</span>
+          <span class="ca-section-badge">Lecture seule</span>
+        </div>
+
+        <div class="ca-grid-2">
+          <!-- Prénom -->
+          <div class="ca-field">
+            <label class="ca-label">Prénom</label>
+            <input
+              pInputText
+              type="text"
+              formControlName="prenom"
+              class="ca-input ca-input--locked"
+              readonly
+            />
+          </div>
+
+          <!-- Nom -->
+          <div class="ca-field">
+            <label class="ca-label">Nom</label>
+            <input
+              pInputText
+              type="text"
+              formControlName="nom"
+              class="ca-input ca-input--locked"
+              readonly
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="ca-field ca-field--full">
+            <label class="ca-label">Adresse email</label>
+            <input
+              pInputText
+              type="email"
+              formControlName="email"
+              class="ca-input ca-input--locked"
+              readonly
+            />
+          </div>
+
+          <!-- Username -->
+          <div class="ca-field">
+            <label class="ca-label">Nom d'utilisateur</label>
+            <input
+              pInputText
+              type="text"
+              formControlName="username"
+              class="ca-input ca-input--locked"
+              readonly
+            />
+          </div>
+
+          <!-- Département -->
+          <div class="ca-field">
+            <label class="ca-label">Département</label>
+            <input
+              pInputText
+              type="text"
+              formControlName="departement"
+              class="ca-input ca-input--locked"
+              readonly
+            />
+          </div>
+
+          <!-- Type de stage — read-only badge display -->
+          <div class="ca-field">
+            <label class="ca-label">Type de stage</label>
+            <div class="ca-type-display">
+              <p-tag
+                [value]="getTypeLabel(form.getRawValue().typeStage)"
+                [severity]="getTypeSeverity(form.getRawValue().typeStage)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ca-divider"></div>
+
+      <!-- ── Section : Période ── -->
+      <div class="ca-section">
+        <div class="ca-section-header">
+          <div class="ca-section-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-3.5 h-3.5"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </div>
+          <span>Période du stage</span>
+        </div>
+
+        <div class="ca-grid-2">
+          <!-- Date de début -->
+          <div class="ca-field">
+            <label class="ca-label">
+              Date de début <span class="ca-required">*</span>
+            </label>
+            <input
+              type="date"
+              formControlName="dateDebut"
+              [class.ca-input-error]="isInvalid('dateDebut')"
+              class="ca-input"
+            />
+            @if (isInvalid("dateDebut")) {
+              <span class="ca-error-msg">La date de début est requise.</span>
+            }
+          </div>
+
+          <!-- Date de fin -->
+          <div class="ca-field">
+            <label class="ca-label">
+              Date de fin <span class="ca-required">*</span>
+            </label>
+            <input
+              type="date"
+              formControlName="dateFin"
+              [class.ca-input-error]="isInvalid('dateFin')"
+              class="ca-input"
+            />
+            @if (isInvalid("dateFin")) {
+              <span class="ca-error-msg">La date de fin est requise.</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Submit error banner ── -->
+      @if (submitError()) {
+        <div class="ca-submit-error">
+          <svg
+            class="ca-submit-error-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          {{ submitError() }}
+        </div>
+      }
+
+      <!-- ── Footer actions ── -->
+      <div class="ca-footer">
+        <p-button
+          label="Annuler"
+          icon="pi pi-times"
+          [outlined]="true"
+          severity="secondary"
+          [disabled]="status() === 'submitting'"
+          (onClick)="goBack()"
+        />
+        <p-button
+          label="Valider la création"
+          icon="pi pi-check"
+          [loading]="status() === 'submitting'"
+          styleClass="ca-btn-confirm"
+          (onClick)="confirm()"
+        />
+      </div>
+    </div>
+  }
+</div>
