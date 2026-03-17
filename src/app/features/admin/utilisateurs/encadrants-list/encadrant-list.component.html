@@ -171,7 +171,7 @@
     </div>
   } @else {
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-      @for (encadrant of filteredEncadrants(); track encadrant.id) {
+      @for (encadrant of paginatedEncadrants(); track encadrant.id) {
         <div class="encadrant-card cursor-pointer" [class.opacity-60]="!encadrant.actif" (click)="openDetailModal(encadrant)">
           <!-- Card Header -->
           <div class="flex items-start justify-between mb-4">
@@ -288,7 +288,7 @@
             <button [title]="encadrant.actif ? 'Archiver' : 'Restaurer'" (click)="openArchiveConfirm(encadrant)" class="action-btn action-btn-delete">
               @if (encadrant.actif) {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
-                  <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
                 </svg>
               } @else {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
@@ -300,6 +300,35 @@
         </div>
       }
     </div>
+
+    <!-- Pagination -->
+      <div class="flex items-center justify-between mt-8 px-2">
+        <p class="text-sm text-gray-500">
+          Page <span class="font-semibold text-gray-800">{{ currentPage() }}</span> sur <span class="font-semibold text-gray-800">{{ totalPages() }}</span>
+          &mdash; <span class="font-semibold text-gray-800">{{ filteredEncadrants().length }}</span> encadrant(s)
+        </p>
+        <div class="flex items-center gap-1">
+          <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          @for (page of pageNumbers(); track page) {
+            <button (click)="goToPage(page)"
+              class="w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all cursor-pointer"
+              [class]="currentPage() === page ? 'bg-ooredoo-600 border-ooredoo-600 text-white shadow-sm' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'">
+              {{ page }}
+            </button>
+          }
+          <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
   }
 </div>
 
@@ -690,21 +719,21 @@
   <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeConfirm()">
     <div class="bg-white rounded-2xl max-w-[420px] w-full shadow-modal animate-modal-in text-center p-8" (click)="$event.stopPropagation()">
       <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-        [class]="!confirmEncadrant?.actif ? 'bg-emerald-50' : 'bg-red-50'">
+        [class]="!confirmEncadrant?.actif ? 'bg-emerald-50' : 'bg-amber-50'">
         @if (!confirmEncadrant?.actif) {
           <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
             <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
           </svg>
         } @else {
-          <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
           </svg>
         }
       </div>
-      <h3 class="text-lg font-bold text-gray-900 mb-2">{{ confirmEncadrant?.actif ? 'Supprimer' : 'Restaurer' }} cet encadrant ?</h3>
+      <h3 class="text-lg font-bold text-gray-900 mb-2">{{ confirmEncadrant?.actif ? 'Archiver' : 'Restaurer' }} cet encadrant ?</h3>
       <p class="text-sm text-gray-500 leading-relaxed mb-6">
         {{ confirmEncadrant?.actif
-          ? 'L\'encadrant "' + confirmEncadrant?.prenom + ' ' + confirmEncadrant?.nom + '" sera supprimé et ne pourra plus superviser de stagiaires.'
+          ? 'L\'encadrant "' + confirmEncadrant?.prenom + ' ' + confirmEncadrant?.nom + '" sera archivé et ne pourra plus superviser de stagiaires.'
           : 'L\'encadrant "' + confirmEncadrant?.prenom + ' ' + confirmEncadrant?.nom + '" sera réactivé et pourra à nouveau superviser des stagiaires.'
         }}
       </p>
@@ -712,7 +741,7 @@
         <button class="modal-btn-cancel" (click)="closeConfirm()">Annuler</button>
         <button (click)="confirmArchive()"
           [class]="!confirmEncadrant?.actif ? 'confirm-btn-success' : 'confirm-btn-danger'">
-          {{ confirmEncadrant?.actif ? 'Supprimer' : 'Restaurer' }}
+          {{ confirmEncadrant?.actif ? 'Archiver' : 'Restaurer' }}
         </button>
       </div>
     </div>

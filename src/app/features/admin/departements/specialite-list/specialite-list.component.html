@@ -26,7 +26,7 @@
       </div>
       <div>
         <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Spécialités</h1>
-        <p class="text-sm text-gray-500 mt-1">{{ filteredSpecialites().length }} spécialité(s) • {{ departement()?.nom }}</p>
+        <p class="text-sm text-gray-500 mt-1">{{ activeFilter() === 'archives' ? 'Archivées' : 'Actives' }} • {{ departement()?.nom }}</p>
       </div>
     </div>
     <button class="btn-amber" (click)="openCreateModal()">
@@ -35,6 +35,35 @@
       </svg>
       <span>Nouvelle spécialité</span>
     </button>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="flex items-center gap-3 mb-6">
+    <div class="flex bg-white border border-gray-200 rounded-xl p-1 gap-1">
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter() === 'actifs' ? 'bg-amber-500 text-white shadow-sm' : 'bg-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50'"
+        (click)="setFilter('actifs')">
+        <span class="flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Actives
+        </span>
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter() === 'archives' ? 'bg-amber-500 text-white shadow-sm' : 'bg-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50'"
+        (click)="setFilter('archives')">
+        <span class="flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+          </svg>
+          Archivées
+        </span>
+      </button>
+    </div>
+    <span class="text-sm text-gray-400">{{ filteredSpecialites().length }} spécialité(s)</span>
   </div>
 
   <!-- Search Bar -->
@@ -95,17 +124,25 @@
             </div>
             <!-- Actions -->
             <div class="flex items-center gap-2">
-              <button title="Modifier" (click)="$event.stopPropagation(); openEditModal(spec, $event)" class="action-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-              </button>
-              <button title="Supprimer" (click)="$event.stopPropagation(); openDeleteConfirm(spec, $event)" class="action-btn action-btn-delete">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
-                  <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                </svg>
-              </button>
+              @if (activeFilter() === 'actifs') {
+                <button title="Modifier" (click)="$event.stopPropagation(); openEditModal(spec, $event)" class="action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button title="Archiver" (click)="$event.stopPropagation(); openDeleteConfirm(spec, $event)" class="action-btn action-btn-delete">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+                  </svg>
+                </button>
+              } @else {
+                <button title="Restaurer" (click)="$event.stopPropagation(); restoreSpecialite(spec, $event)" class="action-btn" style="color:#D97706">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                  </svg>
+                </button>
+              }
             </div>
           </div>
 
@@ -141,14 +178,16 @@
       }
 
       <!-- Add New Card -->
-      <div class="add-card" (click)="openCreateModal()">
-        <div class="add-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
+      @if (activeFilter() === 'actifs') {
+        <div class="add-card" (click)="openCreateModal()">
+          <div class="add-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-400 mt-2">Ajouter une spécialité</span>
         </div>
-        <span class="text-sm text-gray-400 mt-2">Ajouter une spécialité</span>
-      </div>
+      }
     </div>
   }
 
@@ -260,13 +299,13 @@
           <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
         </svg>
       </div>
-      <h3 class="text-lg font-extrabold text-gray-900 mb-2">Supprimer cette spécialité ?</h3>
+      <h3 class="text-lg font-extrabold text-gray-900 mb-2">Archiver cette spécialité ?</h3>
       <p class="text-sm text-gray-500 leading-relaxed mb-6">
-        La spécialité "{{ deletingSpecialite?.nom }}" et toutes ses compétences seront supprimées définitivement.
+        La spécialité "{{ deletingSpecialite?.nom }}" et ses compétences seront archivées.
       </p>
       <div class="flex gap-3 justify-center">
         <button class="modal-btn-cancel" (click)="closeDeleteConfirm()">Annuler</button>
-        <button class="confirm-btn-danger" (click)="confirmDelete()">Supprimer</button>
+        <button class="confirm-btn-danger" (click)="confirmDelete()">Archiver</button>
       </div>
     </div>
   </div>

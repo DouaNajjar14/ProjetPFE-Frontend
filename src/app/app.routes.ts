@@ -111,7 +111,7 @@ export const routes: Routes = [
       },
       {
         path: 'candidatures/:type',
-        loadComponent: () => import('./features/rh/candidatures/rh-candidatures.component').then(m => m.RhCandidaturesComponent)
+        loadComponent: () => import('./features/rh/candidatures/rh-candidatures.component').then(m => m.RhCandidaturesListComponent)
       }
     ]
   },

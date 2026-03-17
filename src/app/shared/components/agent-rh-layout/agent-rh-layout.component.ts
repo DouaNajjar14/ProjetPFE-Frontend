@@ -40,11 +40,8 @@ export class AgentRhLayoutComponent {
       label: 'Candidatures',
       icon: 'file-text',
       children: [
-        { label: 'Toutes les candidatures', icon: 'file-text', route: '/agent-rh/candidatures/tous' },
-        { label: 'Initiation', icon: 'file-text', route: '/agent-rh/candidatures/initiation' },
-        { label: 'Perfectionnement', icon: 'file-text', route: '/agent-rh/candidatures/perfectionnement' },
-        { label: 'PFE', icon: 'file-text', route: '/agent-rh/candidatures/pfe' },
-        { label: 'Été', icon: 'file-text', route: '/agent-rh/candidatures/ete' }
+        { label: 'Stages', icon: 'stages', route: '/agent-rh/candidatures/stages' },
+        { label: 'PFE', icon: 'pfe', route: '/agent-rh/candidatures/pfe' }
       ]
     }
   ];

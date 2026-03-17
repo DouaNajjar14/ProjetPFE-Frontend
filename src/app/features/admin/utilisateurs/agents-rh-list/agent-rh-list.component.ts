@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AgentRHService } from '../../../../core/services/agent-rh.service';
@@ -14,6 +14,24 @@ import { AgentRH, AgentRHRequest, AgentRHUpdateRequest } from '../../../../core/
 export class AgentRhListComponent implements OnInit {
   agents = signal<AgentRH[]>([]);
   filteredAgents = signal<AgentRH[]>([]);
+  currentPage = signal(1);
+  readonly pageSize = 10;
+  totalPages = computed(() => Math.max(1, Math.ceil(this.filteredAgents().length / this.pageSize)));
+  paginatedAgents = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredAgents().slice(start, start + this.pageSize);
+  });
+  pageNumbers = computed(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const maxVisible = 5;
+    let start = Math.max(1, current - Math.floor(maxVisible / 2));
+    let end = Math.min(total, start + maxVisible - 1);
+    if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1);
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) pages.push(i);
+    return pages;
+  });
   isLoading = signal(false);
   searchTerm = '';
   activeFilter: 'actifs' | 'archives' | 'tous' = 'actifs';
@@ -78,6 +96,7 @@ export class AgentRhListComponent implements OnInit {
       a.email.toLowerCase().includes(term)
     );
     this.filteredAgents.set(filtered);
+    this.currentPage.set(1);
   }
 
   onSearchChange(): void {
@@ -87,6 +106,11 @@ export class AgentRhListComponent implements OnInit {
   setFilter(filter: 'actifs' | 'archives' | 'tous'): void {
     this.activeFilter = filter;
     this.loadAgents();
+  }
+
+  goToPage(page: number): void {
+    const total = this.totalPages();
+    if (page >= 1 && page <= total) this.currentPage.set(page);
   }
 
   openCreateModal(): void {

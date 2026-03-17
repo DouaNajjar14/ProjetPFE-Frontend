@@ -22,6 +22,8 @@ export class PostulerComponent implements OnInit {
   allUniversites = signal<Universite[]>([]);
   sujets = signal<SujetPfe[]>([]);
   selectedType = signal<TypeStage | null>(null);
+  typePrefilled = signal(false);
+  pfeSujetPrefilled = signal(false);
   cv1File = signal<File | null>(null);
   cv2File = signal<File | null>(null);
   lettreFile = signal<File | null>(null);
@@ -60,10 +62,10 @@ export class PostulerComponent implements OnInit {
       sujetChoix1Id: [''],
       sujetChoix2Id: [''],
       estBinome: [false],
-      binomeNom: [''],
-      binomePrenom: [''],
-      binomeEmail: [''],
-      binomeTel: ['']
+      binomeNom: ['', [Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'-]+$/)]],
+      binomePrenom: ['', [Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'-]+$/)]],
+      binomeEmail: ['', [Validators.email]],
+      binomeTel: ['', [Validators.pattern(/^[0-9]{8}$/)]]
     });
   }
 
@@ -116,16 +118,31 @@ export class PostulerComponent implements OnInit {
       next: (sujets) => this.sujets.set(sujets)
     });
 
+    this.form.get('estBinome')?.valueChanges.subscribe(isBinome => {
+      this.applyBinomeValidators(!!isBinome);
+      if (!isBinome) {
+        this.cv2File.set(null);
+      }
+    });
+
     // Pre-select type and/or subject from queryParams
     this.route.queryParams.subscribe(params => {
+      this.typePrefilled.set(false);
+      this.pfeSujetPrefilled.set(false);
+
       if (params['type']) {
         const type = params['type'] as TypeStage;
-        this.selectedType.set(type);
-        this.form.patchValue({ typeStage: type });
-        this.setDefaultNiveau(type);
+        if (this.stageTypes.some(t => t.type === type)) {
+          this.typePrefilled.set(true);
+          this.selectedType.set(type);
+          this.form.patchValue({ typeStage: type });
+          this.setDefaultNiveau(type);
+        }
       }
       if (params['sujet']) {
         // Coming from PFE Book with a pre-selected subject
+        this.typePrefilled.set(true);
+        this.pfeSujetPrefilled.set(true);
         this.selectedType.set('PFE');
         this.form.patchValue({ typeStage: 'PFE', sujetChoix1Id: params['sujet'] });
       }
@@ -134,6 +151,13 @@ export class PostulerComponent implements OnInit {
 
   onTypeChange() {
     const type = this.form.get('typeStage')?.value as TypeStage;
+
+    // PFE applications must go through PFE Book topic selection.
+    if (type === 'PFE' && !this.pfeSujetPrefilled()) {
+      this.router.navigate(['/pfe-book']);
+      return;
+    }
+
     this.selectedType.set(type || null);
     this.setDefaultNiveau(type);
     // Reset université when type changes (filtered list depends on type)
@@ -185,6 +209,19 @@ export class PostulerComponent implements OnInit {
     return s?.titre || '—';
   }
 
+  isPrefilledPfeFlow(): boolean {
+    return this.pfeSujetPrefilled() && this.selectedType() === 'PFE';
+  }
+
+  isTypeLocked(): boolean {
+    return this.typePrefilled();
+  }
+
+  isNiveauLocked(): boolean {
+    const type = this.selectedType();
+    return type === 'INITIATION' || type === 'PERFECTIONNEMENT';
+  }
+
   nextStep() {
     if (this.currentStep() < 4) {
       this.currentStep.update(s => s + 1);
@@ -211,9 +248,40 @@ export class PostulerComponent implements OnInit {
     // If binome is checked, all binome fields required
     if (this.form.get('estBinome')?.value) {
       const binomeFields = ['binomeNom', 'binomePrenom', 'binomeEmail', 'binomeTel'];
-      if (!binomeFields.every(f => this.form.get(f)?.value)) return false;
+      if (!binomeFields.every(f => this.form.get(f)?.valid)) return false;
     }
     return true;
+  }
+
+  private applyBinomeValidators(isBinome: boolean) {
+    const nomCtrl = this.form.get('binomeNom');
+    const prenomCtrl = this.form.get('binomePrenom');
+    const emailCtrl = this.form.get('binomeEmail');
+    const telCtrl = this.form.get('binomeTel');
+
+    if (isBinome) {
+      nomCtrl?.setValidators([Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'-]+$/)]);
+      prenomCtrl?.setValidators([Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'-]+$/)]);
+      emailCtrl?.setValidators([Validators.required, Validators.email]);
+      telCtrl?.setValidators([Validators.required, Validators.pattern(/^[0-9]{8}$/)]);
+    } else {
+      this.form.patchValue({
+        binomeNom: '',
+        binomePrenom: '',
+        binomeEmail: '',
+        binomeTel: ''
+      }, { emitEvent: false });
+
+      nomCtrl?.setValidators([Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'-]+$/)]);
+      prenomCtrl?.setValidators([Validators.minLength(2), Validators.pattern(/^[a-zA-ZÀ-ÿ\s'-]+$/)]);
+      emailCtrl?.setValidators([Validators.email]);
+      telCtrl?.setValidators([Validators.pattern(/^[0-9]{8}$/)]);
+    }
+
+    nomCtrl?.updateValueAndValidity({ emitEvent: false });
+    prenomCtrl?.updateValueAndValidity({ emitEvent: false });
+    emailCtrl?.updateValueAndValidity({ emitEvent: false });
+    telCtrl?.updateValueAndValidity({ emitEvent: false });
   }
 
   isStep3Valid(): boolean {

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EncadrantService } from '../../../core/services/encadrant.service';
@@ -18,6 +18,24 @@ import { Specialite } from '../../../core/models/specialite.model';
 export class RhEncadrantListComponent implements OnInit {
     encadrants = signal<Encadrant[]>([]);
     filteredEncadrants = signal<Encadrant[]>([]);
+    currentPage = signal(1);
+    readonly pageSize = 6;
+    totalPages = computed(() => Math.max(1, Math.ceil(this.filteredEncadrants().length / this.pageSize)));
+    paginatedEncadrants = computed(() => {
+        const start = (this.currentPage() - 1) * this.pageSize;
+        return this.filteredEncadrants().slice(start, start + this.pageSize);
+    });
+    pageNumbers = computed(() => {
+        const total = this.totalPages();
+        const current = this.currentPage();
+        const maxVisible = 5;
+        let start = Math.max(1, current - Math.floor(maxVisible / 2));
+        let end = Math.min(total, start + maxVisible - 1);
+        if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1);
+        const pages: number[] = [];
+        for (let i = start; i <= end; i++) pages.push(i);
+        return pages;
+    });
     departements = signal<Departement[]>([]);
     allSpecialites = signal<Specialite[]>([]);
     isLoading = signal(false);
@@ -95,6 +113,7 @@ export class RhEncadrantListComponent implements OnInit {
         }
 
         this.filteredEncadrants.set(filtered);
+        this.currentPage.set(1);
     }
 
     onFilterDepartementChange(): void {
@@ -114,6 +133,11 @@ export class RhEncadrantListComponent implements OnInit {
 
     onSearchChange(): void {
         this.applyFilter();
+    }
+
+    goToPage(page: number): void {
+        const total = this.totalPages();
+        if (page >= 1 && page <= total) this.currentPage.set(page);
     }
 
     // Detail modal

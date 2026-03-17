@@ -277,7 +277,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (agent of filteredAgents(); track agent.id) {
+          @for (agent of paginatedAgents(); track agent.id) {
             <tr
               class="border-b border-brand-border last:border-b-0 transition-colors hover:bg-ooredoo-600/[0.02] cursor-pointer"
               [class.opacity-70]="!agent.actif"
@@ -400,6 +400,35 @@
           }
         </tbody>
       </table>
+
+      <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6 px-1">
+          <p class="text-sm text-gray-500">
+            Page <span class="font-semibold text-gray-800">{{ currentPage() }}</span> sur <span class="font-semibold text-gray-800">{{ totalPages() }}</span>
+            &mdash; <span class="font-semibold text-gray-800">{{ filteredAgents().length }}</span> agent(s)
+          </p>
+          <div class="flex items-center gap-1">
+            <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+              class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            @for (page of pageNumbers(); track page) {
+              <button (click)="goToPage(page)"
+                class="w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all cursor-pointer"
+                [class]="currentPage() === page ? 'bg-ooredoo-600 border-ooredoo-600 text-white shadow-sm' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'">
+                {{ page }}
+              </button>
+            }
+            <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+              class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
     }
   </div>
 </div>

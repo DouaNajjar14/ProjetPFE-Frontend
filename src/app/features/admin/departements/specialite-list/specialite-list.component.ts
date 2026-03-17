@@ -28,6 +28,7 @@ export class SpecialiteListComponent implements OnInit {
     specialites = signal<Specialite[]>([]);
     isLoading = signal(true);
     searchTerm = signal('');
+    activeFilter = signal<'actifs' | 'archives'>('actifs');
 
     // Modal state
     showModal = signal(false);
@@ -73,7 +74,10 @@ export class SpecialiteListComponent implements OnInit {
 
     loadSpecialites(): void {
         this.isLoading.set(true);
-        this.specialiteService.listerParDepartement(this.departementId).subscribe({
+        const obs = this.activeFilter() === 'archives'
+            ? this.specialiteService.listerArchivesParDepartement(this.departementId)
+            : this.specialiteService.listerParDepartement(this.departementId);
+        obs.subscribe({
             next: (data) => {
                 this.specialites.set(data);
                 this.isLoading.set(false);
@@ -89,12 +93,30 @@ export class SpecialiteListComponent implements OnInit {
         // Filtering handled by computed
     }
 
+    setFilter(filter: 'actifs' | 'archives'): void {
+        this.activeFilter.set(filter);
+        this.loadSpecialites();
+    }
+
     goBack(): void {
         this.router.navigate(['/admin/departements']);
     }
 
     viewCompetences(spec: Specialite): void {
-        this.router.navigate(['/admin/departements', this.departementId, 'specialites', spec.id, 'competences']);
+        this.router.navigate(['/admin/departements', this.departementId, 'specialites', spec.id, 'competences'], {
+            queryParams: { filter: this.activeFilter() === 'archives' ? 'archives' : 'actifs' }
+        });
+    }
+
+    restoreSpecialite(spec: Specialite, event: Event): void {
+        event.stopPropagation();
+        this.specialiteService.desarchiver(spec.id).subscribe({
+            next: () => {
+                this.showToast('Spécialité restaurée avec succès', 'success');
+                this.loadSpecialites();
+            },
+            error: () => this.showToast('Erreur lors de la restauration', 'error')
+        });
     }
 
     openCreateModal(): void {
@@ -183,12 +205,12 @@ export class SpecialiteListComponent implements OnInit {
 
         this.specialiteService.supprimer(this.deletingSpecialite.id).subscribe({
             next: () => {
-                this.showToast('Spécialité supprimée avec succès', 'success');
+                this.showToast('Spécialité archivée avec succès', 'success');
                 this.loadSpecialites();
                 this.closeDeleteConfirm();
             },
             error: () => {
-                this.showToast('Erreur lors de la suppression', 'error');
+                this.showToast('Erreur lors de l\'archivage', 'error');
                 this.closeDeleteConfirm();
             }
         });

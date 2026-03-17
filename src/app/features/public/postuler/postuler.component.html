@@ -95,23 +95,31 @@
             <div class="cd-card">
               <div class="cd-fg">
                 <label>Type de stage <em>*</em></label>
-                <select formControlName="typeStage" (change)="onTypeChange()">
-                  <option value="">Choisir...</option>
-                  @for (t of stageTypes; track t.type) {
-                    <option [value]="t.type">{{ t.titre }}</option>
-                  }
-                </select>
+                @if (isTypeLocked()) {
+                  <div class="cd-readonly-field">{{ getTypeLabel() }}</div>
+                } @else {
+                  <select formControlName="typeStage" (change)="onTypeChange()">
+                    <option value="">Choisir...</option>
+                    @for (t of stageTypes; track t.type) {
+                      <option [value]="t.type">{{ t.titre }}</option>
+                    }
+                  </select>
+                }
               </div>
 
               @if (selectedType()) {
                 <div class="cd-fg">
                   <label>Niveau académique <em>*</em></label>
-                  <select formControlName="niveauAcademique" (change)="onNiveauChange()">
-                    <option value="">Sélectionnez votre niveau</option>
-                    @for (niv of niveauOptions(); track niv.value) {
-                      <option [value]="niv.value">{{ niv.label }}</option>
-                    }
-                  </select>
+                  @if (isNiveauLocked()) {
+                    <div class="cd-readonly-field">{{ getNiveauLabel() }}</div>
+                  } @else {
+                    <select formControlName="niveauAcademique" (change)="onNiveauChange()">
+                      <option value="">Sélectionnez votre niveau</option>
+                      @for (niv of niveauOptions(); track niv.value) {
+                        <option [value]="niv.value">{{ niv.label }}</option>
+                      }
+                    </select>
+                  }
                 </div>
               }
 
@@ -131,12 +139,16 @@
               @if (selectedType() === 'PFE') {
                 <div class="cd-fg">
                   <label>Sujet PFE — 1er choix <em>*</em></label>
-                  <select formControlName="sujetChoix1Id">
-                    <option value="">Sélectionnez votre premier choix</option>
-                    @for (s of sujets(); track s.id) {
-                      <option [value]="s.id">{{ s.titre }} — {{ s.departementNom }}</option>
-                    }
-                  </select>
+                  @if (isPrefilledPfeFlow()) {
+                    <div class="cd-readonly-field">{{ getSujetTitre(form.get('sujetChoix1Id')?.value) }}</div>
+                  } @else {
+                    <select formControlName="sujetChoix1Id">
+                      <option value="">Sélectionnez votre premier choix</option>
+                      @for (s of sujets(); track s.id) {
+                        <option [value]="s.id">{{ s.titre }} — {{ s.departementNom }}</option>
+                      }
+                    </select>
+                  }
                 </div>
                 <div class="cd-fg">
                   <label>Sujet PFE — 2ème choix <span class="cd-opt">(optionnel)</span></label>
@@ -165,12 +177,48 @@
                     <div class="cd-binome-form">
                       <h4>Informations du binôme</h4>
                       <div class="cd-row">
-                        <div class="cd-fg"><label>Nom <em>*</em></label><input type="text" formControlName="binomeNom" placeholder="Nom"></div>
-                        <div class="cd-fg"><label>Prénom <em>*</em></label><input type="text" formControlName="binomePrenom" placeholder="Prénom"></div>
+                        <div class="cd-fg">
+                          <label>Nom <em>*</em></label>
+                          <input type="text" formControlName="binomeNom" placeholder="Nom" [class.cd-input-err]="form.get('binomeNom')?.invalid && form.get('binomeNom')?.touched">
+                          @if (form.get('binomeNom')?.touched && form.get('binomeNom')?.hasError('required')) {
+                            <span class="cd-err">Le nom du binôme est obligatoire</span>
+                          } @else if (form.get('binomeNom')?.touched && form.get('binomeNom')?.hasError('pattern')) {
+                            <span class="cd-err">Le nom du binôme doit contenir uniquement des lettres</span>
+                          } @else if (form.get('binomeNom')?.touched && form.get('binomeNom')?.hasError('minlength')) {
+                            <span class="cd-err">Le nom du binôme doit contenir au moins 2 caractères</span>
+                          }
+                        </div>
+                        <div class="cd-fg">
+                          <label>Prénom <em>*</em></label>
+                          <input type="text" formControlName="binomePrenom" placeholder="Prénom" [class.cd-input-err]="form.get('binomePrenom')?.invalid && form.get('binomePrenom')?.touched">
+                          @if (form.get('binomePrenom')?.touched && form.get('binomePrenom')?.hasError('required')) {
+                            <span class="cd-err">Le prénom du binôme est obligatoire</span>
+                          } @else if (form.get('binomePrenom')?.touched && form.get('binomePrenom')?.hasError('pattern')) {
+                            <span class="cd-err">Le prénom du binôme doit contenir uniquement des lettres</span>
+                          } @else if (form.get('binomePrenom')?.touched && form.get('binomePrenom')?.hasError('minlength')) {
+                            <span class="cd-err">Le prénom du binôme doit contenir au moins 2 caractères</span>
+                          }
+                        </div>
                       </div>
                       <div class="cd-row">
-                        <div class="cd-fg"><label>Email <em>*</em></label><input type="email" formControlName="binomeEmail" placeholder="email&#64;exemple.com"></div>
-                        <div class="cd-fg"><label>Téléphone <em>*</em></label><input type="tel" formControlName="binomeTel" placeholder="+216 XX XXX XXX"></div>
+                        <div class="cd-fg">
+                          <label>Email <em>*</em></label>
+                          <input type="email" formControlName="binomeEmail" placeholder="email&#64;exemple.com" [class.cd-input-err]="form.get('binomeEmail')?.invalid && form.get('binomeEmail')?.touched">
+                          @if (form.get('binomeEmail')?.touched && form.get('binomeEmail')?.hasError('required')) {
+                            <span class="cd-err">L'email du binôme est obligatoire</span>
+                          } @else if (form.get('binomeEmail')?.touched && form.get('binomeEmail')?.hasError('email')) {
+                            <span class="cd-err">L'email du binôme doit contenir &#64;</span>
+                          }
+                        </div>
+                        <div class="cd-fg">
+                          <label>Téléphone <em>*</em></label>
+                          <input type="tel" formControlName="binomeTel" placeholder="XX XXX XXX" maxlength="8" [class.cd-input-err]="form.get('binomeTel')?.invalid && form.get('binomeTel')?.touched">
+                          @if (form.get('binomeTel')?.touched && form.get('binomeTel')?.hasError('required')) {
+                            <span class="cd-err">Le téléphone du binôme est obligatoire</span>
+                          } @else if (form.get('binomeTel')?.touched && form.get('binomeTel')?.hasError('pattern')) {
+                            <span class="cd-err">Le téléphone du binôme doit contenir exactement 8 chiffres</span>
+                          }
+                        </div>
                       </div>
                     </div>
                   }

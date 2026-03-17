@@ -1,676 +1,398 @@
-<!-- ══ TOAST (global) ══ -->
-<p-toast position="bottom-right" />
-
-<div class="cand-page">
-  <!-- ══ PAGE HEADER ══ -->
-  <div class="cand-header">
-    <div class="cand-header-left">
-      <div class="cand-header-icon">
-        <i class="pi pi-file text-white text-xl"></i>
-      </div>
-      <div>
-        <h1 class="cand-title">Candidatures</h1>
-        <p class="cand-subtitle">
-          {{ filteredCandidatures().length }} résultat(s) affiché(s)
-        </p>
-      </div>
+<!-- ═══════════════════════════════════
+     TOPBAR TYPE SWITCHER
+═══════════════════════════════════ -->
+<div class="cand-topbar">
+  <div class="cand-topbar-left">
+    <div class="cand-topbar-title">
+      <span class="dot"></span>
+      Gestion des Candidatures
     </div>
-    <p-button
-      icon="pi pi-refresh"
-      label="Actualiser"
-      [outlined]="true"
-      severity="secondary"
-      size="small"
-      (onClick)="loadCandidatures()"
-    />
-  </div>
-
-  <!-- ══ STAT CARDS ══ -->
-  <div class="cand-stats">
-    <div class="stat-card">
-      <div class="stat-accent stat-accent--total"></div>
-      <div class="stat-icon stat-icon--total"><i class="pi pi-file"></i></div>
-      <div>
-        <span class="stat-num">{{ stats()?.total ?? "—" }}</span>
-        <span class="stat-lbl">Total</span>
-      </div>
+    <div class="cand-type-tabs">
+      <button class="ctt pfe-tab" [class.on]="activeTab() === 'PFE'" (click)="setActiveTab('PFE')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        PFE
+        <span class="ctt-badge" id="ctt-pfe-n">{{ getCountByType('PFE') }}</span>
+      </button>
+      <button class="ctt stage-tab" [class.on]="activeTab() === 'STAGES'" (click)="setActiveTab('STAGES')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        Stages
+        <span class="ctt-badge" id="ctt-stg-n">{{ getCountStages() }}</span>
+      </button>
     </div>
-    <div class="stat-card">
-      <div class="stat-accent stat-accent--amber"></div>
-      <div class="stat-icon stat-icon--amber"><i class="pi pi-clock"></i></div>
-      <div>
-        <span class="stat-num">{{
-          getStatCount("EN_ATTENTE", stats()?.parStatut)
-        }}</span>
-        <span class="stat-lbl">En attente</span>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-accent stat-accent--green"></div>
-      <div class="stat-icon stat-icon--green">
-        <i class="pi pi-check-circle"></i>
-      </div>
-      <div>
-        <span class="stat-num">{{
-          getStatCount("ACCEPTE", stats()?.parStatut)
-        }}</span>
-        <span class="stat-lbl">Acceptées</span>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-accent stat-accent--red"></div>
-      <div class="stat-icon stat-icon--red">
-        <i class="pi pi-times-circle"></i>
-      </div>
-      <div>
-        <span class="stat-num">{{
-          getStatCount("REJETE", stats()?.parStatut)
-        }}</span>
-        <span class="stat-lbl">Rejetées</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ MAIN PANEL ══ -->
-  <div class="cand-panel">
-    <!-- Filters -->
-    <div class="cand-filters">
-      <div class="flex-1 relative cand-search-wrap">
-        <i
-          class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-surface-400"
-        ></i>
-        <input
-          pInputText
-          type="text"
-          placeholder="Nom, prénom, email, sujet..."
-          [(ngModel)]="searchQuery"
-          (ngModelChange)="onSearchInput()"
-          class="w-full pl-10 cand-search-input"
-        />
-      </div>
-
-      <p-dropdown
-        [options]="[
-          { label: 'En attente', value: 'EN_ATTENTE' },
-          { label: 'Présélectionné', value: 'PRESELECTIONNE' },
-          { label: 'Accepté', value: 'ACCEPTE' },
-          { label: 'Rejeté', value: 'REJETE' },
-        ]"
-        [(ngModel)]="filterStatut"
-        (ngModelChange)="onFilterChange()"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="Tous les statuts"
-        styleClass="w-48"
-      />
-
-      @if (searchQuery || filterStatut) {
-        <p-button
-          icon="pi pi-times"
-          label="Effacer"
-          [outlined]="true"
-          severity="secondary"
-          size="small"
-          (onClick)="clearFilters()"
-        />
-      }
-    </div>
-
-    <!-- Table PrimeNG -->
-    <p-table
-      [value]="filteredCandidatures()"
-      [loading]="isLoading()"
-      [paginator]="filteredCandidatures().length > 10"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [rowHover]="true"
-      responsiveLayout="scroll"
-      styleClass="cand-table"
-    >
-      <!-- Header -->
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="candidat1.nom">
-            Candidat(s) <p-sortIcon field="candidat1.nom" />
-          </th>
-          @if (activeTab() === "TOUS") {
-            <th>Type</th>
-          }
-          <th pSortableColumn="statut">Statut <p-sortIcon field="statut" /></th>
-          <th>Sujet (1er choix)</th>
-          <th pSortableColumn="dateDepot">
-            Date dépôt <p-sortIcon field="dateDepot" />
-          </th>
-          <th class="text-center">Action</th>
-        </tr>
-      </ng-template>
-
-      <!-- Body -->
-      <ng-template pTemplate="body" let-c>
-        <tr class="cand-row" (click)="openDetail(c)">
-          <!-- Candidat -->
-          <td>
-            <div class="flex items-center gap-3">
-              <p-avatar
-                [label]="getInitials(c.candidat1?.prenom, c.candidat1?.nom)"
-                shape="square"
-                styleClass="cand-avatar"
-              />
-              <div class="min-w-0">
-                <p class="cand-name">
-                  {{ c.candidat1?.prenom }} {{ c.candidat1?.nom }}
-                </p>
-                <p class="cand-email">
-                  {{ c.candidat1?.email }}
-                </p>
-                @if (c.candidat2) {
-                  <div class="cand-binome-inline">
-                    <p-avatar
-                      [label]="
-                        getInitials(c.candidat2?.prenom, c.candidat2?.nom)
-                      "
-                      shape="square"
-                      styleClass="cand-avatar-sm"
-                    />
-                    <span class="cand-binome-name"
-                      >+ {{ c.candidat2.prenom }} {{ c.candidat2.nom }}</span
-                    >
-                  </div>
-                }
-              </div>
-            </div>
-          </td>
-
-          <!-- Type -->
-          @if (activeTab() === "TOUS") {
-            <td>
-              <p-tag
-                [value]="getTypeLabel(c.typeStage)"
-                [severity]="getTypeSeverity(c.typeStage)"
-              />
-            </td>
-          }
-
-          <!-- Statut -->
-          <td>
-            <p-tag
-              [value]="getStatutLabel(c.statut)"
-              [severity]="getStatutSeverity(c.statut)"
-              [icon]="
-                c.statut === 'EN_ATTENTE'
-                  ? 'pi pi-clock'
-                  : c.statut === 'PRESELECTIONNE'
-                    ? 'pi pi-star'
-                    : c.statut === 'ACCEPTE'
-                      ? 'pi pi-check'
-                      : 'pi pi-times'
-              "
-            />
-          </td>
-
-          <!-- Sujet -->
-          <td class="max-w-[220px]">
-            @if (c.sujetChoix1) {
-              <p class="cand-sujet-titre">
-                {{ c.sujetChoix1.titre }}
-              </p>
-              <p class="cand-sujet-dept">
-                {{ c.sujetChoix1.departementNom }}
-              </p>
-            } @else {
-              <span class="text-surface-300 text-sm">—</span>
-            }
-          </td>
-
-          <!-- Date -->
-          <td class="whitespace-nowrap text-sm text-surface-500">
-            {{ formatDate(c.dateDepot) }}
-          </td>
-
-          <!-- Action -->
-          <td class="text-center" (click)="$event.stopPropagation()">
-            <p-button
-              icon="pi pi-eye"
-              [rounded]="true"
-              [text]="true"
-              severity="secondary"
-              size="small"
-              (onClick)="openDetail(c)"
-              pTooltip="Voir les détails"
-              tooltipPosition="left"
-            />
-          </td>
-        </tr>
-      </ng-template>
-
-      <!-- Empty -->
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td [attr.colspan]="activeTab() === 'TOUS' ? 6 : 5">
-            <div class="cand-empty">
-              <div class="cand-empty-icon">
-                <i class="pi pi-inbox"></i>
-              </div>
-              <p class="cand-empty-title">Aucune candidature trouvée</p>
-              <p class="cand-empty-desc">
-                {{
-                  searchQuery || filterStatut
-                    ? "Modifiez vos critères de recherche"
-                    : "Aucune candidature pour ce type de stage"
-                }}
-              </p>
-              @if (searchQuery || filterStatut) {
-                <p-button
-                  label="Effacer les filtres"
-                  icon="pi pi-filter-slash"
-                  [outlined]="true"
-                  severity="secondary"
-                  size="small"
-                  (onClick)="clearFilters()"
-                />
-              }
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-
-      <!-- Footer -->
-      <ng-template pTemplate="footer">
-        <tr>
-          <td
-            [attr.colspan]="activeTab() === 'TOUS' ? 6 : 5"
-            class="cand-table-footer"
-          >
-            <i class="pi pi-list" style="font-size: 11px; opacity: 0.4"></i>
-            {{ filteredCandidatures().length }} résultat(s) ·
-            {{ candidatures().length }} au total
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════
-     DRAWER LATÉRAL — Détail candidature
-══════════════════════════════════════════════════════════════════════ -->
-<p-dialog
-  [visible]="showDetail()"
-  (visibleChange)="!$event ? closeDetail() : null"
-  position="right"
-  styleClass="cand-drawer"
-  [modal]="true"
-  [closeOnEscape]="true"
-  [style]="{ width: '450px', height: '100vh', margin: 0, maxHeight: '100vh' }"
-  contentStyleClass="h-full"
->
-  <ng-template pTemplate="header">
-    @if (selectedCandidature(); as c) {
-      <div class="drawer-head">
-        <div class="drawer-head-avatar-wrap">
-          <p-avatar
-            [label]="getInitials(c.candidat1?.prenom, c.candidat1?.nom)"
-            shape="square"
-            styleClass="drawer-head-avatar"
-          />
-          <div class="drawer-head-avatar-dot"></div>
-        </div>
-        <div class="min-w-0 flex-1">
-          <h2 class="drawer-head-name">
-            {{ c.candidat1?.prenom }} {{ c.candidat1?.nom }}
-          </h2>
-          <p class="drawer-head-uni">{{ c.candidat1?.universiteNom }}</p>
-          <div class="drawer-head-tags">
-            <p-tag
-              [value]="getTypeLabel(c.typeStage)"
-              [severity]="getTypeSeverity(c.typeStage)"
-            />
-            <p-tag
-              [value]="getStatutLabel(c.statut)"
-              [severity]="
-                c.statut === 'EN_ATTENTE'
-                  ? 'warning'
-                  : c.statut === 'PRESELECTIONNE'
-                    ? 'info'
-                    : c.statut === 'ACCEPTE'
-                      ? 'success'
-                      : 'danger'
-              "
-            />
-            @if (c.estBinome) {
-              <p-tag value="Binôme" severity="info" icon="pi pi-users" />
-            }
-          </div>
-        </div>
+<!-- ═══════════════════════════════════
+     CANDIDATURE CONTENT
+═══════════════════════════════════ -->
+<div class="cand-content">
+
+  <!-- TYPE HEADER BAND -->
+  <div class="ctype-band" id="ctype-band">
+    <div class="ctb-ico" id="ctb-ico">
+      <ng-container *ngIf="activeTab() === 'PFE'; else stageIcon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+      </ng-container>
+      <ng-template #stageIcon>
+        <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="white" stroke-width="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="white" stroke-width="2"/></svg>
+      </ng-template>
+    </div>
+    <div class="ctb-body">
+      <div class="ctb-title">
+        {{ activeTab() === 'PFE' ? "Projets de Fin d'Études" : "Stages de Formation" }}
       </div>
-    }
-  </ng-template>
-
-  <ng-template pTemplate="content">
-    @if (selectedCandidature(); as c) {
-      <div class="drawer-body">
-        <!-- Dates -->
-        <section class="drawer-section">
-          <div class="drawer-section-title">
-            <div class="drawer-section-icon">
-              <i class="pi pi-calendar"></i>
-            </div>
-            <span>Dates</span>
-          </div>
-          <div class="drawer-grid-2">
-            <div class="drawer-field">
-              <span class="drawer-field-label">Date de dépôt</span>
-              <span class="drawer-field-value">{{
-                formatDate(c.dateDepot)
-              }}</span>
-            </div>
-            <div class="drawer-field">
-              <span class="drawer-field-label">Date d'entretien</span>
-              <span class="drawer-field-value">{{
-                formatDate(c.dateEntretien)
-              }}</span>
-            </div>
-          </div>
-        </section>
-
-        <div class="drawer-divider"></div>
-
-        <!-- Candidat principal -->
-        <section class="drawer-section">
-          <div class="drawer-section-title">
-            <div class="drawer-section-icon"><i class="pi pi-user"></i></div>
-            <span>Candidat principal</span>
-          </div>
-          <div class="drawer-grid-2">
-            <div class="drawer-field">
-              <span class="drawer-field-label">
-                <i class="pi pi-envelope mr-1 text-xs"></i>Email
-              </span>
-              <span class="drawer-field-value truncate">{{
-                c.candidat1.email
-              }}</span>
-            </div>
-            <div class="drawer-field">
-              <span class="drawer-field-label">
-                <i class="pi pi-phone mr-1 text-xs"></i>Téléphone
-              </span>
-              <span class="drawer-field-value">{{ c.candidat1.tel }}</span>
-            </div>
-            <div class="drawer-field">
-              <span class="drawer-field-label">
-                <i class="pi pi-graduation-cap mr-1 text-xs"></i>Niveau
-              </span>
-              <span class="drawer-field-value">{{
-                c.candidat1.niveauAcademique
-              }}</span>
-            </div>
-            <div class="drawer-field">
-              <span class="drawer-field-label">
-                <i class="pi pi-building mr-1 text-xs"></i>Établissement
-              </span>
-              <span class="drawer-field-value truncate">{{
-                c.candidat1.universiteNom
-              }}</span>
-            </div>
-          </div>
-          <!-- Documents -->
-          <div class="drawer-docs">
-            @if (c.candidat1.cv) {
-              <a
-                [href]="c.candidat1.cv"
-                target="_blank"
-                rel="noopener"
-                class="drawer-doc-link"
-              >
-                <div class="drawer-doc-icon drawer-doc-icon--cv">
-                  <i class="pi pi-file-pdf"></i>
-                </div>
-                <span>CV</span>
-                <i class="pi pi-external-link ml-auto text-xs opacity-30"></i>
-              </a>
-            } @else {
-              <div class="drawer-doc-na">
-                <i class="pi pi-file opacity-30"></i>
-                <span class="opacity-40">CV non fourni</span>
-              </div>
-            }
-            @if (c.candidat1.lettreMotivation) {
-              <a
-                [href]="c.candidat1.lettreMotivation"
-                target="_blank"
-                rel="noopener"
-                class="drawer-doc-link"
-              >
-                <div class="drawer-doc-icon drawer-doc-icon--lettre">
-                  <i class="pi pi-file-edit"></i>
-                </div>
-                <span>Lettre de motivation</span>
-                <i class="pi pi-external-link ml-auto text-xs opacity-30"></i>
-              </a>
-            } @else {
-              <div class="drawer-doc-na">
-                <i class="pi pi-file-edit opacity-30"></i>
-                <span class="opacity-40">Lettre non fournie</span>
-              </div>
-            }
-          </div>
-        </section>
-
-        <!-- Co-candidat -->
-        @if (c.candidat2) {
-          <div class="drawer-divider"></div>
-          <section class="drawer-section">
-            <div class="drawer-section-title drawer-section-title--binome">
-              <div class="drawer-section-icon drawer-section-icon--binome">
-                <i class="pi pi-users"></i>
-              </div>
-              <span>Co-candidat (Binôme)</span>
-            </div>
-            <div class="drawer-binome-box">
-              <div class="flex items-center gap-3 mb-3">
-                <p-avatar
-                  [label]="getInitials(c.candidat2?.prenom, c.candidat2?.nom)"
-                  shape="square"
-                  styleClass="drawer-binome-avatar"
-                />
-                <div>
-                  <p class="font-semibold text-sm">
-                    {{ c.candidat2?.prenom }} {{ c.candidat2?.nom }}
-                  </p>
-                  <p class="text-xs text-surface-400">
-                    {{ c.candidat2?.universiteNom }}
-                  </p>
-                </div>
-              </div>
-              <div class="drawer-grid-2">
-                <div class="drawer-field">
-                  <span class="drawer-field-label">Email</span>
-                  <span class="drawer-field-value truncate">{{
-                    c.candidat2?.email
-                  }}</span>
-                </div>
-                <div class="drawer-field">
-                  <span class="drawer-field-label">Téléphone</span>
-                  <span class="drawer-field-value">{{ c.candidat2?.tel }}</span>
-                </div>
-                <div class="drawer-field">
-                  <span class="drawer-field-label">Niveau</span>
-                  <span class="drawer-field-value">{{
-                    c.candidat2?.niveauAcademique
-                  }}</span>
-                </div>
-                <div class="drawer-field">
-                  <span class="drawer-field-label">Établissement</span>
-                  <span class="drawer-field-value truncate">{{
-                    c.candidat2?.universiteNom
-                  }}</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        }
-
-        <!-- Sujets PFE -->
-        @if (c.sujetChoix1 || c.sujetChoix2) {
-          <div class="drawer-divider"></div>
-          <section class="drawer-section">
-            <div class="drawer-section-title">
-              <div class="drawer-section-icon"><i class="pi pi-book"></i></div>
-              <span>Choix de sujets PFE</span>
-            </div>
-            <div class="space-y-2">
-              @if (c.sujetChoix1) {
-                <div class="drawer-choice drawer-choice--1">
-                  <span class="drawer-choice-num drawer-choice-num--1">1</span>
-                  <div class="min-w-0 flex-1">
-                    <p class="text-sm font-semibold">
-                      {{ c.sujetChoix1.titre }}
-                    </p>
-                    <p class="text-xs text-surface-400 mt-0.5">
-                      {{ c.sujetChoix1.departementNom }}
-                    </p>
-                  </div>
-                  <p-tag value="1er choix" severity="danger" />
-                </div>
-              }
-              @if (c.sujetChoix2) {
-                <div class="drawer-choice">
-                  <span class="drawer-choice-num">2</span>
-                  <div class="min-w-0 flex-1">
-                    <p class="text-sm font-semibold">
-                      {{ c.sujetChoix2.titre }}
-                    </p>
-                    <p class="text-xs text-surface-400 mt-0.5">
-                      {{ c.sujetChoix2.departementNom }}
-                    </p>
-                  </div>
-                  <p-tag value="2ème choix" severity="secondary" />
-                </div>
-              }
-            </div>
-          </section>
-        }
-
-        <!-- Date entretien si EN_ATTENTE -->
-        @if (c.statut === "EN_ATTENTE") {
-          <div class="drawer-divider"></div>
-          <section class="drawer-section">
-            <div class="drawer-section-title">
-              <div class="drawer-section-icon">
-                <i class="pi pi-calendar-plus"></i>
-              </div>
-              <span>Planifier l'entretien</span>
-            </div>
-            <label class="drawer-input-label">
-              Date d'entretien <span class="text-red-500">*</span>
-            </label>
-            <input
-              type="datetime-local"
-              [(ngModel)]="dateEntretienInput"
-              class="drawer-input"
-            />
-          </section>
-        }
-      </div>
-    }
-  </ng-template>
-
-  <!-- Footer actions -->
-  <ng-template pTemplate="footer">
-    @if (selectedCandidature(); as c) {
-      <div class="drawer-footer">
-        @if (c.statut === "EN_ATTENTE") {
-          <p-button
-            label="Présélectionner"
-            icon="pi pi-check"
-            severity="info"
-            [loading]="isUpdatingStatut()"
-            (onClick)="changerStatutDepuisDetail('PRESELECTIONNE')"
-          />
-          <p-button
-            label="Refuser"
-            icon="pi pi-times"
-            severity="danger"
-            [outlined]="true"
-            [loading]="isUpdatingStatut()"
-            (onClick)="changerStatutDepuisDetail('REJETE')"
-          />
-        }
-        @if (c.statut === "PRESELECTIONNE") {
-          <p-button
-            label="Accepter"
-            icon="pi pi-check-circle"
-            severity="success"
-            (onClick)="openAcceptModal()"
-          />
-          <p-button
-            label="Refuser"
-            icon="pi pi-times"
-            severity="danger"
-            [outlined]="true"
-            [loading]="isUpdatingStatut()"
-            (onClick)="changerStatutDepuisDetail('REJETE')"
-          />
-        }
-        <p-button
-          label="Fermer"
-          [outlined]="true"
-          severity="secondary"
-          [disabled]="isUpdatingStatut()"
-          (onClick)="closeDetail()"
-          class="ml-auto"
-        />
-      </div>
-    }
-  </ng-template>
-</p-dialog>
-
-<!-- Modal d'acceptation (Date de début) -->
-<p-dialog
-  [(visible)]="showAcceptModal"
-  [modal]="true"
-  [style]="{ width: '420px' }"
-  styleClass="cand-accept-modal"
-  [closable]="!isUpdatingStatut()"
->
-  <ng-template pTemplate="header">
-    <div class="accept-modal-header">
-      <div class="accept-modal-icon">
-        <i class="pi pi-check-circle"></i>
-      </div>
-      <div>
-        <h3 class="accept-modal-title">Valider l'acceptation</h3>
-        <p class="accept-modal-subtitle">Dernière étape avant confirmation</p>
+      <div class="ctb-sub">
+        {{ activeTab() === 'PFE' ? "Gérez et traitez toutes les candidatures PFE" : "Gérez et traitez toutes les candidatures de stage" }}
       </div>
     </div>
-  </ng-template>
-
-  <div class="accept-modal-body">
-    <p class="accept-modal-desc">
-      Veuillez fixer la <strong>date de début de stage</strong> pour ce candidat
-      avant de valider l'acceptation.
-    </p>
-    <label class="drawer-input-label">
-      Date de début <span class="text-red-500">*</span>
-    </label>
-    <input type="date" [(ngModel)]="dateDebutInput" class="drawer-input" />
+    <div class="ctb-stats">
+      <div class="ctb-stat">
+        <div class="ctb-stat-n">{{ filteredCandidatures().length }}</div>
+        <div class="ctb-stat-l">Total</div>
+      </div>
+      <div class="ctb-stat">
+        <div class="ctb-stat-n">{{ getCountByStatut('EN_ATTENTE') }}</div>
+        <div class="ctb-stat-l">En attente</div>
+      </div>
+      <div class="ctb-stat">
+        <div class="ctb-stat-n">{{ getCountByStatut('ACCEPTE') }}</div>
+        <div class="ctb-stat-l">Accepté</div>
+      </div>
+    </div>
   </div>
-  <ng-template pTemplate="footer">
-    <div class="accept-modal-footer">
-      <p-button
-        label="Annuler"
-        severity="secondary"
-        [outlined]="true"
-        (onClick)="closeAcceptModal()"
-        [disabled]="isUpdatingStatut()"
-      />
-      <p-button
-        label="Confirmer l'acceptation"
-        severity="success"
-        icon="pi pi-check"
-        [loading]="isUpdatingStatut()"
-        (onClick)="changerStatutDepuisDetail('ACCEPTE')"
-      />
+
+  <!-- FILTER BAR -->
+  <div class="cf-bar">
+    <button class="cf-pill" [class.on]="filterStatut === ''" (click)="setFilterStatut('')">
+      Tous <span class="n">{{ getCountByStatutInView('') }}</span>
+    </button>
+    <button class="cf-pill" [class.on]="filterStatut === 'EN_ATTENTE'" (click)="setFilterStatut('EN_ATTENTE')">
+      En attente <span class="n">{{ getCountByStatutInView('EN_ATTENTE') }}</span>
+    </button>
+    <button class="cf-pill" [class.on]="filterStatut === 'PRESELECTIONNE'" (click)="setFilterStatut('PRESELECTIONNE')">
+      Présélectionné <span class="n">{{ getCountByStatutInView('PRESELECTIONNE') }}</span>
+    </button>
+    <button class="cf-pill" [class.on]="filterStatut === 'ENTRETIEN'" (click)="setFilterStatut('ENTRETIEN')">
+      Entretien <span class="n">{{ getCountByStatutInView('ENTRETIEN') }}</span> <!-- Pas de compteur spécifique dans la maquette pour Entretien mais on l'ajoute pour cohérence ou on met 0 -->
+    </button>
+    <button class="cf-pill" [class.on]="filterStatut === 'ACCEPTE'" (click)="setFilterStatut('ACCEPTE')">
+      Accepté <span class="n">{{ getCountByStatutInView('ACCEPTE') }}</span>
+    </button>
+    <button class="cf-pill" [class.on]="filterStatut === 'REJETE'" (click)="setFilterStatut('REJETE')">
+      Refusé <span class="n">{{ getCountByStatutInView('REJETE') }}</span>
+    </button>
+    
+    <div class="cf-search">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="applySearch($event)" placeholder="Nom, université…">
     </div>
+  </div>
+
+  <!-- CARDS GRID -->
+  <div class="cand-grid" *ngIf="filteredCandidatures().length > 0; else emptyState">
+    <div class="cc" *ngFor="let c of filteredCandidatures(); let i = index" 
+         [ngClass]="getStatusClass(c.statut)" 
+         [style.animation-delay]="(i * 0.06) + 's'"
+         style="animation: fadeUp .3s both"
+         (click)="openModal(c)">
+      
+      <div class="cc-head">
+        <div class="cc-av" [ngClass]="getGradientClass(c.candidat1.nom + c.candidat1.prenom)">
+          {{ getInitials(c.candidat1.prenom, c.candidat1.nom) }}
+        </div>
+        <div class="cc-info">
+          <div class="cc-name">{{ c.candidat1.prenom }} {{ c.candidat1.nom }}</div>
+          <div class="cc-univ">{{ c.candidat1.universiteNom }} · {{ c.candidat1.niveauAcademique }}</div>
+          <div class="cc-badges">
+            <span class="badge" [ngClass]="c.typeStage === 'PFE' ? 'b-pfe' : 'b-stg'">
+              {{ c.typeStage === 'PFE' ? 'PFE' : (c.typeStage | titlecase) }}
+            </span>
+            <span class="badge b-bin" *ngIf="c.estBinome">Binôme</span>
+            <span class="badge" [ngClass]="getStatusBadgeClass(c.statut)">
+              <span class="bdot" [style.background]="getStatusDotColor(c.statut)"></span>
+              {{ getStatusLabel(c.statut) }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="cc-div"></div>
+      
+      <div class="cc-body">
+        <div class="rr">
+          <div class="fi"><div class="fk">Email</div><div class="fv lk">{{ c.candidat1.email }}</div></div>
+          <div class="fi"><div class="fk">Téléphone</div><div class="fv">{{ c.candidat1.tel }}</div></div>
+          <div class="fi"><div class="fk">Niveau</div><div class="fv"><span class="nlv">{{ c.candidat1.niveauAcademique }}</span></div></div>
+          
+          <div class="fi" *ngIf="c.typeStage !== 'PFE'">
+            <div class="fk">Type</div><div class="fv">{{ c.typeStage }}</div>
+          </div>
+          <div class="fi" *ngIf="c.typeStage === 'PFE'">
+             <div class="fk">CV</div><div class="fv lk">📄 Voir CV</div>
+          </div>
+        </div>
+      
+        <!-- SUJETS PFE -->
+        <div class="sj-mini" *ngIf="c.typeStage === 'PFE' && (c.sujetChoix1 || c.sujetChoix2)">
+          <div class="sj-lbl">Sujets souhaités</div>
+          <div class="sj-item" *ngIf="c.sujetChoix1">
+            <div class="sj-rk rk1">1</div>
+            <div>
+              <div class="sj-t">{{ c.sujetChoix1.titre }}</div>
+              <div class="sj-d">{{ c.sujetChoix1.departementNom }}</div>
+            </div>
+          </div>
+          <div class="sj-item" *ngIf="c.sujetChoix2">
+            <div class="sj-rk rk2">2</div>
+            <div>
+              <div class="sj-t">{{ c.sujetChoix2.titre }}</div>
+              <div class="sj-d">{{ c.sujetChoix2.departementNom }}</div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- BINOME -->
+        <div class="bn-mini" *ngIf="c.estBinome && c.candidat2">
+          <div class="bn-lbl">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2"/></svg>
+            Binôme
+          </div>
+          <div class="bn-row">
+            <div class="bn-av" [ngClass]="getGradientClass(c.candidat2.nom + c.candidat2.prenom)">
+              {{ getInitials(c.candidat2.prenom, c.candidat2.nom) }}
+            </div>
+            <div>
+              <div class="bn-name">{{ c.candidat2.prenom }} {{ c.candidat2.nom }}</div>
+              <div class="bn-info">{{ c.candidat2.universiteNom }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="cc-foot">
+        <div class="cc-date" [class.ent]="c.dateEntretien">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+          {{ c.dateEntretien ? ('Entretien ' + (c.dateEntretien | date:'dd MMM yyyy HH:mm')) : (c.dateDepot | date:'dd MMM yyyy') }}
+        </div>
+        <div class="cc-open">
+          Voir détail <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #emptyState>
+    <div class="empty">
+      <div class="empty-ico">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="empty-t">Aucune candidature trouvée</div>
+      <div class="empty-d">Essayez de modifier les filtres ou la recherche</div>
+    </div>
+  </ng-template>
+
+</div>
+
+<!-- ═══════════════════════════════════
+     MODAL DÉTAIL
+═══════════════════════════════════ -->
+<div class="overlay" [class.show]="showDetail()" (click)="closeModal($event)">
+  <div class="modal" (click)="$event.stopPropagation()" *ngIf="selectedCandidature() as c">
+    
+    <div class="m-hero">
+      <div class="m-hero-glow"></div><div class="m-hero-glow2"></div><div class="m-hero-grid"></div>
+      <button class="m-close" (click)="closeDetail()"><svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <div class="m-hero-body">
+        <div class="m-av-row">
+          <div class="m-av" [ngClass]="getGradientClass(c.candidat1.nom + c.candidat1.prenom)">
+            {{ getInitials(c.candidat1.prenom, c.candidat1.nom) }}
+          </div>
+          <div class="m-bgs">
+            <span class="badge" [ngClass]="c.typeStage === 'PFE' ? 'b-pfe' : 'b-stg'" style="font-size:11px;padding:4px 11px">
+              {{ c.typeStage === 'PFE' ? 'PFE' : (c.typeStage | titlecase) }}
+            </span>
+            <span class="badge b-bin" *ngIf="c.estBinome" style="font-size:11px;padding:4px 11px">Binôme</span>
+          </div>
+        </div>
+        <div>
+          <div class="m-name">{{ c.candidat1.prenom }} {{ c.candidat1.nom }}</div>
+          <div class="m-univ">{{ c.candidat1.universiteNom }} · {{ c.candidat1.niveauAcademique }}</div>
+        </div>
+        <div class="m-status-row">
+          <span class="m-sp" [ngClass]="getModalStatusClass(c.statut)">
+            <span class="m-sp-dot" [style.background]="getStatusDotColor(c.statut)"></span>
+            {{ getStatusLabel(c.statut) }}
+          </span>
+          <span class="m-date">Déposé le {{ c.dateDepot | date:'dd MMMM yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="m-actions">
+      <button class="ma ma-pre" [class.dis]="!canPreselectionner(c.statut)" (click)="updateStatutWithModal('PRESELECTIONNE')">
+        <svg viewBox="0 0 24 24" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Présélectionner</span>
+      </button>
+      <button class="ma ma-ent" [class.dis]="!canEntretien(c.statut)" (click)="updateStatutWithModal('ENTRETIEN')">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+        <span>Entretien</span>
+      </button>
+      <button class="ma ma-acc" [class.dis]="!canAccepter(c.statut)" (click)="updateStatutWithModal('ACCEPTE')">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Accepter</span>
+      </button>
+      <button class="ma ma-rej" [class.dis]="!canRefuser(c.statut)" (click)="updateStatutWithModal('REJETE')">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Rejeter</span>
+      </button>
+    </div>
+
+    <div class="m-body">
+      <!-- INFO CANDIDAT PRINCIPAL -->
+      <div class="m-section">
+        <div class="m-sec-hd">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/></svg>
+          Candidat Principal
+        </div>
+        <div class="pers">
+          <div class="pers-av" [ngClass]="getGradientClass(c.candidat1.nom + c.candidat1.prenom)">
+            {{ getInitials(c.candidat1.prenom, c.candidat1.nom) }}
+          </div>
+          <div class="pers-body">
+            <div class="pers-name">{{ c.candidat1.prenom }} {{ c.candidat1.nom }}</div>
+            <div class="pers-univ">{{ c.candidat1.universiteNom }}</div>
+            <div class="pers-grid">
+              <div class="pd"><div class="pdk">Email</div><div class="pdv lk">{{ c.candidat1.email }}</div></div>
+              <div class="pd"><div class="pdk">Téléphone</div><div class="pdv">{{ c.candidat1.tel }}</div></div>
+              <div class="pd"><div class="pdk">Niveau</div><div class="pdv">{{ c.candidat1.niveauAcademique }}</div></div>
+              <div class="pd" *ngIf="c.typeStage !== 'PFE'"><div class="pdk">Type</div><div class="pdv">{{ c.typeStage }}</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCS CANDIDAT 1 -->
+      <div class="m-section">
+        <div class="m-sec-hd">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2"/></svg>
+          Documents Candidat Principal
+        </div>
+        <div class="docs">
+          <a class="doc" [href]="c.candidat1.cv" target="_blank">
+            <div class="doc-ico di-r">
+               <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div><div class="doc-name">CV_{{c.candidat1.nom}}.pdf</div><div class="doc-type">Curriculum Vitae</div></div>
+            <div class="doc-arr"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </a>
+          <a class="doc" [href]="c.candidat1.lettreMotivation" target="_blank" *ngIf="c.candidat1.lettreMotivation">
+            <div class="doc-ico di-p">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="2"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div><div class="doc-name">LM_{{c.candidat1.nom}}.pdf</div><div class="doc-type">Lettre de motivation</div></div>
+            <div class="doc-arr"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </a>
+        </div>
+      </div>
+
+      <!-- BINOME -->
+      <ng-container *ngIf="c.estBinome && c.candidat2">
+        <div class="m-section m-blu">
+          <div class="m-sec-hd">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2"/></svg>
+            Candidat Binôme
+          </div>
+          <div class="pers">
+            <div class="pers-av" [ngClass]="getGradientClass(c.candidat2.nom + c.candidat2.prenom)">
+              {{ getInitials(c.candidat2.prenom, c.candidat2.nom) }}
+            </div>
+            <div class="pers-body">
+              <div class="pers-name">{{ c.candidat2.prenom }} {{ c.candidat2.nom }}</div>
+              <div class="pers-univ">{{ c.candidat2.universiteNom }}</div>
+              <div class="pers-grid">
+                <div class="pd"><div class="pdk">Email</div><div class="pdv lk">{{ c.candidat2.email }}</div></div>
+                <div class="pd"><div class="pdk">Téléphone</div><div class="pdv">{{ c.candidat2.tel }}</div></div>
+                <div class="pd"><div class="pdk">Niveau</div><div class="pdv">{{ c.candidat2.niveauAcademique }}</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="docs" style="margin-top:10px">
+            <a class="doc" [href]="c.candidat2.cv" target="_blank">
+              <div class="doc-ico di-r">
+                   <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/></svg>
+              </div>
+              <div><div class="doc-name">CV_{{c.candidat2.nom}}.pdf</div><div class="doc-type">Curriculum Vitae</div></div>
+               <div class="doc-arr"><svg viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+            </a>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- SUJETS PFE -->
+      <ng-container *ngIf="c.typeStage === 'PFE' && (c.sujetChoix1 || c.sujetChoix2)">
+        <div class="m-section">
+          <div class="m-sec-hd">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Sujets PFE Souhaités
+          </div>
+          <div class="spc" *ngIf="c.sujetChoix1">
+            <div class="spc-rk srk1">1</div>
+            <div>
+              <div class="spc-t">{{ c.sujetChoix1.titre }}</div>
+              <span class="spc-d">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16" stroke="currentColor" stroke-width="2"/></svg>
+                {{ c.sujetChoix1.departementNom }}
+              </span>
+            </div>
+          </div>
+          <div class="spc" *ngIf="c.sujetChoix2">
+            <div class="spc-rk srk2">2</div>
+            <div>
+              <div class="spc-t">{{ c.sujetChoix2.titre }}</div>
+              <span class="spc-d">
+                 <svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16" stroke="currentColor" stroke-width="2"/></svg>
+                 {{ c.sujetChoix2.departementNom }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- INFO TECHNIQUE -->
+      <div class="m-section">
+        <div class="m-sec-hd"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>Informations Candidature</div>
+        <div class="dg">
+          <div class="df"><label>Date de dépôt</label><div class="dval">{{ c.dateDepot | date:'dd MMM yyyy HH:mm' }}</div></div>
+          <div class="df"><label>Entretien prévu</label><div class="dval">{{ c.dateEntretien ? (c.dateEntretien | date:'dd MMM yyyy HH:mm') : 'Non planifié' }}</div></div>
+          <div class="df"><label>Type</label><div class="dval">{{ c.typeStage }}</div></div>
+          <div class="df"><label>Candidature</label><div class="dval">{{ c.estBinome ? 'Binôme (2 candidats)' : 'Individuelle' }}</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" [class.show]="toastMessage()" [class.toast-success]="toastType() === 'success'" [class.toast-error]="toastType() === 'error'">
+  <div class="ti">
+    <svg viewBox="0 0 24 24" fill="none" *ngIf="toastType() === 'success'"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" *ngIf="toastType() === 'error'"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </div>
+  <div><div class="tt">{{ toastMessage() }}</div></div>
+</div>
+
+<!-- Modals for actions (Entretien, etc.) handled in Angular logic via DialogService if complex, or inline -->
+<p-dialog header="Planifier Entretien" [visible]="showAcceptModal()" (visibleChange)="showAcceptModal.set($event)" [style]="{width: '450px'}" [modal]="true" class="cand-accept-modal p-fluid">
+  <ng-template pTemplate="content">
+      <div class="field">
+          <label for="dateEntretien">Date de l'entretien</label>
+          <p-calendar [(ngModel)]="dateEntretienInput" dateFormat="dd/mm/yy" [showTime]="true" appendTo="body"></p-calendar>
+      </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+      <button pButton label="Annuler" icon="pi pi-times" class="p-button-text" (click)="showAcceptModal.set(false)"></button>
+      <button pButton label="Confirmer" icon="pi pi-check" class="p-button-danger" (click)="confirmEntretien()"></button>
   </ng-template>
 </p-dialog>

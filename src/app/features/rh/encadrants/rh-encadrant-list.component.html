@@ -130,7 +130,7 @@
     </div>
   } @else {
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-      @for (encadrant of filteredEncadrants(); track encadrant.id) {
+      @for (encadrant of paginatedEncadrants(); track encadrant.id) {
         <div class="encadrant-card cursor-pointer" (click)="openDetailModal(encadrant)">
           <!-- Card Header -->
           <div class="flex items-start justify-between mb-4">
@@ -235,6 +235,35 @@
         </div>
       }
     </div>
+
+    <!-- Pagination -->
+      <div class="flex items-center justify-between mt-8 px-2">
+        <p class="text-sm text-gray-500">
+          Page <span class="font-semibold text-gray-800">{{ currentPage() }}</span> sur <span class="font-semibold text-gray-800">{{ totalPages() }}</span>
+          &mdash; <span class="font-semibold text-gray-800">{{ filteredEncadrants().length }}</span> encadrant(s)
+        </p>
+        <div class="flex items-center gap-1">
+          <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          @for (page of pageNumbers(); track page) {
+            <button (click)="goToPage(page)"
+              class="w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all cursor-pointer"
+              [class]="currentPage() === page ? 'bg-ooredoo-600 border-ooredoo-600 text-white shadow-sm' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'">
+              {{ page }}
+            </button>
+          }
+          <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+            class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
   }
 
   <!-- ═══════ DETAIL MODAL ═══════ -->

@@ -3,6 +3,7 @@ export interface Competence {
     nom: string;
     specialiteId?: number;
     specialiteNom?: string;
+    archive?: boolean;
 }
 
 export interface CompetenceRequest {

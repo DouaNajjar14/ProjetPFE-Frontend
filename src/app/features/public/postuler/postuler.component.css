@@ -247,6 +247,20 @@
   box-shadow: 0 0 0 3px rgba(226, 0, 26, .07);
 }
 
+.cd-readonly-field {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1.5px solid #e8e4df;
+  border-radius: 12px;
+  background: #f7f7f7;
+  color: #3a3a3a;
+  font-size: .88rem;
+  box-sizing: border-box;
+}
+
 .cd-input-err {
   border-color: #E2001A !important;
   box-shadow: 0 0 0 3px rgba(226, 0, 26, .08) !important;

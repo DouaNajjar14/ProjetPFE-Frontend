@@ -158,18 +158,53 @@
                         : 'text-brand-muted hover:text-brand-text hover:bg-brand-bg'
                     "
                   >
-                    <!-- Small indicator icon instead of full feature icon if desired, or reuse -->
-                    <div
-                      class="w-[18px] h-[18px] flex-shrink-0 flex items-center justify-center"
-                    >
-                      <div
-                        class="w-1.5 h-1.5 rounded-full"
-                        [class]="
-                          isActive(child.route!)
-                            ? 'bg-white'
-                            : 'bg-brand-muted group-hover/item:bg-ooredoo-600'
-                        "
-                      ></div>
+                    <div class="w-[18px] h-[18px] flex-shrink-0">
+                      @switch (child.icon) {
+                        @case ("stages") {
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="w-[18px] h-[18px]"
+                          >
+                            <path d="M20 7h-4V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+                            <path d="M8 7h8" />
+                            <path d="M12 12v4" />
+                          </svg>
+                        }
+                        @case ("pfe") {
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="w-[18px] h-[18px]"
+                          >
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="8" y1="13" x2="16" y2="13" />
+                            <line x1="8" y1="17" x2="13" y2="17" />
+                          </svg>
+                        }
+                        @default {
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="w-[18px] h-[18px]"
+                          >
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        }
+                      }
                     </div>
                     <span>{{ child.label }}</span>
                     @if (isActive(child.route!)) {

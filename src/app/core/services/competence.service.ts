@@ -20,6 +20,10 @@ export class CompetenceService {
         return this.http.get<Competence[]>(`${this.apiUrl}/specialite/${specialiteId}`);
     }
 
+    listerArchivesParSpecialite(specialiteId: number): Observable<Competence[]> {
+        return this.http.get<Competence[]>(`${this.apiUrl}/specialite/${specialiteId}/archives`);
+    }
+
     trouverParId(id: number): Observable<Competence> {
         return this.http.get<Competence>(`${this.apiUrl}/${id}`);
     }
@@ -34,5 +38,9 @@ export class CompetenceService {
 
     supprimer(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
+
+    desarchiver(id: number): Observable<Competence> {
+        return this.http.patch<Competence>(`${this.apiUrl}/${id}/desarchiver`, {});
     }
 }

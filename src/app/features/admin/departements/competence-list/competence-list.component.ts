@@ -33,6 +33,7 @@ export class CompetenceListComponent implements OnInit {
     competences = signal<Competence[]>([]);
     isLoading = signal(true);
     searchTerm = signal('');
+    activeFilter = signal<'actifs' | 'archives'>('actifs');
 
     // Modal state
     showModal = signal(false);
@@ -60,6 +61,10 @@ export class CompetenceListComponent implements OnInit {
     ngOnInit(): void {
         this.departementId = this.route.snapshot.paramMap.get('deptId') || '';
         this.specialiteId = this.route.snapshot.paramMap.get('specId') || '';
+        const initialFilter = this.route.snapshot.queryParamMap.get('filter');
+        if (initialFilter === 'archives' || initialFilter === 'actifs') {
+            this.activeFilter.set(initialFilter);
+        }
 
         if (this.departementId && this.specialiteId) {
             this.loadDepartement();
@@ -84,7 +89,10 @@ export class CompetenceListComponent implements OnInit {
 
     loadCompetences(): void {
         this.isLoading.set(true);
-        this.competenceService.listerParSpecialite(+this.specialiteId).subscribe({
+        const obs = this.activeFilter() === 'archives'
+            ? this.competenceService.listerArchivesParSpecialite(+this.specialiteId)
+            : this.competenceService.listerParSpecialite(+this.specialiteId);
+        obs.subscribe({
             next: (data) => {
                 this.competences.set(data);
                 this.isLoading.set(false);
@@ -98,6 +106,22 @@ export class CompetenceListComponent implements OnInit {
 
     onSearchChange(): void {
         // Filtering handled by computed
+    }
+
+    setFilter(filter: 'actifs' | 'archives'): void {
+        this.activeFilter.set(filter);
+        this.loadCompetences();
+    }
+
+    restoreCompetence(comp: Competence, event: Event): void {
+        event.stopPropagation();
+        this.competenceService.desarchiver(comp.id).subscribe({
+            next: () => {
+                this.showToast('Compétence restaurée avec succès', 'success');
+                this.loadCompetences();
+            },
+            error: () => this.showToast('Erreur lors de la restauration', 'error')
+        });
     }
 
     goBack(): void {
@@ -194,12 +218,12 @@ export class CompetenceListComponent implements OnInit {
 
         this.competenceService.supprimer(this.deletingCompetence.id).subscribe({
             next: () => {
-                this.showToast('Compétence supprimée avec succès', 'success');
+                this.showToast('Compétence archivée avec succès', 'success');
                 this.loadCompetences();
                 this.closeDeleteConfirm();
             },
             error: () => {
-                this.showToast('Erreur lors de la suppression', 'error');
+                this.showToast('Erreur lors de l\'archivage', 'error');
                 this.closeDeleteConfirm();
             }
         });

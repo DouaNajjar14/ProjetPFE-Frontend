@@ -20,6 +20,10 @@ export class SpecialiteService {
         return this.http.get<Specialite[]>(`${this.apiUrl}/departement/${departementId}`);
     }
 
+    listerArchivesParDepartement(departementId: string): Observable<Specialite[]> {
+        return this.http.get<Specialite[]>(`${this.apiUrl}/departement/${departementId}/archives`);
+    }
+
     trouverParId(id: number): Observable<Specialite> {
         return this.http.get<Specialite>(`${this.apiUrl}/${id}`);
     }
@@ -34,5 +38,9 @@ export class SpecialiteService {
 
     supprimer(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
+
+    desarchiver(id: number): Observable<Specialite> {
+        return this.http.patch<Specialite>(`${this.apiUrl}/${id}/desarchiver`, {});
     }
 }

@@ -6,6 +6,7 @@ export interface Specialite {
     departementId: string;
     departementNom: string;
     competences: Competence[];
+    archive?: boolean;
 }
 
 export interface SpecialiteRequest {

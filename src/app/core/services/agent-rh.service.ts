@@ -18,7 +18,7 @@ export class AgentRHService {
   private readonly API_URL = `${environment.apiUrl}/admin/agents-rh`;
   private readonly CANDIDATURES_URL = `${environment.apiUrl}/agent-rh/candidatures`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   creer(request: AgentRHRequest): Observable<AgentRH> {
     return this.http.post<AgentRH>(this.API_URL, request);
@@ -81,6 +81,6 @@ export class AgentRHService {
   }
 
   changerStatutCandidature(id: string, request: CandidatureUpdateRequest): Observable<Candidature> {
-    return this.http.patch<Candidature>(`${environment.apiUrl}/candidatures/${id}/statut`, request);
+    return this.http.patch<Candidature>(`${this.CANDIDATURES_URL}/${id}/statut`, request);
   }
 }
