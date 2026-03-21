@@ -2,17 +2,14 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AgentRHService, CandidatureStats } from '../../../core/services/agent-rh.service';
 import { Candidature, StatutCandidature, TypeStage, CandidatureUpdateRequest } from '../../../core/models/candidature.model';
-import { CalendarModule } from 'primeng/calendar';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-rh-candidatures-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CalendarModule, DialogModule, ButtonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './rh-candidatures.component.html',
   styleUrls: ['./rh-candidatures.component.css']
 })
@@ -34,7 +31,7 @@ export class RhCandidaturesListComponent implements OnInit, OnDestroy {
 
   // Modal Acceptation / Entretien
   showAcceptModal = signal(false);
-  dateEntretienInput: Date | null = null;
+  dateEntretienInput: string = '';
   targetStatut: StatutCandidature | null = null;
 
   // Toast
@@ -269,13 +266,9 @@ export class RhCandidaturesListComponent implements OnInit, OnDestroy {
   canRefuser(s: StatutCandidature): boolean { return s !== 'REJETE' && s !== 'ACCEPTE'; }
 
   updateStatutWithModal(statut: 'PRESELECTIONNE' | 'ACCEPTE' | 'REJETE' | 'ENTRETIEN') {
-    if (statut === 'ENTRETIEN') {
-      this.targetStatut = 'PRESELECTIONNE'; // Entretien isn't a status in backend enum from what I saw, usually it's just a date update on PRESELECTIONNE?
-      // Wait, let's check model again. 
-      // Model says: export type StatutCandidature = 'EN_ATTENTE' | 'PRESELECTIONNE' | 'ACCEPTE' | 'REJETE';
-      // So 'ENTRETIEN' is not a status. It's an action to set date.
-      // I will open a modal to pick date, and update status to PRESELECTIONNE (or keep it if already is).
-      this.dateEntretienInput = null;
+    if (statut === 'ENTRETIEN' || statut === 'PRESELECTIONNE' || statut === 'ACCEPTE') {
+      this.targetStatut = statut === 'ENTRETIEN' ? 'PRESELECTIONNE' : statut;
+      this.dateEntretienInput = '';
       this.showAcceptModal.set(true);
     } else {
       this.updateStatut(statut);
@@ -285,21 +278,24 @@ export class RhCandidaturesListComponent implements OnInit, OnDestroy {
   confirmEntretien() {
     if (!this.dateEntretienInput || !this.selectedCandidature()) return;
 
-    // Update date and status (to PRESELECTIONNE if not set)
     const id = this.selectedCandidature()!.id;
-    const req: CandidatureUpdateRequest = {
-      statut: 'PRESELECTIONNE',
-      dateEntretien: this.dateEntretienInput.toISOString()
-    };
+    const isoDate = new Date(this.dateEntretienInput).toISOString();
+
+    const req: CandidatureUpdateRequest = this.targetStatut === 'ACCEPTE'
+      ? { statut: 'ACCEPTE', dateDebut: isoDate }
+      : { statut: 'PRESELECTIONNE', dateEntretien: isoDate };
 
     this.agentRHService.changerStatutCandidature(id, req).subscribe({
       next: (updated) => {
         this.updateLocalCandidature(updated);
         this.showAcceptModal.set(false);
-        this.showToast('Entretien planifié avec succès', 'success');
-        this.closeDetail(); // Close detail modal optionally
+        this.showToast(
+          this.targetStatut === 'ACCEPTE' ? 'Candidature acceptée avec succès' : 'Entretien planifié avec succès',
+          'success'
+        );
+        this.closeDetail();
       },
-      error: () => this.showToast('Erreur lors de la planification', 'error')
+      error: () => this.showToast('Erreur lors de la mise à jour', 'error')
     });
   }
 

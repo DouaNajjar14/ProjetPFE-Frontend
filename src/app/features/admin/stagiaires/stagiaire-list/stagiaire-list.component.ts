@@ -77,7 +77,7 @@ export class StagiaireListComponent implements OnInit, OnDestroy {
     if (confirmed === 'true' && stagiaireId) {
       this.stagiaireService.getStagiaireById(stagiaireId).subscribe(data => {
         this.http.post(
-          'http://localhost:5678/webhook-test/stagiaire-confirme',
+          'http://localhost:5678/webhook/stagiaire-confirme',
           {
             stagiaireId:  data.id,
             username:     data.username,

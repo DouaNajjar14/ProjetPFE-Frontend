@@ -35,6 +35,7 @@ export interface CandidatureRequest {
 export interface CandidatureUpdateRequest {
     statut: StatutCandidature;
     dateEntretien?: string;
+    dateDebut?: string;
 }
 
 export interface CandidatureStats {

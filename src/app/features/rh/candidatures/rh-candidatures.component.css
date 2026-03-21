@@ -1762,6 +1762,137 @@
   letter-spacing: -.02em
 }
 
+/* ══════════════════════════════
+   MODAL ACCEPTER / ENTRETIEN
+══════════════════════════════ */
+.overlay-entretien {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 26, .65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+  padding: 16px;
+}
+
+.overlay-entretien.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-entretien {
+  background: var(--W);
+  border-radius: var(--r3);
+  width: 420px;
+  max-width: 100%;
+  box-shadow: var(--sh4), 0 0 0 1px rgba(255,255,255,.08);
+  border: 1.5px solid var(--brd);
+  transform: scale(.94) translateY(14px);
+  transition: transform .28s var(--ease), opacity .25s;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.overlay-entretien.show .modal-entretien {
+  transform: none;
+  opacity: 1;
+}
+
+.me-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--brd);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink1);
+  letter-spacing: -.02em;
+}
+
+.me-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  color: var(--ink4);
+}
+
+.me-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.me-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.me-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink3);
+  letter-spacing: -.01em;
+}
+
+.me-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--brd);
+  border-radius: var(--r2);
+  font-size: 13.5px;
+  color: var(--ink1);
+  background: var(--W);
+  outline: none;
+  transition: border-color .18s;
+  box-sizing: border-box;
+}
+
+.me-input:focus {
+  border-color: var(--blu);
+}
+
+.me-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--brd);
+}
+
+.me-btn {
+  padding: 8px 20px;
+  border-radius: var(--r2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity .18s;
+}
+
+.me-annuler {
+  background: var(--ink6);
+  color: var(--ink2);
+}
+
+.me-confirmer {
+  background: var(--ink1);
+  color: #fff;
+}
+
+.me-btn:hover {
+  opacity: .85;
+}
+
 .td {
   font-size: 11.5px;
   color: rgba(255, 255, 255, .42);

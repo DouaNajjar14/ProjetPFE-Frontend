@@ -81,6 +81,6 @@ export class AgentRHService {
   }
 
   changerStatutCandidature(id: string, request: CandidatureUpdateRequest): Observable<Candidature> {
-    return this.http.patch<Candidature>(`${this.CANDIDATURES_URL}/${id}/statut`, request);
+    return this.http.patch<Candidature>(`${environment.apiUrl}/candidatures/${id}/statut`, request);
   }
 }
