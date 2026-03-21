@@ -1,0 +1,332 @@
+/* ══════════════════════════════════════════════════════
+   stagiaire-list.component.css — OOREDOO PREMIUM
+   ──────────────────────────────────────────────────────
+   Palette Ooredoo :
+     #ED1C24  Rouge principal
+     #B91520  Rouge sombre
+     #FEF2F2  Rouge pâle fond
+     #FFC2C2  Rouge pâle bordure
+     #FFFBFB  Rose ultra-léger (hover)
+══════════════════════════════════════════════════════ */
+
+:host { display: block; }
+
+/* ─── ANIMATIONS ─────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── PAGE LAYOUT ────────────────────────────────── */
+.stag-page {
+  padding: 24px 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeUp .4s ease both;
+}
+
+/* ─── HEADER ─────────────────────────────────────── */
+.stag-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.stag-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.stag-header-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ED1C24 0%, #B91520 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(237, 28, 36, .3);
+}
+.stag-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--p-surface-900);
+  letter-spacing: -.3px;
+  line-height: 1;
+  margin: 0;
+}
+.stag-subtitle {
+  font-size: 13px;
+  color: var(--p-surface-400);
+  margin-top: 4px;
+}
+
+/* ─── STAT CARDS ─────────────────────────────────── */
+.stag-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+@media (max-width: 768px) {
+  .stag-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-card {
+  position: relative;
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+  transition: box-shadow .2s, border-color .2s, transform .2s;
+}
+.stat-card:hover {
+  border-color: var(--p-surface-300);
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  transform: translateY(-1px);
+}
+
+.stat-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.stat-accent--total { background: #ED1C24; }
+.stat-accent--green { background: #16a34a; }
+.stat-accent--blue  { background: #3b82f6; }
+.stat-accent--red   { background: #dc2626; }
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.stat-icon--total { background: #FEF2F2; color: #ED1C24; border: 1px solid #FFC2C2; }
+.stat-icon--green { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.stat-icon--blue  { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
+.stat-icon--red   { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+.stat-num {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--p-surface-900);
+  line-height: 1;
+  letter-spacing: -.5px;
+}
+.stat-lbl {
+  display: block;
+  font-size: 12px;
+  color: var(--p-surface-400);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* ─── MAIN PANEL ─────────────────────────────────── */
+.stag-panel {
+  background: var(--p-surface-0);
+  border: 1px solid var(--p-surface-200);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* ─── FILTERS ────────────────────────────────────── */
+.stag-filters {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--p-surface-200);
+  background: var(--p-surface-50);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.stag-search-wrap {
+  min-width: 200px;
+}
+.stag-search-input:focus {
+  border-color: #ED1C24 !important;
+  box-shadow: 0 0 0 2px rgba(237,28,36,.1) !important;
+}
+
+/* ══════════════════════════════════════════════════
+   TABLE — MODERN OOREDOO STYLE
+══════════════════════════════════════════════════ */
+
+/* Header rouge Ooredoo */
+::ng-deep .stag-table .p-datatable-thead > tr > th {
+  background: #ED1C24 !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+  padding: 14px 16px !important;
+  border: none !important;
+  border-bottom: 2px solid #B91520 !important;
+}
+::ng-deep .stag-table .p-datatable-thead > tr > th .p-sortable-column-icon {
+  color: rgba(255,255,255,.6) !important;
+}
+::ng-deep .stag-table .p-datatable-thead > tr > th:hover {
+  background: #d4191f !important;
+}
+::ng-deep .stag-table .p-datatable-thead > tr > th.p-highlight {
+  background: #B91520 !important;
+}
+::ng-deep .stag-table .p-datatable-thead > tr > th.p-highlight .p-sortable-column-icon {
+  color: #ffffff !important;
+}
+
+/* Body rows */
+::ng-deep .stag-table .p-datatable-tbody > tr {
+  transition: background .15s ease;
+  border-bottom: 1px solid var(--p-surface-100) !important;
+}
+::ng-deep .stag-table .p-datatable-tbody > tr > td {
+  padding: 14px 16px !important;
+  border: none !important;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+/* Zebra striping */
+::ng-deep .stag-table .p-datatable-tbody > tr:nth-child(even) {
+  background: #FEFAFA !important;
+}
+::ng-deep .stag-table .p-datatable-tbody > tr:nth-child(odd) {
+  background: #ffffff !important;
+}
+
+/* Hover avec bord gauche rouge */
+::ng-deep .stag-table .p-datatable-tbody > tr:hover {
+  background: #FEF2F2 !important;
+}
+::ng-deep .stag-table .p-datatable-tbody > tr:hover > td:first-child {
+  box-shadow: inset 3px 0 0 0 #ED1C24;
+}
+
+/* Footer du tableau */
+::ng-deep .stag-table .p-datatable-tfoot > tr > td {
+  background: var(--p-surface-50) !important;
+  border: none !important;
+  border-top: 1px solid var(--p-surface-200) !important;
+}
+
+/* Paginator */
+::ng-deep .stag-table .p-paginator {
+  border: none !important;
+  border-top: 1px solid var(--p-surface-200) !important;
+  padding: 10px 16px !important;
+}
+::ng-deep .stag-table .p-paginator .p-paginator-page.p-highlight {
+  background: #ED1C24 !important;
+  color: #ffffff !important;
+  border-color: #ED1C24 !important;
+}
+::ng-deep .stag-table .p-paginator .p-paginator-page:hover:not(.p-highlight) {
+  background: #FEF2F2 !important;
+  color: #ED1C24 !important;
+}
+
+/* Loading overlay */
+::ng-deep .stag-table .p-datatable-loading-overlay {
+  background: rgba(255,255,255,.7) !important;
+}
+::ng-deep .stag-table .p-datatable-loading-icon {
+  color: #ED1C24 !important;
+}
+
+/* ─── TABLE CELL STYLES ──────────────────────────── */
+.stag-row { cursor: default; }
+
+.stag-name {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--p-surface-900);
+  white-space: nowrap;
+  margin: 0;
+}
+.stag-email {
+  font-size: 12.5px;
+  color: var(--p-surface-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: block;
+}
+.stag-dept {
+  font-size: 13px;
+  color: var(--p-surface-700);
+  font-weight: 500;
+}
+.stag-encadrant {
+  font-size: 13px;
+  color: var(--p-surface-600);
+}
+
+.stag-table-footer {
+  font-size: 12px;
+  color: var(--p-surface-400);
+  padding: 10px 16px !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── AVATARS ────────────────────────────────────── */
+.stag-avatar {
+  background: linear-gradient(135deg, #ED1C24 0%, #B91520 100%) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 13px !important;
+}
+
+/* ─── EMPTY STATE ────────────────────────────────── */
+.stag-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 20px;
+  text-align: center;
+  gap: 8px;
+}
+.stag-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #FEF2F2;
+  border: 1px solid #FFC2C2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #ED1C24;
+  margin-bottom: 4px;
+}
+.stag-empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--p-surface-600);
+  margin: 0;
+}
+.stag-empty-desc {
+  font-size: 13px;
+  color: var(--p-surface-400);
+  margin: 0 0 4px;
+}

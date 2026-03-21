@@ -1,0 +1,400 @@
+<div class="animate-fade-in">
+  <!-- Breadcrumb Navigation -->
+  <div class="breadcrumb-bar">
+    <button class="back-btn" (click)="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      <span>Retour aux départements</span>
+    </button>
+    <div class="breadcrumb-path">
+      <span class="breadcrumb-item">Départements</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="breadcrumb-separator">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+      <span class="breadcrumb-item current">{{ departement()?.nom || 'Spécialités' }}</span>
+    </div>
+  </div>
+
+  <!-- Page Header Premium -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-amber-50/50 to-white rounded-2xl border border-amber-100/50">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/25">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-7 h-7">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Spécialités</h1>
+        <p class="text-sm text-gray-500 mt-1">{{ activeFilter() === 'archives' ? 'Archivées' : 'Actives' }} • {{ departement()?.nom }}</p>
+      </div>
+    </div>
+    <button class="btn-amber" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      <span>Nouvelle spécialité</span>
+    </button>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="flex items-center gap-3 mb-6">
+    <div class="flex bg-white border border-gray-200 rounded-xl p-1 gap-1">
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter() === 'actifs' ? 'bg-amber-500 text-white shadow-sm' : 'bg-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50'"
+        (click)="setFilter('actifs')">
+        <span class="flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Actives
+        </span>
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="activeFilter() === 'archives' ? 'bg-amber-500 text-white shadow-sm' : 'bg-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50'"
+        (click)="setFilter('archives')">
+        <span class="flex items-center gap-1.5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+          </svg>
+          Archivées
+        </span>
+      </button>
+    </div>
+    <span class="text-sm text-gray-400">{{ filteredSpecialites().length }} spécialité(s)</span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="mb-8">
+    <div class="relative max-w-md">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-5 h-5 text-gray-400">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </div>
+      <input type="text" placeholder="Rechercher une spécialité..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+        class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm text-gray-900 outline-none transition-all duration-300 focus:border-amber-500 focus:shadow-lg focus:shadow-amber-500/10 placeholder:text-gray-400"/>
+    </div>
+  </div>
+
+  <!-- Cards Grid -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center py-20 gap-4">
+      <div class="w-10 h-10 rounded-full border-[3px] border-gray-200 border-t-amber-500 animate-spin"></div>
+      <span class="text-sm text-gray-500">Chargement des spécialités...</span>
+    </div>
+  } @else if (filteredSpecialites().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" class="w-10 h-10">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Aucune spécialité trouvée</h3>
+      <p class="text-sm text-gray-500 mb-5">{{ searchTerm() ? 'Essayez de modifier votre recherche' : 'Commencez par créer une nouvelle spécialité' }}</p>
+      @if (!searchTerm()) {
+        <button class="btn-amber text-sm" (click)="openCreateModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-4 h-4">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Créer une spécialité
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      @for (spec of filteredSpecialites(); track spec.id) {
+        <div class="spec-card" (click)="openDetailModal(spec)">
+          <!-- Card Header -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-4">
+              <!-- Icon -->
+              <div class="spec-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" class="w-6 h-6">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <!-- Name -->
+              <div>
+                <h3 class="text-base font-semibold text-gray-900">{{ spec.nom }}</h3>
+                <p class="text-sm text-gray-500">{{ spec.competences.length }} compétence(s)</p>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+              @if (activeFilter() === 'actifs') {
+                <button title="Modifier" (click)="$event.stopPropagation(); openEditModal(spec, $event)" class="action-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </button>
+                <button title="Archiver" (click)="$event.stopPropagation(); openDeleteConfirm(spec, $event)" class="action-btn action-btn-delete">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+                  </svg>
+                </button>
+              } @else {
+                <button title="Restaurer" (click)="$event.stopPropagation(); restoreSpecialite(spec, $event)" class="action-btn" style="color:#D97706">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-[18px] h-[18px]">
+                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                  </svg>
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Competences Preview -->
+          @if (spec.competences && spec.competences.length > 0) {
+            <div class="mb-4">
+              <div class="flex flex-wrap gap-1.5">
+                @for (comp of spec.competences.slice(0, 4); track comp.id) {
+                  <span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium">
+                    {{ comp.nom }}
+                  </span>
+                }
+                @if (spec.competences.length > 4) {
+                  <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium">
+                    +{{ spec.competences.length - 4 }}
+                  </span>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- View Competences Button -->
+          <button class="view-competences-btn" (click)="$event.stopPropagation(); viewCompetences(spec)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>Voir les compétences</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 ml-auto">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      }
+
+      <!-- Add New Card -->
+      @if (activeFilter() === 'actifs') {
+        <div class="add-card" (click)="openCreateModal()">
+          <div class="add-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-400 mt-2">Ajouter une spécialité</span>
+        </div>
+      }
+    </div>
+  }
+
+<!-- ═══════ CREATE/EDIT MODAL ═══════ -->
+@if (showModal()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeModal()">
+    <div class="bg-white rounded-2xl w-full max-w-[520px] shadow-modal animate-modal-in max-h-[90vh] flex flex-col" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="relative bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 px-6 py-5 text-white rounded-t-2xl">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/20 blur-3xl"></div>
+        </div>
+        <div class="relative flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6">
+                @if (modalMode === 'create') {
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/>
+                } @else {
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                }
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">{{ modalMode === 'create' ? 'Nouvelle Spécialité' : 'Modifier la Spécialité' }}</h2>
+              <p class="text-white/70 text-sm mt-0.5">{{ modalMode === 'create' ? 'Ajoutez une nouvelle spécialité' : 'Modifiez les informations' }}</p>
+            </div>
+          </div>
+          <button (click)="closeModal()" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="px-6 py-5 overflow-y-auto flex-1 space-y-5">
+        @if (modalError()) {
+          <div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" class="w-5 h-5">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-red-800">Erreur</p>
+              <p class="text-sm text-red-600">{{ modalError() }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- SECTION: Informations de la spécialité -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon bg-amber-100">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" class="w-5 h-5">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="form-section-title">Informations de la spécialité</h3>
+              <p class="form-section-subtitle">Nom et identité</p>
+            </div>
+          </div>
+          <div class="form-section-content">
+            <div class="form-group">
+              <label class="form-label">Nom de la spécialité <span class="text-amber-500">*</span></label>
+              <input type="text" class="form-input" placeholder="Ex: Développement Web, Intelligence Artificielle..."
+                [(ngModel)]="specialiteNom" (keyup.enter)="saveModal()" autofocus/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-2xl">
+        <p class="text-xs text-gray-400">
+          <span class="text-amber-500">*</span> Champs obligatoires
+        </p>
+        <div class="flex items-center gap-3">
+          <button class="modal-btn-cancel" (click)="closeModal()">Annuler</button>
+          <button class="btn-amber" (click)="saveModal()" [disabled]="isSaving()">
+            @if (isSaving()) {
+              <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                @if (modalMode === 'create') {
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/>
+                } @else {
+                  <polyline points="20 6 9 17 4 12"/>
+                }
+              </svg>
+            }
+            <span>{{ modalMode === 'create' ? 'Créer la spécialité' : 'Enregistrer' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ CONFIRM DIALOG ═══════ -->
+@if (showDeleteConfirm()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDeleteConfirm()">
+    <div class="bg-white rounded-2xl max-w-[420px] w-full shadow-modal animate-modal-in text-center p-8" (click)="$event.stopPropagation()">
+      <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" class="w-7 h-7">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-extrabold text-gray-900 mb-2">Archiver cette spécialité ?</h3>
+      <p class="text-sm text-gray-500 leading-relaxed mb-6">
+        La spécialité "{{ deletingSpecialite?.nom }}" et ses compétences seront archivées.
+      </p>
+      <div class="flex gap-3 justify-center">
+        <button class="modal-btn-cancel" (click)="closeDeleteConfirm()">Annuler</button>
+        <button class="confirm-btn-danger" (click)="confirmDelete()">Archiver</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ DETAIL MODAL ═══════ -->
+@if (showDetail()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDetailModal()">
+    <div class="bg-white rounded-2xl max-w-[520px] w-full shadow-modal animate-modal-in overflow-hidden" (click)="$event.stopPropagation()">
+      <!-- Header avec fond coloré -->
+      <div class="relative bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 p-6 text-white">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20 blur-2xl"></div>
+          <div class="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
+        </div>
+        <div class="relative flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-7 h-7">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold">{{ selectedSpecialite?.nom }}</h2>
+            <p class="text-white/80 text-sm">{{ departement()?.nom }}</p>
+          </div>
+        </div>
+        <button (click)="closeDetailModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Contenu -->
+      <div class="p-6 space-y-5">
+        <!-- Compétences -->
+        @if (selectedSpecialite?.competences?.length) {
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Compétences ({{ selectedSpecialite!.competences.length }})</h4>
+            <div class="flex flex-wrap gap-2">
+              @for (comp of selectedSpecialite!.competences; track comp.id) {
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-lg text-sm font-medium text-purple-700">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  {{ comp.nom }}
+                </span>
+              }
+            </div>
+          </div>
+        } @else {
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Compétences</h4>
+            <p class="text-sm text-gray-400 italic">Aucune compétence pour le moment</p>
+          </div>
+        }
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
+        <button class="modal-btn-cancel" (click)="closeDetailModal()">Fermer</button>
+        <button class="btn-amber" (click)="editFromDetail()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          <span>Modifier</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ TOAST ═══════ -->
+@if (toastMessage()) {
+  <div class="fixed bottom-8 right-8 flex items-center gap-3 px-5 py-3.5 rounded-[14px] shadow-toast z-[2000] animate-toast-in text-sm font-semibold"
+    [class]="toastType() === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-red-800'">
+    <div>
+      @if (toastType() === 'success') {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" class="w-5 h-5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      } @else {
+        <svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" class="w-5 h-5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      }
+    </div>
+    <span>{{ toastMessage() }}</span>
+  </div>
+}
+</div>

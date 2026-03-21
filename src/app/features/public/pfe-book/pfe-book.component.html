@@ -1,0 +1,181 @@
+
+    <!-- ═══ HERO ═══ -->
+    <section class="pb-hero">
+      <div class="pb-hero-pat"></div>
+      <div class="pb-wm">2026</div>
+      <div class="pb-hero-in">
+        <span class="pb-label">— CATALOGUE 2026</span>
+        <h1 class="pb-h1">Catalogue des Sujets <i>PFE</i></h1>
+        <div class="pb-pills">
+          <span class="pb-pill pb-pill-fill">● {{ filteredSujets().length }} sujets disponibles</span>
+          <span class="pb-pill pb-pill-out">Session 2025 — 2026</span>
+        </div>
+        <div class="pb-hero-filters">
+          <div class="pb-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" [value]="searchQuery()" (input)="onSearchChange($any($event.target).value)" placeholder="Rechercher par titre, département, technologie…">
+          </div>
+          <div class="pb-fil-grp">
+            <select [value]="selectedDepartement()" (change)="onFilterChange($any($event.target).value)">
+              <option value="">Tous les départements</option>
+              @for (dept of departements(); track dept.id) {
+                <option [value]="dept.id">{{ dept.nom }}</option>
+              }
+            </select>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="pb-fil-grp">
+            <select [value]="selectedSpecialite()" (change)="onSpecialiteChange($any($event.target).value)">
+              <option value="">Toutes les spécialités</option>
+              @for (spec of allSpecialites(); track spec.id) {
+                <option [value]="spec.id">{{ spec.nom }}</option>
+              }
+            </select>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ MAIN ═══ -->
+    <section class="pb-main">
+      @if (loading()) {
+        <div class="pb-loading">
+          <div class="pb-spinner"></div>
+          <p>Chargement des sujets…</p>
+        </div>
+      } @else if (filteredSujets().length === 0) {
+        <div class="pb-empty">
+          <h3>Aucun sujet trouvé</h3>
+          <p>Essayez de modifier vos critères de recherche</p>
+          <button (click)="resetFilters()" class="pb-btn-reset">Réinitialiser</button>
+        </div>
+      } @else {
+        <div class="pb-viewer">
+          <div class="pb-accent"></div>
+          <div class="pb-grid">
+            <!-- LEFT PANEL -->
+            <div class="pb-left">
+              <div class="pb-indicator">
+                <span class="pb-cur">{{ currentIndex() + 1 }}</span>
+                <span class="pb-sep">/</span>
+                <span class="pb-tot">{{ filteredSujets().length }}</span>
+              </div>
+              <span class="pb-status" [class.open]="currentSubject()?.statut === 'OUVERT'" [class.closed]="currentSubject()?.statut !== 'OUVERT'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                {{ getStatusLabel(currentSubject()?.statut || '') }}
+              </span>
+
+              <h2 class="pb-title">{{ currentSubject()?.titre }}</h2>
+
+              <div class="pb-tags">
+                <span class="pb-tag pb-t-dept">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  {{ currentSubject()?.departementNom }}
+                </span>
+                <span class="pb-tag pb-t-dur">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  {{ currentSubject()?.dureeEnMois }} mois
+                </span>
+                <span class="pb-tag pb-t-stg">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  {{ currentSubject()?.nombreStagiaires }} stagiaire(s)
+                </span>
+                <span class="pb-tag pb-t-niv">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                  {{ currentSubject()?.niveauAcademique }}
+                </span>
+              </div>
+
+              <div class="pb-info-grid">
+                <div class="pb-info-card">
+                  <div class="pb-ii-ico">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                  </div>
+                  <div class="pb-ii-txt">
+                    <span class="pb-ii-lbl">SPÉCIALITÉ</span>
+                    <span class="pb-ii-val">{{ getSpecialites() }}</span>
+                  </div>
+                </div>
+                <div class="pb-info-card">
+                  <div class="pb-ii-ico enc">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E2001A" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <div class="pb-ii-txt">
+                    <span class="pb-ii-lbl">DÉPARTEMENT</span>
+                    <span class="pb-ii-val">{{ currentSubject()?.departementNom || 'Non défini' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pb-desc-sec">
+                <h4>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2001A" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  Mission &amp; Description
+                </h4>
+                <p class="pb-mission-text">{{ currentSubject()?.mission }}</p>
+              </div>
+
+              <div class="pb-tech-sec">
+                <h4>Technologies</h4>
+                <div class="pb-techs">
+                  @for (comp of currentSubject()?.competences || []; track comp.id) {
+                    <span class="pb-tech">{{ comp.nom }}</span>
+                  }
+                </div>
+              </div>
+
+              @if (currentSubject()?.statut === 'OUVERT') {
+                <a [routerLink]="['/postuler']" [queryParams]="{ type: 'PFE', sujet: currentSubject()?.id }" class="pb-btn-apply">
+                  Postuler pour ce sujet
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+              }
+            </div>
+
+            <!-- RIGHT SIDEBAR -->
+            <div class="pb-right">
+              <div class="pb-side-sec">
+                <div class="pb-sh"><span class="pb-sn">01</span><h3>Prérequis</h3></div>
+                <ul class="pb-req-list">
+                  <li><span class="pb-bul"></span>Connaissances en développement web</li>
+                  <li><span class="pb-bul"></span>Maîtrise des technologies requises</li>
+                  <li><span class="pb-bul"></span>Capacité de travail en équipe</li>
+                </ul>
+              </div>
+              <div class="pb-side-sec">
+                <div class="pb-sh"><span class="pb-sn grn">02</span><h3>Objectifs</h3></div>
+                <ul class="pb-obj-list">
+                  <li><span class="pb-on">1</span>Développer une solution complète</li>
+                  <li><span class="pb-on">2</span>Implémenter les fonctionnalités clés</li>
+                  <li><span class="pb-on">3</span>Assurer la qualité du code</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- NAVIGATION -->
+          <div class="pb-nav">
+            <button class="pb-nav-btn" (click)="previousSubject()" [disabled]="currentIndex() === 0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              Précédent
+            </button>
+            <div class="pb-dots">
+              @for (sujet of filteredSujets(); track sujet.id; let i = $index) {
+                @if (i < 10) {
+                  <button class="pb-dot" [class.active]="i === currentIndex()" (click)="goToSubject(i)"></button>
+                }
+              }
+              @if (filteredSujets().length > 10) {
+                <span class="pb-more">…</span>
+              }
+            </div>
+            <button class="pb-nav-btn" (click)="nextSubject()" [disabled]="currentIndex() === filteredSujets().length - 1">
+              Suivant
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+  

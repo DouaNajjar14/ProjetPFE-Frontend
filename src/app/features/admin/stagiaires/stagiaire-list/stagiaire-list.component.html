@@ -1,0 +1,259 @@
+<!-- ══ TOAST ══ -->
+<p-toast position="bottom-right" />
+
+<div class="stag-page">
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="stag-header">
+    <div class="stag-header-left">
+      <div class="stag-header-icon">
+        <i class="pi pi-users text-white text-xl"></i>
+      </div>
+      <div>
+        <h1 class="stag-title">Stagiaires</h1>
+        <p class="stag-subtitle">
+          {{ filteredStagiaires().length }} résultat(s) affiché(s)
+        </p>
+      </div>
+    </div>
+    <p-button
+      icon="pi pi-refresh"
+      label="Actualiser"
+      [outlined]="true"
+      severity="secondary"
+      size="small"
+      (onClick)="loadStagiaires()"
+    />
+  </div>
+
+  <!-- ══ STAT CARDS ══ -->
+  <div class="stag-stats">
+    <div class="stat-card">
+      <div class="stat-accent stat-accent--total"></div>
+      <div class="stat-icon stat-icon--total"><i class="pi pi-users"></i></div>
+      <div>
+        <span class="stat-num">{{ totalCount }}</span>
+        <span class="stat-lbl">Total</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-accent stat-accent--green"></div>
+      <div class="stat-icon stat-icon--green">
+        <i class="pi pi-check-circle"></i>
+      </div>
+      <div>
+        <span class="stat-num">{{ actifCount }}</span>
+        <span class="stat-lbl">Actifs</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-accent stat-accent--blue"></div>
+      <div class="stat-icon stat-icon--blue"><i class="pi pi-flag"></i></div>
+      <div>
+        <span class="stat-num">{{ termineCount }}</span>
+        <span class="stat-lbl">Terminés</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-accent stat-accent--red"></div>
+      <div class="stat-icon stat-icon--red">
+        <i class="pi pi-times-circle"></i>
+      </div>
+      <div>
+        <span class="stat-num">{{ abandonneCount }}</span>
+        <span class="stat-lbl">Abandonnés</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN PANEL ══ -->
+  <div class="stag-panel">
+    <!-- Filters -->
+    <div class="stag-filters">
+      <div class="flex-1 relative stag-search-wrap">
+        <i
+          class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-surface-400"
+        ></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Nom, prénom, email, département..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchInput()"
+          class="w-full pl-10 stag-search-input"
+        />
+      </div>
+
+      <p-dropdown
+        [options]="statutOptions"
+        [(ngModel)]="filterStatut"
+        (ngModelChange)="onFilterChange()"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Tous les statuts"
+        styleClass="w-48"
+      />
+
+      <p-dropdown
+        [options]="typeStageOptions"
+        [(ngModel)]="filterTypeStage"
+        (ngModelChange)="onFilterChange()"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Tous les types"
+        styleClass="w-48"
+      />
+
+      @if (searchQuery || filterStatut || filterTypeStage) {
+        <p-button
+          icon="pi pi-times"
+          label="Effacer"
+          [outlined]="true"
+          severity="secondary"
+          size="small"
+          (onClick)="clearFilters()"
+        />
+      }
+    </div>
+
+    <!-- Table PrimeNG -->
+    <p-table
+      [value]="filteredStagiaires()"
+      [loading]="isLoading()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [rowHover]="true"
+      responsiveLayout="scroll"
+      styleClass="stag-table"
+    >
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="nom">Nom complet <p-sortIcon field="nom" /></th>
+          <th>Email</th>
+          <th>Type stage</th>
+          <th pSortableColumn="departementNom">
+            Département <p-sortIcon field="departementNom" />
+          </th>
+          <th>Encadrant</th>
+          <th>Période</th>
+          <th pSortableColumn="statut">Statut <p-sortIcon field="statut" /></th>
+          <th pSortableColumn="createdAt">
+            Date création <p-sortIcon field="createdAt" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <!-- Body -->
+      <ng-template pTemplate="body" let-s>
+        <tr class="stag-row">
+          <!-- Nom complet -->
+          <td>
+            <div class="flex items-center gap-3">
+              <p-avatar
+                [label]="getInitials(s.prenom, s.nom)"
+                shape="square"
+                styleClass="stag-avatar"
+              />
+              <div class="min-w-0">
+                <p class="stag-name">{{ s.prenom }} {{ s.nom }}</p>
+              </div>
+            </div>
+          </td>
+
+          <!-- Email -->
+          <td>
+            <span class="stag-email">{{ s.email }}</span>
+          </td>
+
+          <!-- Type stage -->
+          <td>
+            <p-tag
+              [value]="getTypeLabel(s.typeStage)"
+              [severity]="getTypeSeverity(s.typeStage)"
+            />
+          </td>
+
+          <!-- Département -->
+          <td>
+            <span class="stag-dept">{{ s.departementNom }}</span>
+          </td>
+
+          <!-- Encadrant -->
+          <td>
+            <span class="stag-encadrant">{{
+              s.encadrantNomComplet || "—"
+            }}</span>
+          </td>
+
+          <!-- Période -->
+          <td class="whitespace-nowrap text-sm text-surface-500">
+            {{ formatDate(s.dateDebut) }} → {{ formatDate(s.dateFin) }}
+          </td>
+
+          <!-- Statut -->
+          <td>
+            <p-tag
+              [value]="getStatutLabel(s.statut)"
+              [severity]="getStatutSeverity(s.statut)"
+              [icon]="
+                s.statut === 'ACTIF'
+                  ? 'pi pi-check'
+                  : s.statut === 'TERMINE'
+                    ? 'pi pi-flag'
+                    : 'pi pi-times'
+              "
+            />
+          </td>
+
+          <!-- Date création -->
+          <td class="whitespace-nowrap text-sm text-surface-500">
+            {{ formatDate(s.createdAt) }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Empty -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">
+            <div class="stag-empty">
+              <div class="stag-empty-icon">
+                <i class="pi pi-inbox"></i>
+              </div>
+              <p class="stag-empty-title">Aucun stagiaire trouvé</p>
+              <p class="stag-empty-desc">
+                {{
+                  searchQuery || filterStatut || filterTypeStage
+                    ? "Modifiez vos critères de recherche"
+                    : "Aucun stagiaire enregistré sur la plateforme"
+                }}
+              </p>
+              @if (searchQuery || filterStatut || filterTypeStage) {
+                <p-button
+                  label="Effacer les filtres"
+                  icon="pi pi-filter-slash"
+                  [outlined]="true"
+                  severity="secondary"
+                  size="small"
+                  (onClick)="clearFilters()"
+                />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Footer -->
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="8" class="stag-table-footer">
+            <i class="pi pi-list" style="font-size: 11px; opacity: 0.4"></i>
+            {{ filteredStagiaires().length }} résultat(s) ·
+            {{ stagiaires().length }} au total
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

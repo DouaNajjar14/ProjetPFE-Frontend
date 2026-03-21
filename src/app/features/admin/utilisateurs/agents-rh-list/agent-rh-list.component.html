@@ -1,0 +1,902 @@
+<div class="animate-fade-in">
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 px-6 py-5 bg-white rounded-2xl border border-gray-200 shadow-sm">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-ooredoo flex items-center justify-center shadow-md flex-shrink-0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      </div>
+      <div class="flex flex-col justify-center">
+        <h1 class="text-2xl font-bold text-gray-900 leading-none">Gestion des Agents RH</h1>
+        <p class="text-sm text-gray-500 mt-1.5 leading-none">{{ filteredAgents().length }} agent(s) au total</p>
+      </div>
+    </div>
+    <button class="btn-ooredoo-red" (click)="openCreateModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+      <span>Nouvel Agent RH</span>
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div
+      class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+      (click)="setFilter('tous')"
+    >
+      <div
+        class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#6366F1"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-[22px] h-[22px]"
+        >
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+        </svg>
+      </div>
+      <div>
+        <span
+          class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight"
+          >{{ agents().length }}</span
+        >
+        <span class="block text-xs text-brand-muted font-medium mt-0.5"
+          >Total</span
+        >
+      </div>
+    </div>
+    <div
+      class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+      (click)="setFilter('actifs')"
+    >
+      <div
+        class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#10B981"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-[22px] h-[22px]"
+        >
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+      </div>
+      <div>
+        <span
+          class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight"
+          >{{ activeCount }}</span
+        >
+        <span class="block text-xs text-brand-muted font-medium mt-0.5"
+          >Actifs</span
+        >
+      </div>
+    </div>
+    <div
+      class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
+      (click)="setFilter('archives')"
+    >
+      <div
+        class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#F59E0B"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-[22px] h-[22px]"
+        >
+          <polyline points="21 8 21 21 3 21 3 8" />
+          <rect x="1" y="3" width="22" height="5" />
+        </svg>
+      </div>
+      <div>
+        <span
+          class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight"
+          >{{ archivedCount }}</span
+        >
+        <span class="block text-xs text-brand-muted font-medium mt-0.5"
+          >Archivés</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
+    <div
+      class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]"
+    >
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="
+          activeFilter === 'actifs'
+            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
+            : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
+        "
+        (click)="setFilter('actifs')"
+      >
+        Actifs
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="
+          activeFilter === 'archives'
+            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
+            : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
+        "
+        (click)="setFilter('archives')"
+      >
+        Archivés
+      </button>
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="
+          activeFilter === 'tous'
+            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
+            : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
+        "
+        (click)="setFilter('tous')"
+      >
+        Tous
+      </button>
+    </div>
+    <div
+      class="flex items-center gap-2 bg-white border border-brand-border rounded-[10px] px-4 py-2 min-w-[300px] transition-all duration-200 focus-within:border-ooredoo-600 focus-within:shadow-[0_0_0_3px_rgba(237,28,36,0.08)]"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        class="w-[18px] h-[18px] text-brand-light flex-shrink-0"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <input
+        type="text"
+        placeholder="Rechercher par nom, prénom ou email..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        class="flex-1 border-none bg-transparent text-sm text-brand-text outline-none placeholder:text-brand-light"
+      />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card-ooredoo overflow-hidden">
+    @if (isLoading()) {
+      <div class="flex flex-col items-center justify-center py-16 gap-4">
+        <div
+          class="w-9 h-9 rounded-full border-[3px] border-brand-border border-t-ooredoo-600 animate-spin"
+        ></div>
+        <span class="text-sm text-brand-muted"
+          >Chargement des agents RH...</span
+        >
+      </div>
+    } @else if (filteredAgents().length === 0) {
+      <div class="flex flex-col items-center justify-center py-16 text-center">
+        <div
+          class="w-16 h-16 rounded-2xl bg-ooredoo-600/[0.06] flex items-center justify-center mb-4"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ED1C24"
+            stroke-width="1.5"
+            class="w-8 h-8"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-brand-text mb-1">
+          Aucun agent RH trouvé
+        </h3>
+        <p class="text-sm text-brand-muted mb-5">
+          {{
+            searchTerm
+              ? "Essayez de modifier votre recherche"
+              : "Commencez par créer un nouvel agent RH"
+          }}
+        </p>
+        @if (!searchTerm) {
+          <button
+            class="btn-ooredoo-red text-xs px-4 py-2"
+            (click)="openCreateModal()"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              class="w-4 h-4"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Créer un agent RH
+          </button>
+        }
+      </div>
+    } @else {
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-brand-bg border-b border-brand-border">
+            <th
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
+            >
+              Agent
+            </th>
+            <th
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
+            >
+              Email
+            </th>
+            <th
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
+            >
+              Téléphone
+            </th>
+            <th
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
+            >
+              Statut
+            </th>
+            <th
+              class="px-5 py-3.5 text-left text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
+            >
+              Date de création
+            </th>
+            <th
+              class="px-5 py-3.5 text-right text-xs font-bold uppercase tracking-[0.08em] text-brand-muted"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (agent of paginatedAgents(); track agent.id) {
+            <tr
+              class="border-b border-brand-border last:border-b-0 transition-colors hover:bg-ooredoo-600/[0.02] cursor-pointer"
+              [class.opacity-70]="!agent.actif"
+              (click)="openDetailModal(agent)"
+            >
+              <td class="px-5 py-4">
+                <div class="flex items-center gap-3.5">
+                  <div
+                    class="w-10 h-10 rounded-[10px] flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                    [class]="
+                      agent.actif
+                        ? 'bg-gradient-to-br from-ooredoo-600 to-ooredoo-800'
+                        : 'bg-gradient-to-br from-gray-400 to-gray-500'
+                    "
+                  >
+                    {{ agent.prenom.charAt(0) }}{{ agent.nom.charAt(0) }}
+                  </div>
+                  <div>
+                    <span
+                      class="block text-base font-semibold text-brand-text"
+                      >{{ agent.prenom }} {{ agent.nom }}</span
+                    >
+                    <span class="block text-[0.8125rem] text-brand-light">Agent RH</span>
+                  </div>
+                </div>
+              </td>
+              <td class="px-5 py-4 text-sm text-brand-muted">
+                {{ agent.email }}
+              </td>
+              <td class="px-5 py-4 text-sm text-brand-muted">
+                {{ agent.tel || "—" }}
+              </td>
+              <td class="px-5 py-4">
+                <span
+                  class="badge-status"
+                  [class]="
+                    agent.actif
+                      ? 'bg-emerald-50 text-emerald-800'
+                      : 'bg-amber-50 text-amber-800'
+                  "
+                >
+                  <span
+                    class="w-1.5 h-1.5 rounded-full"
+                    [class]="agent.actif ? 'bg-emerald-500' : 'bg-amber-500'"
+                  ></span>
+                  {{ agent.actif ? "Actif" : "Archivé" }}
+                </span>
+              </td>
+              <td class="px-5 py-4 text-sm text-brand-light">
+                {{ formatDate(agent.dateCreation) }}
+              </td>
+              <td class="px-5 py-4 text-right">
+                <div class="flex items-center gap-1.5 justify-end">
+                  @if (agent.actif) {
+                    <button
+                      title="Modifier"
+                      (click)="$event.stopPropagation(); openEditModal(agent)"
+                      class="w-9 h-9 rounded-[10px] border border-brand-border bg-white flex items-center justify-center transition-all duration-200 hover:bg-blue-50 hover:border-blue-400 cursor-pointer"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="w-4 h-4 text-brand-muted"
+                      >
+                        <path
+                          d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                        />
+                        <path
+                          d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                        />
+                      </svg>
+                    </button>
+                  }
+                  <button
+                    [title]="agent.actif ? 'Archiver' : 'Désarchiver'"
+                    (click)="$event.stopPropagation(); openArchiveConfirm(agent)"
+                    class="w-9 h-9 rounded-[10px] border border-brand-border bg-white flex items-center justify-center transition-all duration-200 cursor-pointer"
+                    [class]="
+                      !agent.actif
+                        ? 'hover:bg-emerald-50 hover:border-emerald-400'
+                        : 'hover:bg-amber-50 hover:border-amber-400'
+                    "
+                  >
+                    @if (!agent.actif) {
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="w-4 h-4 text-brand-muted"
+                      >
+                        <polyline points="1 4 1 10 7 10" />
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                      </svg>
+                    } @else {
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="w-4 h-4 text-brand-muted"
+                      >
+                        <polyline points="21 8 21 21 3 21 3 8" />
+                        <rect x="1" y="3" width="22" height="5" />
+                        <line x1="10" y1="12" x2="14" y2="12" />
+                      </svg>
+                    }
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6 px-1">
+          <p class="text-sm text-gray-500">
+            Page <span class="font-semibold text-gray-800">{{ currentPage() }}</span> sur <span class="font-semibold text-gray-800">{{ totalPages() }}</span>
+            &mdash; <span class="font-semibold text-gray-800">{{ filteredAgents().length }}</span> agent(s)
+          </p>
+          <div class="flex items-center gap-1">
+            <button (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+              class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            @for (page of pageNumbers(); track page) {
+              <button (click)="goToPage(page)"
+                class="w-9 h-9 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all cursor-pointer"
+                [class]="currentPage() === page ? 'bg-ooredoo-600 border-ooredoo-600 text-white shadow-sm' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'">
+                {{ page }}
+              </button>
+            }
+            <button (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+              class="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+    }
+  </div>
+</div>
+
+<!-- ═══════ CREATE/EDIT MODAL ═══════ -->
+@if (showModal()) {
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5"
+    (click)="closeModal()"
+  >
+    <div
+      class="bg-white rounded-2xl w-full max-w-[720px] shadow-modal animate-modal-in max-h-[90vh] flex flex-col"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Modal Header with Gradient -->
+      <div class="relative bg-gradient-to-br from-[#ED1C24] via-[#ED1C24] to-[#ED1C24] px-6 py-5 text-white rounded-t-2xl">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/20 blur-3xl"></div>
+        </div>
+        <div class="relative flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6">
+                @if (modalMode === 'create') {
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+                } @else {
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                }
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">{{ modalMode === 'create' ? 'Nouvel Agent RH' : 'Modifier l\'Agent RH' }}</h2>
+              <p class="text-white/70 text-sm mt-0.5">{{ modalMode === 'create' ? 'Créez un nouveau compte agent RH' : 'Modifiez les informations de l\'agent' }}</p>
+            </div>
+          </div>
+          <button (click)="closeModal()" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="px-6 py-5 overflow-y-auto flex-1 space-y-5">
+        @if (modalError()) {
+          <div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-5 h-5">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-red-800">Erreur</p>
+              <p class="text-sm text-red-600">{{ modalError() }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- SECTION 1: Informations personnelles -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon bg-red-100">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-5 h-5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="form-section-title">Informations personnelles</h3>
+              <p class="form-section-subtitle">Identité de l'agent RH</p>
+            </div>
+          </div>
+          <div class="form-section-content">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">Prénom <span class="text-red-500">*</span></label>
+                <input type="text" class="form-input" 
+                       [class.field-invalid]="isFieldInvalid('prenom')"
+                       placeholder="Ex: Mohamed" 
+                       [(ngModel)]="formPrenom" 
+                       (blur)="touchField('prenom')"
+                       (ngModelChange)="onNameChange()"
+                       maxlength="50"/>
+                @if (getFieldError('prenom')) {
+                  <span class="flex items-center gap-1 text-xs text-red-600 mt-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5 flex-shrink-0">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    {{ getFieldError('prenom') }}
+                  </span>
+                }
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nom <span class="text-red-500">*</span></label>
+                <input type="text" class="form-input" 
+                       [class.field-invalid]="isFieldInvalid('nom')"
+                       placeholder="Ex: Ben Ali" 
+                       [(ngModel)]="formNom" 
+                       (blur)="touchField('nom')"
+                       (ngModelChange)="onNameChange()"
+                       maxlength="50"/>
+                @if (getFieldError('nom')) {
+                  <span class="flex items-center gap-1 text-xs text-red-600 mt-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5 flex-shrink-0">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    {{ getFieldError('nom') }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Contact & Sécurité -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-icon bg-blue-100">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" class="w-5 h-5">
+                <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="form-section-title">Contact & Sécurité</h3>
+              <p class="form-section-subtitle">Coordonnées et accès</p>
+            </div>
+          </div>
+          <div class="form-section-content">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">Email <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                  <input type="email" class="form-input has-icon" 
+                         [class.field-invalid]="isFieldInvalid('email')"
+                         placeholder="prenom.nom@ooredoo.tn" 
+                         [(ngModel)]="formEmail"
+                         (blur)="touchField('email')"/>
+                </div>
+                @if (getFieldError('email')) {
+                  <span class="flex items-center gap-1 text-xs text-red-600 mt-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5 flex-shrink-0">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    {{ getFieldError('email') }}
+                  </span>
+                } @else {
+                  <p class="form-hint">Format: xxx&#64;ooredoo.tn (unique)</p>
+                }
+              </div>
+              <div class="form-group">
+                <label class="form-label">Téléphone</label>
+                <div class="relative">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/>
+                  </svg>
+                  <input type="tel" class="form-input has-icon" 
+                         [class.field-invalid]="isFieldInvalid('tel')"
+                         placeholder="XX XXX XXX" 
+                         maxlength="8"
+                         [(ngModel)]="formTel"
+                         (blur)="touchField('tel')"/>
+                </div>
+                @if (getFieldError('tel')) {
+                  <span class="flex items-center gap-1 text-xs text-red-600 mt-1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5 flex-shrink-0">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    {{ getFieldError('tel') }}
+                  </span>
+                } @else {
+                  <p class="form-hint">8 chiffres (ex: 29 123 456)</p>
+                }
+              </div>
+            </div>
+            @if (modalMode === 'create') {
+              <div class="form-group mt-4">
+                <label class="form-label flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" class="w-4 h-4">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  Mot de passe (généré automatiquement)
+                </label>
+                <div class="relative">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <input [type]="showPassword ? 'text' : 'password'" 
+                         class="form-input has-icon has-icon-right bg-gray-50" 
+                         [(ngModel)]="formMotDePasse"
+                         readonly/>
+                  <button type="button" (click)="showPassword = !showPassword"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
+                    @if (showPassword) {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                        <path d="M17.94 17.94A10 10 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94"/><line x1="1" y1="1" x2="23" y2="23"/>
+                      </svg>
+                    } @else {
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    }
+                  </button>
+                </div>
+                @if (formMotDePasse) {
+                  <p class="form-hint text-emerald-600">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5 inline mr-1">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Mot de passe généré à partir du nom et prénom
+                  </p>
+                } @else {
+                  <p class="form-hint">Remplissez le prénom et le nom pour générer le mot de passe</p>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-2xl"
+      >
+        <p class="text-xs text-gray-400">
+          <span class="text-red-500">*</span> Champs obligatoires
+        </p>
+        <div class="flex items-center gap-3">
+          <button class="modal-btn-cancel" (click)="closeModal()">Annuler</button>
+          <button
+            class="btn-ooredoo-red"
+            (click)="saveModal()"
+            [disabled]="isSaving()"
+          >
+            @if (isSaving()) {
+              <div
+                class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
+              ></div>
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                @if (modalMode === 'create') {
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+                } @else {
+                  <polyline points="20 6 9 17 4 12"/>
+                }
+              </svg>
+            }
+            <span>{{ modalMode === "create" ? "Créer l'agent RH" : "Enregistrer" }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ DETAIL MODAL ═══════ -->
+@if (showDetail()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDetailModal()">
+    <div class="bg-white rounded-2xl max-w-[520px] w-full shadow-modal animate-modal-in overflow-hidden" (click)="$event.stopPropagation()">
+      <!-- Header avec fond coloré -->
+      <div class="relative bg-gradient-to-br from-[#ED1C24] via-[#ED1C24] to-[#ED1C24] p-6 text-white">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20 blur-2xl"></div>
+          <div class="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
+        </div>
+        <div class="relative flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl font-bold shadow-lg">
+            {{ selectedAgent?.prenom?.charAt(0) }}{{ selectedAgent?.nom?.charAt(0) }}
+          </div>
+          <div>
+            <h2 class="text-xl font-bold">{{ selectedAgent?.prenom }} {{ selectedAgent?.nom }}</h2>
+            <p class="text-white/80 text-sm">Agent Ressources Humaines</p>
+            <span class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-semibold"
+              [class]="selectedAgent?.actif ? 'bg-emerald-500/20 text-emerald-100' : 'bg-red-200/30 text-red-100'">
+              <span class="w-1.5 h-1.5 rounded-full" [class]="selectedAgent?.actif ? 'bg-emerald-400' : 'bg-red-300'"></span>
+              {{ selectedAgent?.actif ? 'Actif' : 'Archivé' }}
+            </span>
+          </div>
+        </div>
+        <button (click)="closeDetailModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Contenu -->
+      <div class="p-6 space-y-5">
+        <!-- Contact -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Contact</h4>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+              <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
+                  <rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-gray-400">Email</p>
+                <p class="text-sm font-medium text-gray-900 truncate">{{ selectedAgent?.email }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+              <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs text-gray-400">Téléphone</p>
+                <p class="text-sm font-medium text-gray-900">{{ selectedAgent?.tel || 'Non renseigné' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Informations</h4>
+          <div class="bg-gray-50 rounded-xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-500">Date de création</span>
+              <span class="text-sm font-medium text-gray-900">{{ formatDate(selectedAgent?.dateCreation || '') }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-500">Rôle</span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-100 text-red-700 rounded-lg text-xs font-medium">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Agent RH
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
+        <button class="modal-btn-cancel" (click)="closeDetailModal()">Fermer</button>
+        @if (selectedAgent?.actif) {
+          <button class="btn-ooredoo-red" (click)="editFromDetail()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            <span>Modifier</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ CONFIRM DIALOG ═══════ -->
+@if (showConfirm()) {
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5"
+    (click)="closeConfirm()"
+  >
+    <div
+      class="bg-white rounded-2xl max-w-[420px] w-full shadow-modal animate-modal-in text-center p-8"
+      (click)="$event.stopPropagation()"
+    >
+      <div
+        class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+        [class]="!confirmAgent?.actif ? 'bg-emerald-50' : 'bg-amber-50'"
+      >
+        @if (!confirmAgent?.actif) {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#10B981"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-7 h-7"
+          >
+            <polyline points="1 4 1 10 7 10" />
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+          </svg>
+        } @else {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#F59E0B"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-7 h-7"
+          >
+            <polyline points="21 8 21 21 3 21 3 8" />
+            <rect x="1" y="3" width="22" height="5" />
+            <line x1="10" y1="12" x2="14" y2="12" />
+          </svg>
+        }
+      </div>
+      <h3 class="text-lg font-extrabold text-brand-text mb-2">
+        {{ confirmAgent?.actif ? "Archiver" : "Désarchiver" }} cet agent ?
+      </h3>
+      <p class="text-sm text-brand-muted leading-relaxed mb-6">
+        {{
+          confirmAgent?.actif
+            ? "L'agent \"" +
+              confirmAgent?.prenom +
+              " " +
+              confirmAgent?.nom +
+              '" sera désactivé et ne pourra plus accéder à la plateforme.'
+            : "L'agent \"" +
+              confirmAgent?.prenom +
+              " " +
+              confirmAgent?.nom +
+              '" sera réactivé et pourra accéder à la plateforme.'
+        }}
+      </p>
+      <div class="flex gap-3 justify-center">
+        <button class="modal-btn-cancel" (click)="closeConfirm()">Annuler</button>
+        <button
+          (click)="confirmArchive()"
+          [class]="
+            !confirmAgent?.actif ? 'confirm-btn-success' : 'confirm-btn-danger'
+          "
+        >
+          {{ confirmAgent?.actif ? "Archiver" : "Désarchiver" }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════ TOAST ═══════ -->
+@if (toastMessage()) {
+  <div
+    class="fixed bottom-8 right-8 flex items-center gap-3 px-5 py-3.5 rounded-[14px] shadow-toast z-[2000] animate-toast-in text-sm font-semibold"
+    [class]="
+      toastType() === 'success'
+        ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+        : 'bg-red-50 border border-red-200 text-ooredoo-800'
+    "
+  >
+    <div>
+      @if (toastType() === "success") {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#10B981"
+          stroke-width="2.5"
+          class="w-5 h-5"
+        >
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+      } @else {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#ED1C24"
+          stroke-width="2.5"
+          class="w-5 h-5"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      }
+    </div>
+    <span>{{ toastMessage() }}</span>
+  </div>
+}
