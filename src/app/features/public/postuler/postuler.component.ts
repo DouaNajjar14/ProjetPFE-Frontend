@@ -29,6 +29,8 @@ export class PostulerComponent implements OnInit {
   lettreFile = signal<File | null>(null);
   submitting = signal(false);
   showSuccess = signal(false);
+  showErrorModal = signal(false);
+  errorMessage = signal<string>('');
   currentStep = signal(1);
   acceptTerms = false;
 
@@ -370,7 +372,25 @@ export class PostulerComponent implements OnInit {
       this.cv2File() || undefined
     ).subscribe({
       next: () => { this.submitting.set(false); this.showSuccess.set(true); },
-      error: (err) => { console.error('Erreur:', err?.error || err); this.submitting.set(false); alert('Erreur: ' + (err?.error?.message || 'Erreur lors de la soumission.')); }
+      error: (err) => {
+        console.error('Erreur:', err?.error || err);
+        this.submitting.set(false);
+        this.errorMessage.set(this.cleanErrorMessage(err?.error?.message));
+        this.showErrorModal.set(true);
+      }
     });
+  }
+
+  // ═══ Error Modal ═══
+  private cleanErrorMessage(message: string): string {
+    if (!message) return 'Erreur lors de la soumission.';
+    // Enlever le préfixe du contrôleur pour afficher seulement le vrai message
+    const prefix = 'Erreur lors de la création de la candidature: ';
+    return message.startsWith(prefix) ? message.substring(prefix.length) : message;
+  }
+
+  closeErrorModal() {
+    this.showErrorModal.set(false);
+    this.errorMessage.set('');
   }
 }

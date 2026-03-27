@@ -15,7 +15,7 @@ export interface CandidatureStats {
   providedIn: 'root'
 })
 export class AgentRHService {
-  private readonly API_URL = `${environment.apiUrl}/admin/agents-rh`;
+  private readonly API_URL = `${environment.apiUrl}/agent-rh/agents`;
   private readonly CANDIDATURES_URL = `${environment.apiUrl}/agent-rh/candidatures`;
 
   constructor(private http: HttpClient) { }

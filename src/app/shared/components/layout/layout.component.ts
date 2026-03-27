@@ -78,6 +78,10 @@ export class LayoutComponent {
     if (!item.children) return false;
     return item.children.some(child => this.isActive(child.route!));
   }
+
+  navigateToProfil(): void {
+    this.router.navigate(['/admin/profil']);
+  }
 }
 
 interface NavItem {

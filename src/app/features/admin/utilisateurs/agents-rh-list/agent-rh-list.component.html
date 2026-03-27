@@ -1,128 +1,52 @@
 <div class="animate-fade-in">
-  <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 px-6 py-5 bg-white rounded-2xl border border-gray-200 shadow-sm">
-    <div class="flex items-center gap-4">
-      <div class="w-14 h-14 rounded-2xl bg-ooredoo flex items-center justify-center shadow-md flex-shrink-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      </div>
-      <div class="flex flex-col justify-center">
-        <h1 class="text-2xl font-bold text-gray-900 leading-none">Gestion des Agents RH</h1>
-        <p class="text-sm text-gray-500 mt-1.5 leading-none">{{ filteredAgents().length }} agent(s) au total</p>
-      </div>
-    </div>
-    <button class="btn-ooredoo-red" (click)="openCreateModal()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
-        <line x1="12" y1="5" x2="12" y2="19" />
-        <line x1="5" y1="12" x2="19" y2="12" />
-      </svg>
-      <span>Nouvel Agent RH</span>
-    </button>
-  </div>
-
-  <!-- Stats -->
-  <div class="grid grid-cols-3 gap-4 mb-6">
-    <div
-      class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-      (click)="setFilter('tous')"
-    >
-      <div
-        class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#6366F1"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="w-[22px] h-[22px]"
-        >
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-        </svg>
-      </div>
+  <!-- Red Hero Section like Stages -->
+  <div class="hero hero-admin">
+    <div class="hero-top">
       <div>
-        <span
-          class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight"
-          >{{ agents().length }}</span
-        >
-        <span class="block text-xs text-brand-muted font-medium mt-0.5"
-          >Total</span
-        >
+        <h1>Gestion des Agents RH</h1>
+        <p>Gérez tous vos agents ressources humaines</p>
       </div>
-    </div>
-    <div
-      class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-      (click)="setFilter('actifs')"
-    >
-      <div
-        class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#10B981"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="w-[22px] h-[22px]"
-        >
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-          <polyline points="22 4 12 14.01 9 11.01" />
+      <button class="btn-hero-add" (click)="openCreateModal()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
-      </div>
-      <div>
-        <span
-          class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight"
-          >{{ activeCount }}</span
-        >
-        <span class="block text-xs text-brand-muted font-medium mt-0.5"
-          >Actifs</span
-        >
-      </div>
+        Nouvel Agent RH
+      </button>
     </div>
-    <div
-      class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-      (click)="setFilter('archives')"
-    >
-      <div
-        class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#F59E0B"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="w-[22px] h-[22px]"
-        >
-          <polyline points="21 8 21 21 3 21 3 8" />
-          <rect x="1" y="3" width="22" height="5" />
-        </svg>
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-n">{{ agents().length }}</div>
+        <div class="hstat-l">Total</div>
       </div>
-      <div>
-        <span
-          class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight"
-          >{{ archivedCount }}</span
-        >
-        <span class="block text-xs text-brand-muted font-medium mt-0.5"
-          >Archivés</span
-        >
+      <div class="hstat" style="background:rgba(16,185,129,.18);border-color:rgba(167,243,208,.3)">
+        <div class="hstat-n">{{ activeCount }}</div>
+        <div class="hstat-l">Actifs</div>
+      </div>
+      <div class="hstat" style="background:rgba(217,119,6,.18);border-color:rgba(253,212,114,.3)">
+        <div class="hstat-n">{{ archivedCount }}</div>
+        <div class="hstat-l">Archivés</div>
       </div>
     </div>
   </div>
 
-  <!-- Toolbar -->
-  <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
+  <!-- Search & Filters Bar Premium -->
+  <div class="mb-8 space-y-4">
+    <!-- Toolbar -->
+    <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
     <div
       class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]"
     >
+      <button
+        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
+        [class]="
+          activeFilter === 'tous'
+            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
+            : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
+        "
+        (click)="setFilter('tous')"
+      >
+        Tous
+      </button>
       <button
         class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
         [class]="
@@ -144,17 +68,6 @@
         (click)="setFilter('archives')"
       >
         Archivés
-      </button>
-      <button
-        class="px-4 py-2 text-sm font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
-        [class]="
-          activeFilter === 'tous'
-            ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]'
-            : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'
-        "
-        (click)="setFilter('tous')"
-      >
-        Tous
       </button>
     </div>
     <div

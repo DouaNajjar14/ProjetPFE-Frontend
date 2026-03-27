@@ -7,6 +7,7 @@ export interface SujetPfeSimple {
     id: string;
     titre: string;
     departementNom: string;
+    dureeEnMois?: number;
 }
 
 export interface Candidature {

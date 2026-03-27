@@ -624,4 +624,38 @@
         </div>
       </div>
     }
+
+    <!-- ═══ ERROR MODAL ═══ -->
+    @if (showErrorModal()) {
+      <div class="error-modal-overlay" (click)="closeErrorModal()">
+        <div class="error-modal" (click)="$event.stopPropagation()">
+          <div class="error-modal-header">
+            <div class="error-modal-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <h3>Erreur de candidature</h3>
+            <button class="error-modal-close" (click)="closeErrorModal()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="error-modal-body">
+            <p class="error-modal-message">{{ errorMessage() }}</p>
+          </div>
+
+          <div class="error-modal-footer">
+            <button class="error-modal-btn" (click)="closeErrorModal()">
+              Comprendre et continuer
+            </button>
+          </div>
+        </div>
+      </div>
+    }
   

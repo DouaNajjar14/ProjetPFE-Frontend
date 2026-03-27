@@ -13,6 +13,7 @@ export interface LoginResponse {
   nom: string;
   prenom: string;
   role: Role;
+  premier_login?: boolean;
 }
 
 export interface User {

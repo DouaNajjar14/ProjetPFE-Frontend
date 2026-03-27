@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { SujetPfeService } from '../../../core/services/sujet-pfe.service';
 import { DepartementService } from '../../../core/services/departement.service';
@@ -73,7 +74,8 @@ export class AgentRhSujetPfeComponent implements OnInit, OnDestroy {
     private sujetService: SujetPfeService,
     private departementService: DepartementService,
     private specialiteUniversitaireService: SpecialiteUniversitaireService,
-    private competenceService: CompetenceService
+    private competenceService: CompetenceService,
+    private route: ActivatedRoute
   ) {
     this.initForm();
   }
@@ -84,6 +86,25 @@ export class AgentRhSujetPfeComponent implements OnInit, OnDestroy {
     this.loadDepartements();
     this.loadSpecialitesUniversitaires();
     this.loadCompetences();
+
+    // Read route parameter
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.loadAndShowSujet(params['id']);
+      }
+    });
+  }
+
+  private loadAndShowSujet(sujetId: string): void {
+    this.sujetService.trouverParId(sujetId).subscribe(
+      (sujet: SujetPfe) => {
+        this.detailSujet = sujet;
+        this.showDetail.set(true);
+      },
+      (error) => {
+        console.error('Erreur lors du chargement du sujet:', error);
+      }
+    );
   }
 
   ngOnDestroy(): void {

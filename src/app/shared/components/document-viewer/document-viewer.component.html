@@ -1,0 +1,46 @@
+<div class="document-viewer-container">
+  <!-- Loading state -->
+  <div *ngIf="isLoading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement du document...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="!isLoading() && errorMessage()" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <p class="error-message">{{ errorMessage() }}</p>
+  </div>
+
+  <!-- Desktop view: iframe for inline viewing -->
+  <div *ngIf="!isLoading() && !errorMessage() && !isMobile()" class="viewer-wrapper">
+    <iframe 
+      [src]="documentUrl() | safe" 
+      class="pdf-viewer"
+      title="Visualisation du document PDF"
+      frameborder="0">
+    </iframe>
+  </div>
+
+  <!-- Mobile view: download button only -->
+  <div *ngIf="!isLoading() && !errorMessage() && isMobile()" class="mobile-viewer">
+    <div class="mobile-message">
+      <p>Vue complète disponible sur écran plus large</p>
+    </div>
+    <button 
+      (click)="downloadDocument()" 
+      class="btn-download"
+      [disabled]="isLoading()">
+      ⬇️ Télécharger {{ getDocumentLabel() }}
+    </button>
+  </div>
+
+  <!-- Desktop view: action buttons -->
+  <div *ngIf="!isLoading() && !errorMessage() && !isMobile()" class="viewer-actions">
+    <button 
+      (click)="downloadDocument()" 
+      class="btn-download"
+      [disabled]="isLoading()">
+      ⬇️ Télécharger {{ getDocumentLabel() }}
+    </button>
+  </div>
+</div>

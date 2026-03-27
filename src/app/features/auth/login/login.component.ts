@@ -46,13 +46,21 @@ export class LoginComponent {
     this.errorMessage.set(null);
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
+      next: (response) => {
         this.isLoading.set(false);
-        const user = this.authService.currentUser();
-        if (user?.role === Role.AGENT_RH) {
-          this.router.navigate(['/agent-rh/dashboard']);
+
+        // Vérifier si c'est le premier login
+        if (response.premier_login) {
+          // Rediriger vers le changement de mot de passe
+          this.router.navigate(['/change-password-first-login']);
         } else {
-          this.router.navigate(['/admin/dashboard']);
+          // Redirection normale basée sur le rôle
+          const user = this.authService.currentUser();
+          if (user?.role === Role.AGENT_RH) {
+            this.router.navigate(['/agent-rh/dashboard']);
+          } else {
+            this.router.navigate(['/admin/dashboard']);
+          }
         }
       },
       error: (error) => {

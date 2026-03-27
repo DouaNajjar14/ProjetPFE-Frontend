@@ -43,4 +43,8 @@ export class CompetenceService {
     desarchiver(id: number): Observable<Competence> {
         return this.http.patch<Competence>(`${this.apiUrl}/${id}/desarchiver`, {});
     }
+
+    archiver(id: number): Observable<Competence> {
+        return this.http.patch<Competence>(`${this.apiUrl}/${id}/archiver`, {});
+    }
 }

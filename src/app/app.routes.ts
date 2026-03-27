@@ -35,6 +35,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
   },
   {
+    path: 'change-password-first-login',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/auth/change-password-first-login/change-password-first-login.component').then(m => m.ChangePasswordFirstLoginComponent)
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./shared/components/layout/layout.component').then(m => m.LayoutComponent),
     canActivate: [authGuard, adminGuard],
@@ -75,6 +80,10 @@ export const routes: Routes = [
       {
         path: 'create-account',
         loadComponent: () => import('./features/admin/create-account/admin-create-account.component').then(m => m.AdminCreateAccountComponent)
+      },
+      {
+        path: 'profil',
+        loadComponent: () => import('./features/admin/profil/profil.component').then(m => m.ProfilComponent)
       }
     ]
   },
@@ -101,6 +110,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/rh/sujets-pfe/agent-rh-sujet-pfe.component').then(m => m.AgentRhSujetPfeComponent)
       },
       {
+        path: 'sujets-pfe/:id',
+        loadComponent: () => import('./features/rh/sujets-pfe/agent-rh-sujet-pfe.component').then(m => m.AgentRhSujetPfeComponent)
+      },
+      {
         path: 'encadrants',
         loadComponent: () => import('./features/rh/encadrants/rh-encadrant-list.component').then(m => m.RhEncadrantListComponent)
       },
@@ -112,6 +125,10 @@ export const routes: Routes = [
       {
         path: 'candidatures/:type',
         loadComponent: () => import('./features/rh/candidatures/rh-candidatures.component').then(m => m.RhCandidaturesListComponent)
+      },
+      {
+        path: 'profil',
+        loadComponent: () => import('./features/admin/profil/profil.component').then(m => m.ProfilComponent)
       }
     ]
   },

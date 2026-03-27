@@ -75,6 +75,10 @@ export class AgentRhLayoutComponent {
     if (!item.children) return false;
     return item.children.some(child => this.isActive(child.route!));
   }
+
+  navigateToProfil(): void {
+    this.router.navigate(['/agent-rh/profil']);
+  }
 }
 
 interface NavItem {

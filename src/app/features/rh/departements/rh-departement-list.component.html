@@ -1,65 +1,54 @@
-<div class="animate-fade-in">
-  <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-ooredoo-600/[0.03] to-white rounded-2xl border border-ooredoo-600/10">
-    <div class="flex items-center gap-4">
-      <div class="w-14 h-14 rounded-2xl bg-ooredoo flex items-center justify-center shadow-lg shadow-ooredoo-600/25 flex-shrink-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
-          <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
-        </svg>
+<div class="page">
+  <!-- HERO ROUGE avec STATS -->
+  <div class="hero hero-stages">
+    <div class="hero-top">
+      <div>
+        <h1>Départements</h1>
+        <p>Gérez et traitez tous les départements</p>
       </div>
-      <div class="flex flex-col justify-center">
-        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-none">Départements</h1>
-        <p class="text-sm text-gray-500 mt-1.5 leading-none">{{ filteredDepartements().length }} département(s) • {{ totalEncadrants }} encadrant(s) • {{ totalStagiaires }} stagiaire(s)</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Stats Cards -->
-  <div class="grid grid-cols-3 gap-4 mb-6">
-    <div class="card-ooredoo flex items-center gap-4 p-5">
-      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
+      <div class="hero-badge">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/>
         </svg>
-      </div>
-      <div>
-        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ departements().length }}</span>
-        <span class="block text-xs text-brand-muted font-medium mt-0.5">Total Départements</span>
+        Départements 2025–2026
       </div>
     </div>
-    <div class="card-ooredoo flex items-center gap-4 p-5">
-      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-        </svg>
+    <div class="hero-stats" *ngIf="departements">
+      <div class="hstat">
+        <div class="hstat-n">{{ departements().length }}</div>
+        <div class="hstat-l">Total</div>
       </div>
-      <div>
-        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ totalEncadrants }}</span>
-        <span class="block text-xs text-brand-muted font-medium mt-0.5">Encadrants</span>
+      <div class="hstat" style="background:rgba(16,185,129,.18);border-color:rgba(167,243,208,.3)">
+        <div class="hstat-n">{{ totalEncadrants }}</div>
+        <div class="hstat-l">Encadrants</div>
       </div>
-    </div>
-    <div class="card-ooredoo flex items-center gap-4 p-5">
-      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-      </div>
-      <div>
-        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ totalStagiaires }}</span>
-        <span class="block text-xs text-brand-muted font-medium mt-0.5">Stagiaires</span>
+      <div class="hstat" style="background:rgba(220,38,38,.15);border-color:rgba(252,165,165,.3)">
+        <div class="hstat-n">{{ totalStagiaires }}</div>
+        <div class="hstat-l">Stagiaires</div>
       </div>
     </div>
   </div>
 
-  <!-- Toolbar: Search -->
-  <div class="flex items-center justify-between gap-4 mb-6 flex-wrap">
-    <div class="flex items-center gap-2 bg-white border border-brand-border rounded-[10px] px-4 py-2 min-w-[300px] transition-all duration-200 focus-within:border-ooredoo-600 focus-within:shadow-[0_0_0_3px_rgba(237,28,36,0.08)]">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-[18px] h-[18px] text-brand-light flex-shrink-0">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+  <!-- PILLS FILTRES -->
+  <div class="pills">
+    <button class="pill" [class.active]="!searchTerm" (click)="searchTerm = ''">
+      Tous <span class="pn">{{ departements().length }}</span>
+    </button>
+  </div>
+
+  <!-- TOOLBAR FILTRES -->
+  <div class="toolbar">
+    <div class="search">
+      <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-      <input type="text" placeholder="Rechercher un département..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
-        class="flex-1 border-none bg-transparent text-sm text-brand-text outline-none placeholder:text-brand-light"/>
+      <input type="text" placeholder="Rechercher un département…" [(ngModel)]="searchTerm" (input)="onSearchChange()"/>
     </div>
+  </div>
+
+  <!-- RES BAR -->
+  <div class="res-bar">
+    <div class="res-count"><strong>{{ filteredDepartements().length }}</strong> département(s)</div>
   </div>
 
   <!-- Cards Grid -->

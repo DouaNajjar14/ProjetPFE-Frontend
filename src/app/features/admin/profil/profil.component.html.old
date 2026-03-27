@@ -1,0 +1,500 @@
+<div class="profil-container">
+  <!-- ══ SIDEBAR ══ -->
+  <nav class="sb">
+    <div class="sb-logo">
+      <span class="logo">ooredoo</span><div class="dot"></div>
+    </div>
+
+    <div class="sb-sect">Menu principal</div>
+    <a class="ni" href="/admin/dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Tableau de bord
+    </a>
+
+    <!-- Bottom user -->
+    <div class="sb-bot">
+      <div class="sb-user-zone" title="Mon profil">
+        <div class="ua">{{ initials() }}</div>
+        <div style="min-width:0">
+          <div class="un">{{ fullName() }}</div>
+          <div class="ur">{{ profil()?.role }}</div>
+        </div>
+      </div>
+      <button class="sb-out" title="Déconnexion" (click)="authService.logout()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="bc">
+        <a href="/admin">Ooredoo Tunisie</a>
+        <span class="bc-sep">/</span>
+        <a href="/admin/dashboard">Espace Admin</a>
+        <span class="bc-sep">/</span>
+        <span class="bc-cur">Mon profil</span>
+      </div>
+      <div class="ol"><div class="ol-dot"></div>En ligne</div>
+    </div>
+
+    <div class="page" *ngIf="profil(); else loading">
+
+      <!-- HERO -->
+      <div class="hero" *ngIf="profil() as p">
+        <div class="hero-lines"></div>
+        <div class="hero-row">
+          <div class="hero-avatar">{{ initials() }}</div>
+          <div class="hero-info">
+            <h1>{{ fullName() }}</h1>
+            <div class="hero-meta">
+              <span class="hero-badge">{{ p.role }}</span>
+              <span class="hero-email">{{ p.email }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-stat-row">
+          <div class="hstat">
+            <div class="hstat-n">{{ p.statut }}</div>
+            <div class="hstat-l">Statut compte</div>
+          </div>
+          <div class="hstat">
+            <div class="hstat-n">{{ p.dateCreation | date: 'MMM yyyy' }}</div>
+            <div class="hstat-l">Membre depuis</div>
+          </div>
+          <div class="hstat">
+            <div class="hstat-n">Auj.</div>
+            <div class="hstat-l">Dernière connexion</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab" [class.on]="currentTab() === 'coordonnees'" (click)="switchTab('coordonnees')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Mes coordonnées
+        </button>
+        <button class="tab" [class.on]="currentTab() === 'securite'" (click)="switchTab('securite')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Sécurité & mot de passe
+        </button>
+        <button class="tab" [class.on]="currentTab() === 'activite'" (click)="switchTab('activite')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Activité
+        </button>
+      </div>
+
+      <!-- ══ TAB: COORDONNÉES ══ -->
+      <div *ngIf="currentTab() === 'coordonnees'">
+        <div class="prof-grid">
+
+          <!-- Informations personnelles (READONLY) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  Informations personnelles
+                </div>
+                <div class="card-sub">Nom et prénom non modifiables — données officielles</div>
+              </div>
+            </div>
+            <div class="card-body" *ngIf="profil() as p">
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+                <!-- Prénom — verrouillé -->
+                <div class="field">
+                  <div class="field-label">
+                    Prénom
+                    <span style="background:var(--gray-100);border-radius:4px;padding:1px 6px;font-size:9.5px;color:var(--gray-400);font-weight:700;letter-spacing:.03em">Verrouillé</span>
+                  </div>
+                  <div class="field-wrap">
+                    <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    <input class="f-input f-readonly" type="text" [value]="p.prenom" disabled/>
+                    <span class="lock-badge">🔒</span>
+                  </div>
+                </div>
+                <!-- Nom — verrouillé -->
+                <div class="field">
+                  <div class="field-label">
+                    Nom
+                    <span style="background:var(--gray-100);border-radius:4px;padding:1px 6px;font-size:9.5px;color:var(--gray-400);font-weight:700;letter-spacing:.03em">Verrouillé</span>
+                  </div>
+                  <div class="field-wrap">
+                    <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    <input class="f-input f-readonly" type="text" [value]="p.nom" disabled/>
+                    <span class="lock-badge">🔒</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-pill" style="margin-bottom:18px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Le nom et prénom sont définis par l'administrateur et ne peuvent pas être modifiés.
+              </div>
+
+              <div class="sec-divider">
+                <div class="sec-divider-line"></div>
+                <div class="sec-divider-label">Rôle & statut</div>
+                <div class="sec-divider-line"></div>
+              </div>
+
+              <!-- Rôle — verrouillé -->
+              <div class="field">
+                <div class="field-label">
+                  Rôle
+                  <span style="background:var(--gray-100);border-radius:4px;padding:1px 6px;font-size:9.5px;color:var(--gray-400);font-weight:700;letter-spacing:.03em">Verrouillé</span>
+                </div>
+                <div class="field-wrap">
+                  <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                  <input class="f-input f-readonly" type="text" [value]="p.role" disabled/>
+                  <span class="lock-badge">🔒</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Coordonnées modifiables -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 7.72 7.72l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z"/></svg>
+                  Coordonnées
+                </div>
+                <div class="card-sub">Email et téléphone modifiables</div>
+              </div>
+            </div>
+            <div class="card-body">
+
+              <!-- Email -->
+              <div class="field">
+                <div class="field-label">Adresse email professionnelle</div>
+                <div class="field-wrap">
+                  <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                  <input 
+                    class="f-input" 
+                    type="email"
+                    [value]="formEmail()"
+                    (input)="formEmail.set($any($event.target).value); markDirtyCoord()"
+                    [class.is-error]="hasError('email')"
+                  />
+                </div>
+                <div class="field-hint">Format : prenom.nom&#64;ooredoo.tn</div>
+                <div class="field-error" *ngIf="hasError('email')">{{ getError('email') }}</div>
+              </div>
+
+              <!-- Téléphone -->
+              <div class="field">
+                <div class="field-label">Téléphone</div>
+                <div class="field-wrap">
+                  <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 7.72 7.72l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z"/></svg></span>
+                  <input 
+                    class="f-input"
+                    type="tel"
+                    [value]="formTel()"
+                    (input)="formTel.set($any($event.target).value); markDirtyCoord()"
+                    [class.is-error]="hasError('tel')"
+                  />
+                </div>
+                <div class="field-hint">Format tunisien : +216 XX XXX XXX</div>
+                <div class="field-error" *ngIf="hasError('tel')">{{ getError('tel') }}</div>
+              </div>
+
+              <button 
+                class="btn-save" 
+                (click)="saveCoord()"
+                [disabled]="!coordonnesDirty() || coordonnesSaving()"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" *ngIf="!coordonnesSaving()"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="spinner" *ngIf="coordonnesSaving()"></span>
+                {{ coordonnesSaving() ? 'Enregistrement…' : 'Enregistrer les modifications' }}
+              </button>
+              <button 
+                class="btn-cancel-inline"
+                (click)="cancelCoord()"
+                *ngIf="coordonnesDirty()"
+              >
+                Annuler
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ TAB: SÉCURITÉ ══ -->
+      <div *ngIf="currentTab() === 'securite'">
+        <div class="prof-grid">
+
+          <!-- Changer mot de passe -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Changer le mot de passe
+                </div>
+                <div class="card-sub">Min. 8 car. — majuscule, minuscule, chiffre, symbole</div>
+              </div>
+            </div>
+            <div class="card-body">
+
+              <!-- Mot de passe actuel -->
+              <div class="field">
+                <div class="field-label">Mot de passe actuel</div>
+                <div class="field-wrap">
+                  <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                  <input 
+                    class="f-input"
+                    [type]="eyeStates().cur ? 'text' : 'password'"
+                    [value]="curPass()"
+                    (input)="curPass.set($any($event.target).value)"
+                    placeholder="Votre mot de passe actuel"
+                    [class.is-error]="hasError('curPass')"
+                  />
+                  <button 
+                    class="eye-btn"
+                    type="button"
+                    (click)="toggleEye('cur')"
+                    tabindex="-1"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" *ngIf="!eyeStates().cur"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" *ngIf="eyeStates().cur"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                </div>
+                <div class="field-error" *ngIf="hasError('curPass')">{{ getError('curPass') }}</div>
+              </div>
+
+              <div class="sec-divider">
+                <div class="sec-divider-line"></div>
+                <div class="sec-divider-label">Nouveau mot de passe</div>
+                <div class="sec-divider-line"></div>
+              </div>
+
+              <!-- Nouveau mot de passe -->
+              <div class="field">
+                <div class="field-label">Nouveau mot de passe</div>
+                <div class="field-wrap">
+                  <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                  <input 
+                    class="f-input"
+                    [type]="eyeStates().new ? 'text' : 'password'"
+                    [value]="newPass()"
+                    (input)="newPass.set($any($event.target).value); onNewPassInput()"
+                    placeholder="Créez un nouveau mot de passe"
+                    [class.is-ok]="passwordValid() && newPass().length > 0"
+                    [class.is-error]="newPass().length > 0 && !passwordValid()"
+                  />
+                  <button 
+                    class="eye-btn"
+                    type="button"
+                    (click)="toggleEye('new')"
+                    tabindex="-1"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" *ngIf="!eyeStates().new"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" *ngIf="eyeStates().new"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                </div>
+
+                <!-- Barre de force -->
+                <div class="strength-wrap" *ngIf="newPass().length > 0">
+                  <div class="strength-bars">
+                    <div class="strength-bar" [style.background]="passStrength() >= 1 ? '#E30613' : '#f0e0e0'"></div>
+                    <div class="strength-bar" [style.background]="passStrength() >= 2 ? '#d97706' : '#f0e0e0'"></div>
+                    <div class="strength-bar" [style.background]="passStrength() >= 4 ? '#059669' : '#f0e0e0'"></div>
+                    <div class="strength-bar" [style.background]="passStrength() >= 5 ? '#047857' : '#f0e0e0'"></div>
+                  </div>
+                  <div class="strength-label" [style.color]="passStrength() >= 4 ? '#059669' : '#d97706'">
+                    {{ passStrength() <= 2 ? 'Faible' : passStrength() === 3 ? 'Moyen' : passStrength() === 4 ? 'Fort' : 'Très fort' }}
+                  </div>
+                </div>
+
+                <!-- Critères -->
+                <div class="req-box" *ngIf="newPass().length > 0">
+                  <div class="req-item" [class.met]="passRequirements().len">
+                    <div class="req-dot"></div>Min. 8 caractères
+                  </div>
+                  <div class="req-item" [class.met]="passRequirements().upper">
+                    <div class="req-dot"></div>Une majuscule
+                  </div>
+                  <div class="req-item" [class.met]="passRequirements().lower">
+                    <div class="req-dot"></div>Une minuscule
+                  </div>
+                  <div class="req-item" [class.met]="passRequirements().num">
+                    <div class="req-dot"></div>Un chiffre
+                  </div>
+                  <div class="req-item" [class.met]="passRequirements().sym" style="grid-column:1/-1">
+                    <div class="req-dot"></div>Un caractère spécial (!&#64;#$%…)
+                  </div>
+                </div>
+                <div class="field-error" *ngIf="hasError('newPass')">{{ getError('newPass') }}</div>
+              </div>
+
+              <!-- Confirmer -->
+              <div class="field">
+                <div class="field-label">Confirmer le nouveau mot de passe</div>
+                <div class="field-wrap">
+                  <span class="field-icon"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                  <input 
+                    class="f-input"
+                    [type]="eyeStates().confirm ? 'text' : 'password'"
+                    [value]="confirmPass()"
+                    (input)="confirmPass.set($any($event.target).value); updatePasswordMatch()"
+                    placeholder="Répétez le mot de passe"
+                    [class.is-ok]="passMatch() && confirmPass().length > 0"
+                    [class.is-error]="confirmPass().length > 0 && !passMatch()"
+                  />
+                  <button 
+                    class="eye-btn"
+                    type="button"
+                    (click)="toggleEye('confirm')"
+                    tabindex="-1"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" *ngIf="!eyeStates().confirm"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" *ngIf="eyeStates().confirm"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                </div>
+                <div class="match-indicator" *ngIf="confirmPass().length > 0" [class.ok]="passMatch()" [class.bad]="!passMatch()">
+                  <span style="font-size:13px">{{ passMatch() ? '✓' : '✗' }}</span>
+                  <span>{{ passMatch() ? 'Les mots de passe correspondent' : 'Les mots de passe ne correspondent pas' }}</span>
+                </div>
+                <div class="field-error" *ngIf="hasError('confirmPass')">{{ getError('confirmPass') }}</div>
+              </div>
+
+              <button 
+                class="btn-save"
+                (click)="savePassword()"
+                [disabled]="!canSavePass() || passSaving()"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" *ngIf="!passSaving()" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span class="spinner" *ngIf="passSaving()"></span>
+                {{ passSaving() ? 'Mise à jour…' : 'Mettre à jour le mot de passe' }}
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Sécurité infos -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Règles du mot de passe
+                </div>
+              </div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--gray-600)">
+                    <div style="width:22px;height:22px;border-radius:6px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    Minimum 8 caractères
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--gray-600)">
+                    <div style="width:22px;height:22px;border-radius:6px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    Au moins une majuscule et une minuscule
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--gray-600)">
+                    <div style="width:22px;height:22px;border-radius:6px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    Au moins un chiffre (0–9)
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--gray-600)">
+                    <div style="width:22px;height:22px;border-radius:6px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    Au moins un caractère spécial (!&#64;#$%…)
+                  </div>
+                </div>
+
+                <div style="margin-top:16px;padding:12px;background:var(--orange-light);border:1px solid var(--orange-mid);border-radius:9px;font-size:11.5px;color:var(--orange);font-weight:600;line-height:1.5">
+                  Aucun collaborateur Ooredoo ne vous demandera jamais votre mot de passe.
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Sessions actives
+                </div>
+              </div>
+              <div class="card-body">
+                <div *ngFor="let session of sessions()" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+                  <div style="width:36px;height:36px;border-radius:9px;background:var(--green-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  </div>
+                  <div style="flex:1">
+                    <div style="font-size:12.5px;font-weight:700;color:var(--dark)">{{ session.navigateur }}</div>
+                    <div style="font-size:11px;color:var(--gray-400)">{{ session.ville }} · {{ session.actif ? 'Actif' : 'Inactive' }}</div>
+                  </div>
+                  <div style="width:7px;height:7px;background:var(--green);border-radius:50%;flex-shrink:0" *ngIf="session.actif"></div>
+                </div>
+                <div style="font-size:11.5px;color:var(--gray-400);margin-top:12px;line-height:1.6">
+                  Changer votre mot de passe déconnectera toutes les autres sessions actives.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ TAB: ACTIVITÉ ══ -->
+      <div *ngIf="currentTab() === 'activite'">
+        <div class="prof-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Historique des modifications
+              </div>
+            </div>
+            <div class="card-body">
+              <div *ngFor="let log of activite()" class="log-item">
+                <div class="log-dot" [style.background]="log.type === 'succes' ? 'var(--green)' : log.type === 'erreur' ? 'var(--red)' : 'var(--orange)'"></div>
+                <div>
+                  <div class="log-text">{{ log.description }}</div>
+                  <div class="log-time">{{ log.dateTime | date: 'dd MMM yyyy à HH:mm' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <ng-template #loading>
+      <div class="page" style="display:flex;align-items:center;justify-content:center;min-height:600px">
+        <div style="text-align:center">
+          <span class="spinner" style="scale:2;margin-bottom:16px;display:block"></span>
+          <p style="color:var(--gray-500)">Chargement du profil…</p>
+        </div>
+      </div>
+    </ng-template>
+
+  </main><!-- /main -->
+
+  <!-- ══ TOAST ══ -->
+  <div class="toast" [class.show]="showToast()">
+    <div class="toast-icon" [class.ok]="toastType() === 'ok'" [class.err]="toastType() === 'err'">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" *ngIf="toastType() === 'ok'"><polyline points="20 6 9 17 4 12"/></svg>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" *ngIf="toastType() === 'err'"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </div>
+    <span>{{ toastMessage() }}</span>
+  </div>
+
+</div>

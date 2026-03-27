@@ -47,4 +47,8 @@ export class EncadrantService {
     trouverParId(id: string): Observable<Encadrant> {
         return this.http.get<Encadrant>(`${this.API_URL}/${id}`);
     }
+
+    modifierCapacite(id: string, capaciteMax: number): Observable<Encadrant> {
+        return this.http.patch<Encadrant>(`${this.API_URL}/${id}/capacite`, { capaciteMax });
+    }
 }

@@ -25,6 +25,8 @@ export class PostulerPfeComponent implements OnInit {
   loading = signal(true);
   submitting = signal(false);
   showSuccess = signal(false);
+  showErrorModal = signal(false);
+  errorMessage = signal<string>('');
   currentStep = signal(1);
   isDragging = signal(false);
   acceptTerms = false;
@@ -281,8 +283,22 @@ export class PostulerPfeComponent implements OnInit {
       error: (err) => {
         console.error('Erreur soumission:', err);
         this.submitting.set(false);
-        alert('Une erreur est survenue. Veuillez réessayer.');
+        this.errorMessage.set(this.cleanErrorMessage(err?.error?.message));
+        this.showErrorModal.set(true);
       }
     });
+  }
+
+  // ═══ Error Modal ═══
+  private cleanErrorMessage(message: string): string {
+    if (!message) return 'Une erreur est survenue. Veuillez réessayer.';
+    // Enlever le préfixe du contrôleur pour afficher seulement le vrai message
+    const prefix = 'Erreur lors de la création de la candidature: ';
+    return message.startsWith(prefix) ? message.substring(prefix.length) : message;
+  }
+
+  closeErrorModal() {
+    this.showErrorModal.set(false);
+    this.errorMessage.set('');
   }
 }

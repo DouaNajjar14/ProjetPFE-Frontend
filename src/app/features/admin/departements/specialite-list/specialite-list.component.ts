@@ -203,10 +203,10 @@ export class SpecialiteListComponent implements OnInit {
     confirmDelete(): void {
         if (!this.deletingSpecialite) return;
 
-        this.specialiteService.supprimer(this.deletingSpecialite.id).subscribe({
+        this.specialiteService.archiver(this.deletingSpecialite.id).subscribe({
             next: () => {
                 this.showToast('Spécialité archivée avec succès', 'success');
-                this.loadSpecialites();
+                this.setFilter('archives');
                 this.closeDeleteConfirm();
             },
             error: () => {

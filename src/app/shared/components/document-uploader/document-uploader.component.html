@@ -1,0 +1,75 @@
+<div class="document-uploader-container">
+  <!-- Drop zone -->
+  <div 
+    class="drop-zone"
+    [class.is-dragging]="isDragOver()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+    
+    <div class="drop-zone-content">
+      <div class="drop-icon">📄</div>
+      <p class="drop-label">
+        Déposez votre {{ getDocumentLabel() }} (PDF) ici<br>
+        <span class="drop-hint">ou <a (click)="triggerFileInput()" class="click-link">cliquez pour sélectionner</a></span>
+      </p>
+      <input 
+        type="file" 
+        accept=".pdf" 
+        (change)="onFileSelected($event)"
+        #fileInput
+        style="display: none;">
+    </div>
+  </div>
+
+  <!-- Selected file info -->
+  <div *ngIf="selectedFile()" class="file-info">
+    <div class="file-icon">📎</div>
+    <div class="file-details">
+      <div class="file-name">{{ selectedFile()?.name }}</div>
+      <div class="file-size">{{ getFormattedFileSize(selectedFile()?.size ?? 0) }}</div>
+    </div>
+    <button 
+      (click)="removeFile()" 
+      class="btn-remove"
+      type="button">
+      ✕
+    </button>
+  </div>
+
+  <!-- Message area -->
+  <div 
+    *ngIf="uploadMessage()" 
+    class="message"
+    [class.success]="messageType() === 'success'"
+    [class.error]="messageType() === 'error'">
+    {{ uploadMessage() }}
+  </div>
+
+  <!-- Upload progress -->
+  <div *ngIf="isUploading()" class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="uploadProgress()"></div>
+    </div>
+    <div class="progress-text">{{ uploadProgress() }}%</div>
+  </div>
+
+  <!-- Action buttons -->
+  <div class="button-group">
+    <button 
+      *ngIf="selectedFile()" 
+      (click)="uploadFile()" 
+      class="btn-upload"
+      [disabled]="isUploading()">
+      <span *ngIf="!isUploading()">📤 Télécharger</span>
+      <span *ngIf="isUploading()" class="spinner"></span>
+    </button>
+    <button 
+      *ngIf="!selectedFile() && !isUploading()" 
+      (click)="triggerFileInput()" 
+      class="btn-select"
+      type="button">
+      📁 Sélectionner fichier
+    </button>
+  </div>
+</div>

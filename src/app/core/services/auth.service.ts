@@ -22,7 +22,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API_URL}/login`, credentials).pipe(
@@ -44,6 +44,24 @@ export class AuthService {
       tap(response => this.handleAuthResponse(response)),
       catchError(error => {
         this.logout();
+        return throwError(() => error);
+      })
+    );
+  }
+
+  changePasswordFirstLogin(request: { nouveauMotDePasse: string; confirmerMotDePasse: string }): Observable<any> {
+    return this.http.post<any>(
+      `${this.API_URL}/change-password-first-login`,
+      request
+    ).pipe(
+      tap(response => {
+        // Update token if provided
+        if (response.token) {
+          localStorage.setItem(this.TOKEN_KEY, response.token);
+        }
+      }),
+      catchError(error => {
+        console.error('Password change error:', error);
         return throwError(() => error);
       })
     );

@@ -1,179 +1,72 @@
-<div class="animate-fade-in">
-  <!-- Page Header Premium -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-ooredoo-600/[0.03] to-white rounded-2xl border border-ooredoo-600/10">
-    <div class="flex items-center gap-4">
-      <div class="w-14 h-14 rounded-2xl bg-ooredoo flex items-center justify-center shadow-lg shadow-ooredoo-600/25 flex-shrink-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-7 h-7">
+<div class="page">
+  <!-- HERO ROUGE avec STATS -->
+  <div class="hero hero-stages">
+    <div class="hero-top">
+      <div>
+        <h1>Gestion des Sujets PFE</h1>
+        <p>Gérez et traitez tous les sujets PFE</p>
+      </div>
+      <div class="hero-badge">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
         </svg>
-      </div>
-      <div class="flex flex-col justify-center">
-        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-none">Gestion des Sujets PFE</h1>
-        <p class="text-sm text-gray-500 mt-1.5 leading-none">{{ totalElements }} sujet(s) au total</p>
+        Sujets PFE 2025–2026
       </div>
     </div>
-    <button class="btn-ooredoo-red" (click)="openCreateModal()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="w-5 h-5">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-      <span>Nouveau Sujet</span>
+    <div class="hero-stats" *ngIf="totalElements">
+      <div class="hstat">
+        <div class="hstat-n">{{ totalElements }}</div>
+        <div class="hstat-l">Total</div>
+      </div>
+      <div class="hstat" style="background:rgba(16,185,129,.18);border-color:rgba(167,243,208,.3)">
+        <div class="hstat-n">{{ getOpenCount() }}</div>
+        <div class="hstat-l">Disponibles</div>
+      </div>
+      <div class="hstat" style="background:rgba(220,38,38,.15);border-color:rgba(252,165,165,.3)">
+        <div class="hstat-n">{{ getArchivedCount() }}</div>
+        <div class="hstat-l">Archivés</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PILLS FILTRES -->
+  <div class="pills">
+    <button class="pill" [class.active]="activeFilter==='tous'" (click)="setFilter('tous')">
+      Tous <span class="pn">{{ totalElements }}</span>
+    </button>
+    <button class="pill" [class.active]="activeFilter==='actifs'" (click)="setFilter('actifs')">
+      Disponibles <span class="pn">{{ getOpenCount() }}</span>
+    </button>
+    <button class="pill" [class.active]="activeFilter==='archives'" (click)="setFilter('archives')">
+      Archivés <span class="pn">{{ getArchivedCount() }}</span>
     </button>
   </div>
 
-  <!-- Search & Filters Bar Premium -->
-  <div class="mb-8 space-y-4">
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-3 gap-4 mb-6">
-      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-           [class.border-ooredoo-600]="activeFilter === 'tous'"
-           (click)="setFilter('tous')">
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-          </svg>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ totalElements }}</span>
-          <span class="block text-xs text-brand-muted font-medium mt-0.5">Total</span>
-        </div>
-      </div>
-      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-           [class.border-ooredoo-600]="activeFilter === 'actifs'"
-           (click)="setFilter('actifs')">
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-          </svg>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ getOpenCount() }}</span>
-          <span class="block text-xs text-brand-muted font-medium mt-0.5">Disponibles</span>
-        </div>
-      </div>
-      <div class="card-ooredoo flex items-center gap-4 p-5 cursor-pointer hover:border-ooredoo-600 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-           [class.border-ooredoo-600]="activeFilter === 'archives'"
-           (click)="setFilter('archives')">
-        <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/>
-          </svg>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ getArchivedCount() }}</span>
-          <span class="block text-xs text-brand-muted font-medium mt-0.5">Archivés</span>
-        </div>
-      </div>
+  <!-- TOOLBAR FILTRES -->
+  <div class="toolbar">
+    <div class="search">
+      <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Rechercher un sujet..." [(ngModel)]="searchTitre" (input)="onSearchInput()"/>
     </div>
-
-    <!-- Toolbar with Filter Tabs -->
-    <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
-      <div class="flex bg-white border border-brand-border rounded-[10px] p-[3px] gap-[2px]">
-        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
-          [class]="activeFilter === 'actifs' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
-          (click)="setFilter('actifs')">
-          Actifs
-        </button>
-        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
-          [class]="activeFilter === 'archives' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
-          (click)="setFilter('archives')">
-          Archivés
-        </button>
-        <button class="px-4 py-2 text-[0.8125rem] font-semibold rounded-lg border-none transition-all duration-200 cursor-pointer"
-          [class]="activeFilter === 'tous' ? 'bg-ooredoo-600 text-white shadow-[0_2px_8px_rgba(237,28,36,0.2)]' : 'bg-transparent text-brand-muted hover:text-brand-text hover:bg-brand-bg'"
-          (click)="setFilter('tous')">
-          Tous
-        </button>
-      </div>
-    </div>
-
-    <!-- Search and Filters Card -->
-    <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-      <!-- Search Input -->
-      <div class="relative mb-4">
-        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-5 h-5 text-gray-400">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-        </div>
-        <input type="text" placeholder="Rechercher un sujet par titre..." [(ngModel)]="searchTitre" (ngModelChange)="onSearchInput()"
-          class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 outline-none transition-all duration-300 focus:border-ooredoo-600 focus:bg-white focus:shadow-sm placeholder:text-gray-400"/>
-      </div>
-      
-      <!-- Filters Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Statut Filter -->
-        <div>
-          <label class="block text-xs font-medium text-gray-500 mb-1.5 ml-1">Statut</label>
-          <div class="relative">
-            <select [(ngModel)]="searchStatut" (ngModelChange)="onSearch()"
-              class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-200 focus:border-ooredoo-600 focus:bg-white appearance-none cursor-pointer">
-              <option value="">Tous les statuts</option>
-              <option value="OUVERT">Disponible</option>
-              <option value="POURVU">Pourvu</option>
-              <option value="FERME">Indisponible</option>
-            </select>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Département Filter -->
-        <div>
-          <label class="block text-xs font-medium text-gray-500 mb-1.5 ml-1">Département</label>
-          <div class="relative">
-            <select [(ngModel)]="searchDepartementId" (ngModelChange)="onSearch()"
-              class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-200 focus:border-ooredoo-600 focus:bg-white appearance-none cursor-pointer">
-              <option value="">Tous les départements</option>
-              @for (dept of departements(); track dept.id) {
-                <option [value]="dept.id">{{ dept.nom }}</option>
-              }
-            </select>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Spécialité Filter -->
-        <div>
-          <label class="block text-xs font-medium text-gray-500 mb-1.5 ml-1">Spécialité universitaire</label>
-          <div class="relative">
-            <select [(ngModel)]="searchSpecialiteId" (ngModelChange)="onSearch()"
-              class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-200 focus:border-ooredoo-600 focus:bg-white appearance-none cursor-pointer">
-              <option value="">Toutes les spécialités</option>
-              @for (spec of specialitesUniversitaires(); track spec.id) {
-                <option [value]="spec.id">{{ spec.nom }}</option>
-              }
-            </select>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Clear Filters Button -->
-      @if (searchTitre || searchStatut || searchDepartementId || searchSpecialiteId) {
-        <div class="mt-4 pt-4 border-t border-gray-100">
-          <button (click)="clearFilters()" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-all duration-200 cursor-pointer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-            Effacer tous les filtres
-          </button>
-        </div>
+    <select class="flt" [(ngModel)]="searchDepartementId" (change)="onSearch()">
+      <option value="">Tous les départements</option>
+      @for (dept of departements(); track dept.id) {
+        <option [value]="dept.id">{{ dept.nom }}</option>
       }
-    </div>
+    </select>
+    <select class="flt" [(ngModel)]="searchStatut" (change)="onSearch()">
+      <option value="">Tous les statuts</option>
+      <option value="OUVERT">Disponible</option>
+      <option value="POURVU">Pourvu</option>
+      <option value="FERME">Indisponible</option>
+    </select>
+  </div>
+
+  <!-- RES BAR -->
+  <div class="res-bar">
+    <div class="res-count"><strong>{{ sujets().length }}</strong> sujet(s)</div>
   </div>
 
   <!-- Content -->
@@ -258,7 +151,10 @@
                   <button 
                     (click)="openConfirm(sujet, sujet.archive ? 'desarchiver' : 'archiver')"
                     [title]="sujet.archive ? 'Restaurer' : 'Archiver'"
-                    class="inline-flex items-center justify-center w-9 h-9 border border-gray-200 rounded-lg text-gray-500 hover:bg-ooredoo-600/[0.06] hover:border-ooredoo-600/20 hover:text-ooredoo-600 transition-all">
+                    [style.background-color]="sujet.archive ? '#fee2e2' : '#dcfce7'"
+                    [style.border-color]="sujet.archive ? '#fca5a5' : '#86efac'"
+                    [style.color]="sujet.archive ? '#dc2626' : '#16a34a'"
+                    class="inline-flex items-center justify-center w-9 h-9 border rounded-lg transition-all hover:opacity-80">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
                       @if (sujet.archive) {
                         <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>

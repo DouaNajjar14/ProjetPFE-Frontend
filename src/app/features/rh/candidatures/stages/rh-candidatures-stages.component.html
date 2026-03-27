@@ -1,0 +1,618 @@
+<!-- ══ VUE LISTE STAGES ══ -->
+<div class="page" *ngIf="!selected">
+  <div class="hero hero-stages">
+    <div class="hero-top">
+      <div>
+        <h1>Stages</h1>
+        <p>Gérez et traitez toutes les candidatures de stage</p>
+      </div>
+      <div class="hero-badge">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8L6 7h12z"/>
+        </svg>
+        Stages 2025–2026
+      </div>
+    </div>
+    <div class="hero-stats" *ngIf="localStats">
+      <div class="hstat">
+        <div class="hstat-n">{{localStats().total || 0}}</div>
+        <div class="hstat-l">Total</div>
+      </div>
+      <div class="hstat" style="background:rgba(217,119,6,.18);border-color:rgba(253,212,114,.3)">
+        <div class="hstat-n">{{localStats().attente || 0}}</div>
+        <div class="hstat-l">En attente</div>
+      </div>
+      <div class="hstat" style="background:rgba(124,58,237,.18);border-color:rgba(196,181,253,.3)">
+        <div class="hstat-n">{{localStats().presel || 0}}</div>
+        <div class="hstat-l">Présélectionnés</div>
+      </div>
+      <div class="hstat" style="background:rgba(16,185,129,.18);border-color:rgba(167,243,208,.3)">
+        <div class="hstat-n">{{localStats().accepte || 0}}</div>
+        <div class="hstat-l">Acceptés</div>
+      </div>
+      <div class="hstat" style="background:rgba(220,38,38,.15);border-color:rgba(252,165,165,.3)">
+        <div class="hstat-n">{{localStats().refuse || 0}}</div>
+        <div class="hstat-l">Refusés</div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="pills">
+    <button class="pill" [class.active]="statusFilter==='all'" (click)="setStatusFilter('all')">
+      Tous <span class="pn">{{localStats().total || 0}}</span>
+    </button>
+    <button class="pill" [class.active]="statusFilter==='EN_ATTENTE'" (click)="setStatusFilter('EN_ATTENTE')">
+      En attente <span class="pn">{{localStats().attente || 0}}</span>
+    </button>
+    <button class="pill" [class.active]="statusFilter==='PRESELECTIONNE'" (click)="setStatusFilter('PRESELECTIONNE')">
+      Présélectionnés <span class="pn">{{localStats().presel || 0}}</span>
+    </button>
+    <button class="pill" [class.active]="statusFilter==='ACCEPTE'" (click)="setStatusFilter('ACCEPTE')">
+      Acceptés <span class="pn">{{localStats().accepte || 0}}</span>
+    </button>
+    <button class="pill" [class.active]="statusFilter==='REJETE'" (click)="setStatusFilter('REJETE')">
+      Refusés <span class="pn">{{localStats().refuse || 0}}</span>
+    </button>
+  </div>
+ 
+  <div class="toolbar">
+    <div class="search">
+      <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Nom, université, email…" [(ngModel)]="searchQuery" (input)="applySearch(searchQuery)"/>
+    </div>
+    <select class="flt" [(ngModel)]="levelFilter" (change)="setLevelFilter(levelFilter)">
+      <option value="">Tous les niveaux</option>
+      <option value="1ère année Licence">1ère année Licence</option>
+      <option value="2ème année Licence">2ème année Licence</option>
+      <option value="1ère année Master">1ère année Master</option>
+      <option value="1ère année cycle Ingénieur">1ère année Cycle Ingénieur</option>
+      <option value="2ème année cycle Ingénieur">2ème Cycle Ingénieur</option>
+    </select>
+    <select class="flt" [(ngModel)]="stageTypeFilter" (change)="setFilterStageType(stageTypeFilter)">
+      <option value="">Tous les types</option>
+      <option value="INITIATION">Initiation</option>
+      <option value="PERFECTIONNEMENT">Perfectionnement</option>
+      <option value="ETE">Été</option>
+    </select>
+  </div>
+ 
+  <div class="res-bar">
+    <div class="res-count"><strong>{{filteredCandidatures().length}}</strong> candidature(s)</div>
+    <div class="sort-wrap">Trier : <select class="sort-sel"><option>Date récente</option><option>A → Z</option></select></div>
+  </div>
+ 
+  <div class="grid">
+    <div class="stage-card" *ngFor="let s of filteredCandidatures()" (click)="openDetail(s)">
+      <div class="card-head">
+        <div class="av" [ngClass]="s.av" [style]="s.avStyle">{{s.initials}}</div>
+        <div class="card-meta">
+          <div class="c-name">{{s.name}}</div>
+          <div class="c-univ">{{s.univ}}</div>
+          <div class="bgs">
+            <span class="bg" [ngClass]="getLevelClass(s.niv)">{{s.niv}}</span>
+            <span class="bg" [ngClass]="getTypeClass(s.type)">{{getFormattedType(s.type)}}</span>
+            <span class="bg" [ngClass]="getBadgeClass(s.statut)">{{getFormattedStatut(s.statut)}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-info">
+        <div><div class="ci-l">Email</div><div class="ci-v"><a href="mailto:{{s.email}}" (click)="$event.stopPropagation()">{{s.email}}</a></div></div>
+        <div><div class="ci-l">Téléphone</div><div class="ci-v">{{s.tel}}</div></div>
+        <div><div class="ci-l">Niveau</div><div class="ci-v"><span class="tag">{{s.niv}}</span></div></div>
+        <div><div class="ci-l">Durée</div><div class="ci-v"><span class="badge-duree">{{s.duree}}</span></div></div>
+      </div>
+
+      <div class="card-foot">
+        <div class="c-date">
+          <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          {{s.date}}
+        </div>
+        <div class="card-actions">
+          <button class="btn-pri" (click)="openDetail(s);$event.stopPropagation()">Voir détail →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ══ VUE DÉTAIL STAGE ══ -->
+<div *ngIf="selected">
+  <div class="det-hero det-hero-stage">
+    <div class="dh-c1"></div>
+    <div class="dh-c2"></div>
+    <div class="dh-z">
+      <div class="dh-nav">
+        <button class="dh-back" (click)="goBack()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Retour aux candidatures Stages
+        </button>
+        <span class="dh-id">#CAND-STAGE-2026</span>
+      </div>
+      </div>
+ 
+      <div class="dh-profile">
+        <div class="dh-av" [ngClass]="selected.av" [style]="selected.avStyle">{{selected.initials}}</div>
+        <div style="flex:1;min-width:0">
+          <div class="dh-name">{{selected.name}}</div>
+          <div class="dh-meta">
+            <span>{{selected.univ}}</span>
+            <div class="dh-meta-dot"></div>
+            <span>Dépôt le {{selected.date}}</span>
+          </div>
+          <div class="dh-tags">
+            <span class="dtag">Stage</span>
+            <span class="dtag">{{getFormattedType(selected.type)}}</span>
+            <span class="dtag" [ngClass]="selected.statClass">{{getFormattedStatut(selected.statut)}}</span>
+          </div>
+        </div>
+ 
+        <div class="det-hero-stats">
+          <div class="dc-kpi">
+            <div class="dc-kpi-icon">
+              <svg width="15" height="15" fill="none" stroke="rgba(255,255,255,.85)" viewBox="0 0 24 24" stroke-width="2.5">
+                <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8L6 7h12z"/>
+              </svg>
+            </div>
+            <div class="dc-kpi-body">
+              <div class="dc-kpi-val">{{getFormattedType(selected.type)}}</div>
+              <div class="dc-kpi-lbl">Type de stage</div>
+            </div>
+          </div>
+          <div class="dc-kpi">
+            <div class="dc-kpi-icon">
+              <svg width="15" height="15" fill="none" stroke="rgba(255,255,255,.85)" viewBox="0 0 24 24" stroke-width="2.5">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              </svg>
+            </div>
+            <div class="dc-kpi-body">
+              <div class="dc-kpi-val">{{getNiv(selected.niv)}}</div>
+              <div class="dc-kpi-lbl">Niveau académique</div>
+            </div>
+          </div>
+          <div class="dc-kpi">
+            <div class="dc-kpi-icon">
+              <svg width="15" height="15" fill="none" stroke="rgba(255,255,255,.85)" viewBox="0 0 24 24" stroke-width="2.5">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="dc-kpi-body">
+              <div class="dc-kpi-val">{{selected.duree}}</div>
+              <div class="dc-kpi-lbl">Durée souhaitée</div>
+            </div>
+          </div>
+          <div class="dc-kpi">
+            <div class="dc-kpi-icon">
+              <svg width="15" height="15" fill="none" stroke="rgba(255,255,255,.85)" viewBox="0 0 24 24" stroke-width="2.5">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <div class="dc-kpi-body">
+              <div class="dc-kpi-val">2</div>
+              <div class="dc-kpi-lbl">Documents</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+ 
+  <div class="det-card">
+    <div class="det-actions">
+      <button class="act-btn presel" (click)="preselectionner()" [disabled]="!canPreselectionner(selected?.statut)">
+        <span class="act-btn-icon">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </span>
+        <span class="act-btn-label">Présélectionner</span>
+      </button>
+      <button class="act-btn entretien" (click)="updateStatutWithModal('PRESELECTIONNE')" [disabled]="!canEntretien(selected?.statut)">
+        <span class="act-btn-icon">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </span>
+        <span class="act-btn-label">Fixer entretien</span>
+      </button>
+      <button class="act-btn accept" (click)="accepter()">
+        <span class="act-btn-icon">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+        <span class="act-btn-label">Accepter</span>
+      </button>
+      <button class="act-btn reject" (click)="rejeter()">
+        <span class="act-btn-icon">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </span>
+        <span class="act-btn-label">Rejeter</span>
+      </button>
+      <div class="act-sp"></div>
+
+    </div>
+  </div>
+
+  <!-- Modal for Date Input -->
+  <div class="modal-overlay" *ngIf="showAcceptModal()" (click)="showAcceptModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{targetStatut === 'ACCEPTE' ? 'Accepter la candidature' : 'Planifier l\'entretien'}}</h2>
+        <button class="modal-close" (click)="showAcceptModal.set(false)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>{{targetStatut === 'ACCEPTE' ? 'Date de début du stage' : 'Date d\'entretien'}}</label>
+          <input type="datetime-local" [(ngModel)]="dateEntretienInput" class="form-input" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="showAcceptModal.set(false)">Annuler</button>
+        <button class="btn-confirm" (click)="confirmEntretien()">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" *ngIf="toastMessage()" [ngClass]="'toast-' + toastType()">
+    {{toastMessage()}}
+  </div>
+ 
+  <div class="det-layout">
+    <!-- GAUCHE -->
+    <div>
+      <!-- Candidat -->
+      <div class="sec candidat-section">
+        <div class="sec-hd">
+          <div class="sec-ico">
+            <svg width="14" height="14" fill="none" stroke="#ef4444" viewBox="0 0 24 24" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span class="sec-title">Candidat</span>
+        </div>
+        <div class="sec-body">
+          <div class="cand-grid-2col">
+            <div class="cand-row"><div class="cand-label">NOM COMPLET</div><div class="cand-value">{{selected.name}}</div></div>
+            <div class="cand-row"><div class="cand-label">EMAIL</div><div class="cand-value"><a href="mailto:{{selected.email}}">{{selected.email}}</a></div></div>
+            <div class="cand-row"><div class="cand-label">TÉLÉPHONE</div><div class="cand-value">{{selected.tel}}</div></div>
+            <div class="cand-row"><div class="cand-label">NIVEAU</div><div class="cand-value"><span class="cand-tag">{{getNiv(selected.niv)}}</span></div></div>
+            <div class="cand-row"><div class="cand-label">UNIVERSITÉ</div><div class="cand-value"><span class="cand-tag red">{{getUniv(selected.univ)}}</span></div></div>
+            <div class="cand-row"><div class="cand-label">TYPE DE STAGE</div><div class="cand-value"><span class="cand-tag orange">{{getFormattedType(selected.type)}}</span></div></div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Documents -->
+      <div class="sec documents-section">
+        <div class="sec-hd">
+          <div class="sec-ico">
+            <svg width="14" height="14" fill="none" stroke="#ef4444" viewBox="0 0 24 24" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <span class="sec-title">Documents déposés</span>
+          <span class="sec-sub">2 fichiers</span>
+        </div>
+        <div class="sec-body" style="padding:0">
+          <div class="doc-section-label">CV</div>
+          <div class="doc-item">
+            <div class="doc-icon"><svg width="16" height="16" fill="none" stroke="#007bff" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-details">
+              <div class="doc-name">CV_{{selected.name}}.pdf</div>
+              <div class="doc-size">PDF</div>
+            </div>
+            <span class="doc-badge">Déposé</span>
+            <button class="doc-action-btn" title="Voir" (click)="onViewDocument('cv')"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Voir</button>
+            <button class="doc-action-btn download" title="Télécharger" (click)="onDownloadDocument('cv')"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Télécharger</button>
+          </div>
+          <div class="doc-section-label">LETTRE DE MOTIVATION</div>
+          <div class="doc-item">
+            <div class="doc-icon"><svg width="16" height="16" fill="none" stroke="#10b981" viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="doc-details">
+              <div class="doc-name">Lettre_{{selected.name}}.pdf</div>
+              <div class="doc-size">PDF</div>
+            </div>
+            <span class="doc-badge">Déposé</span>
+            <button class="doc-action-btn" title="Voir" (click)="onViewDocument('lettre')"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Voir</button>
+            <button class="doc-action-btn download" title="Télécharger" (click)="onDownloadDocument('lettre')"><svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Télécharger</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF Viewer Modal -->
+      <div class="pdf-modal-overlay" *ngIf="openPdf" (click)="closePdfModal()">
+        <div class="pdf-modal" (click)="$event.stopPropagation()">
+          <div class="pdf-modal-header">
+            <span class="pdf-modal-title">Document PDF</span>
+            <div class="pdf-modal-actions">
+              <button class="pdf-download-header-btn" (click)="onDownloadDocument(currentDocType)" title="Télécharger le document">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Télécharger
+              </button>
+              <button class="pdf-close-btn" (click)="closePdfModal()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="pdf-modal-content">
+            <div class="pdf-viewer-section">
+              <div class="pdf-modal-body" *ngIf="!pdfLoading">
+                <iframe [src]="getPdfUrl()" class="pdf-iframe"></iframe>
+              </div>
+              <div class="pdf-modal-body" *ngIf="pdfLoading" style="align-items: center; justify-content: center;">
+                <div style="text-align: center; color: #999;">
+                  <p>Chargement du document...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Informations candidature -->
+      <div class="sec">
+        <div class="sec-hd">
+          <div class="sec-ico">
+            <svg width="14" height="14" fill="none" stroke="#ef4444" viewBox="0 0 24 24" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <span class="sec-title">Informations candidature</span>
+        </div>
+        <div class="sec-body">
+          <div class="info-cand-grid">
+            <div><div class="fl">Date de dépôt</div><div class="fv">{{selected.dateDepot || selected.date}}</div></div>
+            <div><div class="fl">Entretien prévu</div><div class="fv">{{selected.dateEntretien || 'Non planifié'}}</div></div>
+            <div><div class="fl">Durée</div><div class="fv">{{selected.duree}}</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- DROITE -->
+    <div>
+      <!-- Statut -->
+      <div class="rsec">
+        <div class="rsec-hd">          <div class="rsec-ico">
+            <svg width="14" height="14" fill="none" stroke="#d97706" viewBox="0 0 24 24" stroke-width="2.2">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8m0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/>
+            </svg>
+          </div>          <span class="rsec-title">Statut du dossier</span>
+          <span class="status-pill" [ngClass]="{'ok': selected.statClass==='ok', 'sel': selected.statClass==='sel', 'reject': selected.statClass==='reject', 'presel': selected.statut==='PRESELECTIONNE'}">{{getFormattedStatut(selected.statut)}}</span>
+        </div>
+        <div class="rsec-body">
+          <div class="prog-lbl-row">
+            <span class="prog-lbl">Progression</span>
+            <span class="prog-pct" [style.color]="progColor">{{progressPct}}%</span>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill" [style.width.%]="progressPct" [style.background]="progGradient"></div>
+          </div>
+          <div class="steps">
+            <div class="step" *ngFor="let s of steps; let i=index" [ngClass]="s">
+              <svg *ngIf="s==='done'" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+                <path d="M5 13l4 4L19 7" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              {{['REÇU','PRÉSÉLEC.','ENTRETIEN','ACCEPTÉ'][i]}}
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Parcours -->
+      <div class="rsec">
+        <div class="rsec-hd">
+          <span class="rsec-title">Parcours</span>
+        </div>
+        <div class="rsec-body">
+          <div class="wf">
+            <div class="wf-item" *ngFor="let s of steps; let i=index" [ngClass]="s">
+              <div class="wf-dot">
+                <svg *ngIf="s==='done'" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
+                  <path d="M5 13l4 4L19 7" stroke="#059669" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="wf-lbl">{{['Reçu','Présélec.','Entretien','Accepté'][i]}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Contact rapide -->
+      <div class="rsec">
+        <div class="rsec-hd">
+          <span class="rsec-title">Contact rapide</span>
+        </div>
+        <div class="rsec-body">
+          <a class="contact-link contact-card" href="mailto:{{selected.email}}">
+            <div class="contact-ico">
+              <svg width="15" height="15" fill="none" stroke="var(--red)" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-lbl">Email</div>
+              <div class="contact-val red">{{selected.email}}</div>
+            </div>
+            <svg class="contact-arrow" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          <a class="contact-link contact-card" href="tel:{{selected.tel}}">
+            <div class="contact-ico">
+              <svg width="15" height="15" fill="none" stroke="var(--red)" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.27 9.09a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.72 6.72l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="contact-lbl">Téléphone</div>
+              <div class="contact-val">{{selected.tel}}</div>
+            </div>
+            <svg class="contact-arrow" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Modal for Date Input -->
+  <div class="modal-overlay" *ngIf="showAcceptModal()" (click)="showAcceptModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{targetStatut === 'ACCEPTE' ? 'Accepter la candidature' : 'Planifier l\'entretien'}}</h2>
+        <button class="modal-close" (click)="showAcceptModal.set(false)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>{{targetStatut === 'ACCEPTE' ? 'Date de début du stage' : 'Date d\'entretien'}}</label>
+          <input type="datetime-local" [(ngModel)]="dateEntretienInput" class="form-input" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="showAcceptModal.set(false)">Annuler</button>
+        <button class="btn-confirm" (click)="confirmEntretien()">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Avertissement Doublons -->
+  <div class="modal-overlay" *ngIf="showDuplicateWarningModal()" (click)="cancelDuplicateWarning()">
+    <div class="modal modal-warning duplicate-warning" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-header-inner">
+          <div class="modal-head-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path d="M12 9v2m0 4v2m-9-15h18a2 2 0 012 2v18a2 2 0 01-2 2H3a2 2 0 01-2-2V4a2 2 0 012-2z"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Candidat avec Postulations Multiples</h3>
+            <p class="subtitle">Cet candidat a postulé pour plusieurs types de stages</p>
+          </div>
+          <button class="modal-close" (click)="cancelDuplicateWarning()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="duplicate-body">
+        <!-- Candidat Info -->
+        <div class="modal-section-label">Informations Candidat</div>
+        <div class="modal-cand">
+          <div class="modal-cand-av">{{ selected?.initials }}</div>
+          <div>
+            <div class="modal-cand-name">{{ selected?.name }}</div>
+            <div class="modal-cand-school">{{ selected?.univ }}</div>
+            <div class="modal-cand-contacts">
+              <div class="modal-cand-contact">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                {{ selected?.email }}
+              </div>
+              <div class="modal-cand-contact">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+                {{ selected?.tel }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Postulations Multiple -->
+        <div class="modal-section-label" style="margin-top: 20px;">Postulations ({{ duplicateCandidatures().length + 1 }} stages)</div>
+        <div class="modal-cands-grid">
+          <!-- Current candidature -->
+          <div class="modal-cand-card active">
+            <div class="modal-cand-card-header">
+              <span class="selected-chip">Sélectionnée</span>
+              <span class="type-chip" [ngClass]="selected?.type?.toLowerCase()">{{ selected?.type }}</span>
+            </div>
+            <div class="modal-cand-card-row">
+              <span class="mcc-label">Type Stage:</span>
+              <span class="mcc-value">{{ selected?.type }}</span>
+            </div>
+            <div class="modal-cand-card-row">
+              <span class="mcc-label">Statut:</span>
+              <span class="mcc-value">{{ getFormattedStatut(selected?.statut) }}</span>
+            </div>
+            <div class="modal-cand-card-row">
+              <span class="mcc-label">Dépôt:</span>
+              <span class="mcc-value">{{ selected?.date }}</span>
+            </div>
+          </div>
+
+          <!-- Other candidatures -->
+          <div class="modal-cand-card" *ngFor="let dup of duplicateCandidatures()">
+            <div class="modal-cand-card-header">
+              <span class="type-chip" [ngClass]="dup.typeStage.toLowerCase()">{{ dup.typeStage }}</span>
+            </div>
+            <div class="modal-cand-card-row">
+              <span class="mcc-label">Type Stage:</span>
+              <span class="mcc-value">{{ dup.typeStage }}</span>
+            </div>
+            <div class="modal-cand-card-row">
+              <span class="mcc-label">Statut:</span>
+              <span class="mcc-value">{{ getFormattedStatut(dup.statut) }}</span>
+            </div>
+            <div class="modal-cand-card-row" *ngIf="dup.dateDepot">
+              <span class="mcc-label">Dépôt:</span>
+              <span class="mcc-value">{{ dup.dateDepot | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Warning Box -->
+        <div class="modal-warning-box">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path d="M12 9v2m0 4v2m-9-15h18a2 2 0 012 2v18a2 2 0 01-2 2H3a2 2 0 01-2-2V4a2 2 0 012-2z"/>
+          </svg>
+          <p>Ce candidat a déjà postulé pour d'autres types de stages. Assurez-vous que cela est intentionnel.</p>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-annuler" (click)="cancelDuplicateWarning()">Annuler</button>
+        <button class="btn-continuer" (click)="confirmDuplicateWarning()">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          Continuer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" *ngIf="toastMessage()" [ngClass]="'toast-' + toastType()">
+    {{toastMessage()}}
+  </div>

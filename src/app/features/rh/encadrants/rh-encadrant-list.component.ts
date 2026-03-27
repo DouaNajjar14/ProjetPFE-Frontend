@@ -49,6 +49,12 @@ export class RhEncadrantListComponent implements OnInit {
     showDetail = signal(false);
     selectedEncadrant: Encadrant | null = null;
 
+    // Capacity modal
+    showCapacityModal = signal(false);
+    capacityEncadrant: Encadrant | null = null;
+    newCapacite = 0;
+    showCapacityConfirm = signal(false);
+
     // Toast
     toastMessage = signal<string | null>(null);
     toastType = signal<'success' | 'error'>('success');
@@ -149,6 +155,53 @@ export class RhEncadrantListComponent implements OnInit {
     closeDetailModal(): void {
         this.showDetail.set(false);
         this.selectedEncadrant = null;
+    }
+
+    openCapacityModal(encadrant: Encadrant): void {
+        this.capacityEncadrant = encadrant;
+        this.newCapacite = encadrant.capaciteMax;
+        this.showCapacityModal.set(true);
+    }
+
+    closeCapacityModal(): void {
+        this.showCapacityModal.set(false);
+        this.capacityEncadrant = null;
+        this.newCapacite = 0;
+    }
+
+    openCapacityConfirm(): void {
+        if (!this.capacityEncadrant || this.newCapacite <= 0) {
+            this.showToast('Veuillez entrer une capacité valide', 'error');
+            return;
+        }
+        this.showCapacityConfirm.set(true);
+    }
+
+    closeCapacityConfirm(): void {
+        this.showCapacityConfirm.set(false);
+    }
+
+    confirmUpdateCapacity(): void {
+        if (!this.capacityEncadrant) return;
+
+        this.encadrantService.modifierCapacite(this.capacityEncadrant.id, this.newCapacite).subscribe({
+            next: (updated) => {
+                const index = this.encadrants().findIndex(e => e.id === updated.id);
+                if (index >= 0) {
+                    const updated_array = [...this.encadrants()];
+                    updated_array[index] = updated;
+                    this.encadrants.set(updated_array);
+                    this.applyFilter();
+                }
+                this.showToast('Capacité mise à jour avec succès', 'success');
+                this.closeCapacityConfirm();
+                this.closeCapacityModal();
+            },
+            error: () => {
+                this.showToast('Erreur lors de la mise à jour de la capacité', 'error');
+                this.closeCapacityConfirm();
+            }
+        });
     }
 
     // Toast

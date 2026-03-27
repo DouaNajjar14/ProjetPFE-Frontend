@@ -1,115 +1,66 @@
-<div class="animate-fade-in">
-  <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 p-6 bg-gradient-to-r from-ooredoo-600/[0.03] to-white rounded-2xl border border-ooredoo-600/10">
-    <div class="flex items-center gap-4">
-      <div class="w-14 h-14 rounded-2xl bg-ooredoo flex items-center justify-center shadow-lg shadow-ooredoo-600/25 flex-shrink-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7">
+<div class="page">
+  <!-- HERO ROUGE avec STATS -->
+  <div class="hero hero-stages">
+    <div class="hero-top">
+      <div>
+        <h1>Encadrants</h1>
+        <p>Gérez et traitez tous les encadrants</p>
+      </div>
+      <div class="hero-badge">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
         </svg>
+        Encadrants 2025–2026
       </div>
-      <div class="flex flex-col justify-center">
-        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight leading-none">Encadrants</h1>
-        <p class="text-sm text-gray-500 mt-1.5 leading-none">{{ filteredEncadrants().length }} encadrant(s) au total</p>
+    </div>
+    <div class="hero-stats" *ngIf="encadrants">
+      <div class="hstat">
+        <div class="hstat-n">{{ encadrants().length }}</div>
+        <div class="hstat-l">Total</div>
+      </div>
+      <div class="hstat" style="background:rgba(16,185,129,.18);border-color:rgba(167,243,208,.3)">
+        <div class="hstat-n">{{ totalCapacity }}</div>
+        <div class="hstat-l">Capacité totale</div>
+      </div>
+      <div class="hstat" style="background:rgba(220,38,38,.15);border-color:rgba(252,165,165,.3)">
+        <div class="hstat-n">{{ usedCapacity }}</div>
+        <div class="hstat-l">Stagiaires encadrés</div>
       </div>
     </div>
   </div>
 
-  <!-- Stats Cards -->
-  <div class="grid grid-cols-3 gap-4 mb-6">
-    <div class="card-ooredoo flex items-center gap-4 p-5">
-      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/10">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-        </svg>
-      </div>
-      <div>
-        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ encadrants().length }}</span>
-        <span class="block text-xs text-brand-muted font-medium mt-0.5">Total</span>
-      </div>
-    </div>
-    <div class="card-ooredoo flex items-center gap-4 p-5">
-      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/10">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-      </div>
-      <div>
-        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ totalCapacity }}</span>
-        <span class="block text-xs text-brand-muted font-medium mt-0.5">Capacité totale</span>
-      </div>
-    </div>
-    <div class="card-ooredoo flex items-center gap-4 p-5">
-      <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/10">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" class="w-[22px] h-[22px]">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-        </svg>
-      </div>
-      <div>
-        <span class="block text-2xl font-extrabold text-brand-text leading-none tracking-tight">{{ usedCapacity }}</span>
-        <span class="block text-xs text-brand-muted font-medium mt-0.5">Stagiaires encadrés</span>
-      </div>
-    </div>
+  <!-- PILLS FILTRES -->
+  <div class="pills">
+    <button class="pill" [class.active]="!filterDepartementId" (click)="onFilterDepartementChange()">
+      Tous <span class="pn">{{ encadrants().length }}</span>
+    </button>
   </div>
 
-  <!-- Search & Filters -->
-  <div class="mb-8 space-y-4">
-    <!-- Search Input -->
-    <div class="relative max-w-md">
-      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-5 h-5 text-gray-400">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-      </div>
-      <input type="text" placeholder="Rechercher par nom, email..." [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
-        class="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-2xl text-sm text-gray-900 outline-none transition-all duration-300 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/10 placeholder:text-gray-400"/>
+  <!-- TOOLBAR FILTRES -->
+  <div class="toolbar">
+    <div class="search">
+      <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Nom, université, email…" [(ngModel)]="searchTerm" (input)="onSearchChange()"/>
     </div>
-
-    <!-- Filters Row -->
-    <div class="flex flex-wrap items-center gap-4">
-      <!-- Filter by Département -->
-      <div class="relative min-w-[220px]">
-        <select [(ngModel)]="filterDepartementId" (ngModelChange)="onFilterDepartementChange()"
-          class="w-full pl-12 pr-10 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-300 focus:border-red-500 appearance-none cursor-pointer">
-          <option value="">Tous les départements</option>
-          @for (dept of departements(); track dept.id) {
-            <option [value]="dept.id">{{ dept.nom }}</option>
-          }
-        </select>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </div>
-
-      <!-- Filter by Spécialité -->
-      <div class="relative min-w-[220px]">
-        <select [(ngModel)]="filterSpecialiteId" (ngModelChange)="onFilterSpecialiteChange()"
-          class="w-full pl-12 pr-10 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-sm text-gray-700 outline-none transition-all duration-300 focus:border-red-500 appearance-none cursor-pointer">
-          <option value="">Toutes les spécialités</option>
-          @for (spec of allSpecialites(); track spec.id) {
-            <option [value]="spec.id">{{ spec.nom }}</option>
-          }
-        </select>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </div>
-
-      <!-- Clear Filters Button -->
-      @if (searchTerm || filterDepartementId || filterSpecialiteId) {
-        <button (click)="clearFilters()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200 cursor-pointer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-          Effacer les filtres
-        </button>
+    <select class="flt" [(ngModel)]="filterDepartementId" (change)="onFilterDepartementChange()">
+      <option value="">Tous les départements</option>
+      @for (dept of departements(); track dept.id) {
+        <option [value]="dept.id">{{ dept.nom }}</option>
       }
-    </div>
+    </select>
+    <select class="flt" [(ngModel)]="filterSpecialiteId" (change)="onFilterSpecialiteChange()">
+      <option value="">Toutes les spécialités</option>
+      @for (spec of allSpecialites(); track spec.id) {
+        <option [value]="spec.id">{{ spec.nom }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- RES BAR -->
+  <div class="res-bar">
+    <div class="res-count"><strong>{{ filteredEncadrants().length }}</strong> encadrant(s)</div>
   </div>
 
   <!-- Cards Grid -->
@@ -150,10 +101,22 @@
                 </div>
               </div>
             </div>
-            <!-- Status Badge -->
-            <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-600">
-              Actif
-            </span>
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+              <button 
+                (click)="openDetailModal(encadrant); $event.stopPropagation()"
+                title="Modifier"
+                class="inline-flex items-center justify-center w-9 h-9 border border-red-200 rounded-lg text-red-500 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <!-- Status Badge -->
+              <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-600">
+                Actif
+              </span>
+            </div>
           </div>
 
           <!-- Contact Info -->
@@ -270,40 +233,28 @@
   @if (showDetail()) {
     <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeDetailModal()">
       <div class="bg-white rounded-2xl max-w-[520px] w-full shadow-modal animate-modal-in overflow-hidden" (click)="$event.stopPropagation()">
-        <!-- Header avec fond coloré -->
-        <div class="relative bg-gradient-to-br from-[#ED1C24] via-[#ED1C24] to-[#ED1C24] p-6 text-white">
-          <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-4 right-4 w-32 h-32 rounded-full bg-white/20 blur-2xl"></div>
-            <div class="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-white/10 blur-xl"></div>
+        <!-- Header identique au modal capacité -->
+        <div class="detail-modal-header">
+          <!-- Contenu du header -->
+          <div class="detail-modal-header-content">
+            <button (click)="closeDetailModal()" class="detail-modal-close-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="w-4 h-4">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+            <h3>{{ selectedEncadrant?.prenom }} {{ selectedEncadrant?.nom }}</h3>
+            <p>Changez la capacité d'encadrement maximale pour <strong>{{ selectedEncadrant?.prenom }} {{ selectedEncadrant?.nom }}</strong></p>
           </div>
-          <div class="relative flex items-center gap-4">
-            <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl font-bold shadow-lg">
-              {{ selectedEncadrant?.prenom?.charAt(0) }}{{ selectedEncadrant?.nom?.charAt(0) }}
-            </div>
-            <div>
-              <h2 class="text-xl font-bold">{{ selectedEncadrant?.prenom }} {{ selectedEncadrant?.nom }}</h2>
-              <p class="text-white/80 text-sm">{{ selectedEncadrant?.departementNom || 'Non assigné' }}</p>
-              <span class="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-100">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                Actif
-              </span>
-            </div>
-          </div>
-          <button (click)="closeDetailModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-          </button>
         </div>
 
-        <!-- Contenu -->
-        <div class="p-6 space-y-5">
+        <!-- Contenu blanc -->
+        <div class="p-6 bg-white space-y-5">
           <!-- Contact -->
           <div>
-            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Contact</h4>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Contact</h4>
             <div class="grid grid-cols-2 gap-3">
-              <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-                <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
+              <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
                     <rect x="2" y="4" width="20" height="16" rx="3"/><polyline points="2,4 12,13 22,4"/>
                   </svg>
@@ -313,8 +264,8 @@
                   <p class="text-sm font-medium text-gray-900 truncate">{{ selectedEncadrant?.email }}</p>
                 </div>
               </div>
-              <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-                <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center">
+              <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                <div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#ED1C24" stroke-width="2" class="w-4 h-4">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                   </svg>
@@ -330,13 +281,10 @@
           <!-- Spécialités -->
           @if (selectedEncadrant?.specialites?.length) {
             <div>
-              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Spécialités</h4>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Spécialités</h4>
               <div class="flex flex-wrap gap-2">
                 @for (spec of selectedEncadrant?.specialites || []; track spec.id) {
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-sm font-medium text-amber-700">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
-                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                    </svg>
+                  <span class="inline-flex items-center px-3 py-1.5 bg-amber-50 border border-amber-200 rounded text-xs font-medium text-amber-700">
                     {{ spec.nom }}
                   </span>
                 }
@@ -347,13 +295,10 @@
           <!-- Compétences -->
           @if (selectedEncadrant?.competences?.length) {
             <div>
-              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Compétences</h4>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Compétences</h4>
               <div class="flex flex-wrap gap-2">
                 @for (comp of selectedEncadrant?.competences || []; track comp.id) {
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-lg text-sm font-medium text-purple-700">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
+                  <span class="inline-flex items-center px-3 py-1.5 bg-purple-50 border border-purple-200 rounded text-xs font-medium text-purple-700">
                     {{ comp.nom }}
                   </span>
                 }
@@ -363,13 +308,13 @@
 
           <!-- Capacité -->
           <div>
-            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Capacité d'encadrement</h4>
-            <div class="bg-gray-50 rounded-xl p-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Capacité d'encadrement</h4>
+            <div class="bg-gray-50 rounded-lg p-4">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-medium text-gray-700">Stagiaires encadrés</span>
                 <span class="text-sm font-bold text-gray-900">{{ selectedEncadrant?.capaciteActuelle || 0 }} / {{ selectedEncadrant?.capaciteMax }}</span>
               </div>
-              <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div class="h-full rounded-full transition-all duration-500"
                   [class]="((selectedEncadrant?.capaciteActuelle || 0) / (selectedEncadrant?.capaciteMax || 1)) >= 1 ? 'bg-red-500' : ((selectedEncadrant?.capaciteActuelle || 0) / (selectedEncadrant?.capaciteMax || 1)) >= 0.7 ? 'bg-amber-500' : 'bg-emerald-500'"
                   [style.width.%]="((selectedEncadrant?.capaciteActuelle || 0) / (selectedEncadrant?.capaciteMax || 1)) * 100">
@@ -386,9 +331,88 @@
           </div>
         </div>
 
-        <!-- Footer -->
-        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100">
-          <button class="modal-btn-cancel" (click)="closeDetailModal()">Fermer</button>
+        <!-- Footer identique au modal capacité -->
+        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
+          <button class="modal-btn-cancel" (click)="closeDetailModal()">Annuler</button>
+          <button class="btn-confirmation-red" 
+            (click)="openCapacityModal(selectedEncadrant!)">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ═══════ CAPACITY MODIFICATION MODAL ═══════ -->
+  @if (showCapacityModal()) {
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1000] animate-overlay-in p-5" (click)="closeCapacityModal()">
+      <div class="capacity-modal-card max-w-[420px] w-full shadow-modal animate-modal-in" (click)="$event.stopPropagation()">
+        <!-- Modal Header -->
+        <div class="capacity-modal-header">
+          <div class="capacity-modal-header-content">
+            <h3>Modifier la capacité</h3>
+            <p>Changez la capacité d'encadrement maximale pour <strong>{{ capacityEncadrant?.nom }} {{ capacityEncadrant?.prenom }}</strong></p>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="capacity-modal-body">
+          <!-- Current capacity info -->
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <p class="text-sm text-blue-900 font-semibold"><strong>Capacité actuelle:</strong> {{ capacityEncadrant?.capaciteMax }} stagiaires</p>
+            <p class="text-xs text-blue-700 mt-2">{{ capacityEncadrant?.capaciteActuelle }} / {{ capacityEncadrant?.capaciteMax }} positions utilisées</p>
+          </div>
+
+          <!-- Input field -->
+          <div>
+            <label class="text-sm font-semibold text-gray-700 mb-2 block">Nouvelle capacité <span class="text-red-500">*</span></label>
+            <input type="number" 
+              [(ngModel)]="newCapacite" 
+              min="1" 
+              max="50"
+              class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg text-gray-900 focus:border-red-500 focus:outline-none transition-all"
+              placeholder="Entrez la nouvelle capacité">
+            <p class="text-xs text-gray-400 mt-2">La nouvelle capacité doit être au moins {{ capacityEncadrant?.capaciteActuelle }} (encadrements en cours)</p>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="capacity-modal-footer">
+          <button class="modal-btn-cancel" (click)="closeCapacityModal()">Annuler</button>
+          <button class="btn-confirmation-red" 
+            (click)="openCapacityConfirm()">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ═══════ CAPACITY CONFIRMATION POPUP ═══════ -->
+  @if (showCapacityConfirm()) {
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[1100] animate-overlay-in p-5" (click)="closeCapacityConfirm()">
+      <div class="capacity-modal-card max-w-[380px] w-full animate-modal-in" (click)="$event.stopPropagation()">
+        <!-- Modal Header -->
+        <div class="capacity-modal-header">
+          <div class="capacity-modal-header-content">
+            <h3>Confirmer la modification</h3>
+            <p>Êtes-vous sûr de vouloir changer la capacité ?</p>
+          </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="capacity-modal-body text-center">
+          <div class="w-14 h-14 rounded-2xl bg-yellow-50 flex items-center justify-center mx-auto mb-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" class="w-7 h-7">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Êtes-vous sûr de vouloir changer la capacité d'encadrement de <strong>{{ capacityEncadrant?.nom }}</strong> à <strong>{{ newCapacite }} stagiaires</strong> ?
+          </p>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="capacity-modal-footer justify-center">
+          <button class="modal-btn-cancel" (click)="closeCapacityConfirm()">Annuler</button>
+          <button class="btn-confirmation-red" 
+            (click)="confirmUpdateCapacity()">Confirmer la modification</button>
         </div>
       </div>
     </div>

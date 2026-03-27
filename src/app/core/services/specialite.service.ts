@@ -43,4 +43,8 @@ export class SpecialiteService {
     desarchiver(id: number): Observable<Specialite> {
         return this.http.patch<Specialite>(`${this.apiUrl}/${id}/desarchiver`, {});
     }
+
+    archiver(id: number): Observable<Specialite> {
+        return this.http.patch<Specialite>(`${this.apiUrl}/${id}/archiver`, {});
+    }
 }

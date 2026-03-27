@@ -216,10 +216,10 @@ export class CompetenceListComponent implements OnInit {
     confirmDelete(): void {
         if (!this.deletingCompetence) return;
 
-        this.competenceService.supprimer(this.deletingCompetence.id).subscribe({
+        this.competenceService.archiver(this.deletingCompetence.id).subscribe({
             next: () => {
                 this.showToast('Compétence archivée avec succès', 'success');
-                this.loadCompetences();
+                this.setFilter('archives');
                 this.closeDeleteConfirm();
             },
             error: () => {

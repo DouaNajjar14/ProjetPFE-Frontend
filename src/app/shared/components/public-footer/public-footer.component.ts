@@ -62,7 +62,9 @@ import { RouterModule } from '@angular/router';
                     <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                   </svg>
                 </div>
-                <span>Immeuble Ooredoo,<br>Lac 3, Tunis 1053</span>
+                <a href="https://maps.app.goo.gl/RCnqB1EnhpVAt5Bm7" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                  Les Jardins du Lac - 1053 Lac 2,<br>Tunis
+                </a>
               </li>
               <li>
                 <div class="contact-icon">
